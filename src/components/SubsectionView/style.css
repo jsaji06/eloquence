@@ -1,0 +1,41 @@
+
+.aiPanel {
+    /* margin-bottom:50px; */
+    background-color: var(--menu-background);
+}
+.subsectionView .header {
+    padding: 20px;
+    display: flex;
+    background-color: var(--primary-color);
+    border-bottom:1px solid white;
+    border-radius:2px;
+    align-items: center;
+}
+
+.subsectionView .header .icon {
+    margin-left:auto;
+}
+
+.point {
+    padding:15px 20px;
+    border-bottom:1px solid gray;
+    background-color: rgb(199, 199, 199);
+}
+
+.subsectionView h2 {
+    font-size:16px;
+}
+
+.icon:hover {
+    cursor:pointer;   
+}
+
+.subtext {
+    color:#2e2e2e;
+    /* margin:0; */
+}
+
+.pointText {
+    font-size:15px;
+    /* margin:0; */
+}

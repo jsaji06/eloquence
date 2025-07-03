@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #555555;
+  content: attr(data-placeholder);
+  
+}
+
+.ProseMirror.header p.is-editor-empty:first-child::before {
+  font-family: "Playfair Display";
+  font-size:64px;
+}
+
+.ProseMirror.header p {
+  font-family: "Playfair Display";
+  font-size:64px;
+}
+
+
+.ProseMirror.editor p.is-editor-empty:first-child::before {
+  font-family: "DM Sans";
+  font-size:22px;
+}
+
+.ProseMirror.editor {
+  font-family: "Playfair Display";
+  font-size:22px;
+  /* width:750px; */
+}

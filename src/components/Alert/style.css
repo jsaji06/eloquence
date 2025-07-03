@@ -1,0 +1,35 @@
+.alert {
+    z-index: 3;
+    width: 450px;
+    height: 175px;
+    background-color: var(--primary-color);
+    margin: 0;
+    padding: 50px;
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap:30px;
+    border-radius:20px;
+
+}
+
+.alert button {
+    width:25%;
+}
+
+.alert p 
+{
+    font-size:15px;
+}
+
+.alert h1 {
+    font-size:32px;
+}
+
+.alert * {
+    margin: 0;
+}
