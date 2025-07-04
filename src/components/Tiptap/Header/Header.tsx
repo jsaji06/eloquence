@@ -1,9 +1,9 @@
-// src/Tiptap.tsx
-import { useEditor, EditorContent, FloatingMenu, BubbleMenu, Editor } from '@tiptap/react'
+import { useEditor, EditorContent } from '@tiptap/react'
 import Heading from '@tiptap/extension-heading'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder';
 import './style.css'
+import React from 'react';
 
 const extensions = [StarterKit, Heading.configure({
   levels: [1],
@@ -26,7 +26,6 @@ const Header = (props: HeaderProps) => {
         class: 'header',
       },
       handleKeyDown(view, event) {
-        // Prevent Enter key from inserting paragraphs
         if (event.key === 'Enter') return true
       },
     },

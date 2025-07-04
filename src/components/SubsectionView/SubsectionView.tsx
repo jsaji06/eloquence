@@ -1,8 +1,8 @@
-import { type Response, type Point } from '../../Types.tsx';
-import "./style.css";
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
+import { type Response } from '../../Types.tsx';
+import "./style.css";
 
 interface SubsectionViewProps {
     subsection: Response;

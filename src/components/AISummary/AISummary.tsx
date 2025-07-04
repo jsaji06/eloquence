@@ -1,4 +1,4 @@
-import React, { type SetStateAction, type Dispatch } from 'react'
+import { type SetStateAction, type Dispatch } from 'react'
 import './style.css'
 import { type Response } from '../../Types';
 import SubsectionView from '../SubsectionView/SubsectionView';

@@ -1,16 +1,16 @@
-// src/Tiptap.tsx
 import { useEditor, EditorContent, FloatingMenu, BubbleMenu } from '@tiptap/react'
+import { useEffect, useState, type ChangeEvent } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faList, faListOl } from '@fortawesome/free-solid-svg-icons'
+import { Color } from '@tiptap/extension-color'
 import StarterKit from '@tiptap/starter-kit'
 import Heading from '@tiptap/extension-heading'
 import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
-import { Color } from '@tiptap/extension-color'
 import Highlight from '@tiptap/extension-highlight'
 import TextStyle from "@tiptap/extension-text-style";
 import './style.css'
-import { useEffect, useState, type ChangeEvent } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBold, faDisplay, faItalic, faList, faListOl, faStrikethrough, faUnderline } from '@fortawesome/free-solid-svg-icons'
+
 const html_tag_regex = new RegExp("<[^>]+>")
 
 const extensions = [StarterKit, Heading, Underline, Highlight.configure({ multicolor: true }), TextStyle, Color, Placeholder.configure({ placeholder: "Your masterpiece begins here. To enable AI features, write at least 25 words. This editor has Markdown support.", emptyEditorClass: "empty-editor" })]

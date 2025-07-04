@@ -1,0 +1,53 @@
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* text-align: center; */
+    gap:10px;
+    width:100vw;
+    height:100vh;
+}
+
+input {
+    background-color: transparent;
+    font-family:"DM Sans";
+    border:none;
+    padding:10px 35px;
+    text-align:left;
+    border-bottom:1px solid var(--secondary-color);
+    border-radius:2px;
+}
+
+input:focus {
+    outline:none;
+    border:1px solid var(--secondary-color);
+
+    
+}
+
+.login button {
+    padding:10px 30px;
+    margin:10px 0;
+}
+
+.login a {
+    font-family:"DM Sans";
+    color:var(--secondary-color)
+}
+
+.loginOptions {
+    display:flex;
+    gap:10px;
+}
+
+.otherOptions {
+    display:flex;
+    justify-content: center;
+    gap:25px;
+
+}
+
+.options * {
+    margin:15px 0;
+}
