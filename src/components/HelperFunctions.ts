@@ -5,7 +5,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { type Response } from "../Types";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD05Mnj7ZryNoCbH-kxVWOJGV91Aj9opnw",
+    apiKey: process.env.FIREBASE_API_KEY,
     authDomain: "eloquence-39ed6.firebaseapp.com",
     projectId: "eloquence-39ed6",
     storageBucket: "eloquence-39ed6.firebasestorage.app",

@@ -82,6 +82,8 @@ Now generate exactly 3 critical points that challenge, question, or explore this
 
 For EACH point, reference ONE of the key phrases you listed above. Use the EXACT same text you copied - do not modify it.
 
+It's possible for each subsection to have multiple refutations, dilemmas, counterpoints, etc. What's most important is that you reflect upon what you have read, and come up with reasonable challenges for the writer to think about.
+
 Color Assignment Rules:
 - Subsection 1: Use blue tones 
 - Subsection 2: Use green tones 
