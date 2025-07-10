@@ -1,0 +1,70 @@
+.dashboard {
+    min-width:100vw;
+    height: 100%;
+}
+
+nav {
+    display:flex;
+    align-items: center;
+    /* justify-content: center; */
+    /* gap:500px; */
+    padding:45px;
+}
+
+nav .icons {
+    margin-left:auto;
+    display: flex;
+    gap:30px;
+}
+
+.documentContainer {
+    display:flex;
+    flex-direction: column;
+    gap:30px;
+}
+
+.row 
+{
+    display: flex;
+    gap:30px;
+}
+
+.dashContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashContainer h3 {
+    font-size: 32px;
+}
+
+.documentView {
+    transition: .5s;
+}
+
+.documentView:hover {
+    cursor:pointer;
+    transform:translateY(-5%);
+    transition:.5s;
+}
+
+.dropdown {
+    position:absolute;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    right:0;
+    margin:10px 0;
+}
+
+.dropdown button {
+    border-radius:0;
+    padding:15px 40px;
+    border-bottom:1px solid black;
+}
+
+nav button {
+    flex-grow: 0;
+    flex:0;
+}

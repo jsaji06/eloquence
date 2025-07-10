@@ -1,6 +1,8 @@
 export type Point = {
     type_of_point: string;
-    content: string
+    content: string;
+    highlighted_text:Array<string>;
+    color:string;
 }
 
 export type Response = {

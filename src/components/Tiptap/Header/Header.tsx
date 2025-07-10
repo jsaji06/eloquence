@@ -2,8 +2,10 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import Heading from '@tiptap/extension-heading'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder';
+import { doc, updateDoc, getFirestore } from 'firebase/firestore'
 import './style.css'
-import React from 'react';
+import React, { useEffect } from 'react';
+import { updateDocument } from '../../HelperFunctions';
 
 const extensions = [StarterKit, Heading.configure({
   levels: [1],
@@ -13,14 +15,18 @@ const extensions = [StarterKit, Heading.configure({
 })]
 
 interface HeaderProps {
-  setTitle: (value:string) => void
+  docId: string;
+  title: string;
+  setTitle: (value: string) => void
 }
 
+const db = getFirestore();
 
 const Header = (props: HeaderProps) => {
-  const editor = useEditor({  
+  const editor = useEditor({
     extensions,
-    injectCSS:false,
+    injectCSS: false,
+    content: props.title,
     editorProps: {
       attributes: {
         class: 'header',
@@ -29,11 +35,18 @@ const Header = (props: HeaderProps) => {
         if (event.key === 'Enter') return true
       },
     },
-    onUpdate: ({ editor }) => {
+    onUpdate: async ({ editor }) => {
       props.setTitle(editor?.getJSON()?.content![0].content![0].text ?? "")
+      updateDocument(props.docId, editor?.getJSON()?.content![0].content![0].text, undefined, undefined);
     }
 
   })
+
+  useEffect(() => {
+    if (editor && props.title != "" && props.title !== editor.getText()) {
+      editor?.commands.setContent(props.title);
+    }
+  }, [editor, props.title])
 
   if (!editor) return null
 

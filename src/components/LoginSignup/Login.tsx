@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { getAuth } from "firebase/auth"
-import { loginWithEmail, loginWithGoogle } from './HelperFunctions'
+import { useState, useEffect } from 'react'
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { loginWithEmail, loginWithGoogle } from '../HelperFunctions'
 import { useNavigate } from 'react-router';
 import Overlay from "../Overlay/Overlay";
 import Alert from "../Alert/Alert";
@@ -11,9 +11,12 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | undefined>(undefined);
-
-    let user = getAuth().currentUser;
-    if (user) navigate("/dashboard");
+    const auth = getAuth();
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) navigate('/dashboard');
+        })
+    }, [navigate])
     return (
         <>
             {error && <Alert setMessage={setError} message={error} />}
@@ -28,7 +31,7 @@ export default function Login() {
                 <button type="submit" onClick={e => {
                     loginWithEmail(e, email, password)
                         .then((_) => {
-                            
+
                             navigate("/dashboard")
                         })
                         .catch(_ => {

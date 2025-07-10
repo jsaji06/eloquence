@@ -19,7 +19,7 @@ export default function SubsectionView(props: SubsectionViewProps) {
             <div className="content" style={{ 'display': collapsed ? 'block' : 'none' }}>
                 {props.subsection.points.map(point => {
                     return (
-                        <div className="point">
+                        <div className="point" style={{backgroundColor: point.color}}>
                             <p className="subtext">{point.type_of_point.toUpperCase()}</p>
                             <p className="pointText">{point.content}</p>
                         </div>

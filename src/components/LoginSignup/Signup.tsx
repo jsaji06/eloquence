@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { loginWithGoogle } from "./HelperFunctions.ts";
+import { loginWithGoogle } from "../HelperFunctions.ts";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import Alert from "../Alert/Alert.tsx";
 import Overlay from "../Overlay/Overlay.tsx";

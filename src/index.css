@@ -39,7 +39,7 @@ body, html {
   width:80%;
 }
 
-.saved {
+.saved, .time {
   color:var(--teritary-color);
 }
 

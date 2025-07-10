@@ -1,0 +1,23 @@
+.documentView {
+    width:250px;
+    height:250px;
+    background-color: rgb(204, 204, 204);
+    position:relative;
+    padding:30px;
+    border-radius:5px;
+    box-shadow:5px 5px rgb(216, 216, 216);
+}
+
+h4 {
+  font-size:24px;
+}
+
+
+p.docContent {
+   display: -webkit-box;
+  -webkit-line-clamp: 3;   /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size:14px;
+}

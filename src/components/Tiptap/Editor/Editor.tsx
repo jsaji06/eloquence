@@ -1,5 +1,5 @@
 import { useEditor, EditorContent, FloatingMenu, BubbleMenu } from '@tiptap/react'
-import { useEffect, useState, type ChangeEvent } from 'react'
+import { useEffect, useState, type ChangeEvent, type SetStateAction, type Dispatch } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList, faListOl } from '@fortawesome/free-solid-svg-icons'
 import { Color } from '@tiptap/extension-color'
@@ -10,33 +10,101 @@ import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
 import TextStyle from "@tiptap/extension-text-style";
 import './style.css'
+import { updateDocument } from '../../HelperFunctions'
+import { Timestamp } from 'firebase/firestore'
+import { type Response, type Point } from '../../../Types'
+
 
 const html_tag_regex = new RegExp("<[^>]+>")
 
+
 const extensions = [StarterKit, Heading, Underline, Highlight.configure({ multicolor: true }), TextStyle, Color, Placeholder.configure({ placeholder: "Your masterpiece begins here. To enable AI features, write at least 25 words. This editor has Markdown support.", emptyEditorClass: "empty-editor" })]
 
+
 interface EditorProps {
+  docId: string;
+  text: string;
   setText: (value: string) => void;
   review: (value?: string) => void
   loading: boolean;
-  title:string;
-
+  title: string;
+  setRecentlyModified: Dispatch<SetStateAction<Timestamp | undefined>>
+  aiData: Response[]
 }
 
+
 const Editor = (props: EditorProps) => {
+  console.log(props)
   const editor = useEditor({
     extensions,
-    content: '',
+    content: props.text,
     editorProps: {
       attributes: {
-        class: 'editor',
-
+        class: 'editor'
       }
     },
     onUpdate: ({ editor }) => {
       props.setText(editor.getHTML());
+      updateDocument(props.docId, undefined, editor.getHTML(), undefined);
+      props.setRecentlyModified(Timestamp.now());
+
+
+
+
     }
   })
+
+
+  useEffect(() => {
+    if (editor && props.text !== editor.getHTML()) {
+      editor.commands.setContent(props.text);
+    }
+  }, [editor, props.text]);
+
+  function normalize(text:string){
+    return text
+    .replace(/[\u2018\u2019]/g, "'")  // smart single quotes
+    .replace(/[\u201C\u201D]/g, '"')  // smart double quotes
+    .replace(/\u2013|\u2014/g, "-")   // en/em dashes
+    .replace(/&nbsp;/g, " ")          // non-breaking space
+    .replace(/\s+/g, " ")             // collapse whitespace
+    .trim()
+    .toLowerCase();
+  }
+
+  useEffect(() => {
+    editor?.chain().focus().selectAll().unsetHighlight().run()
+    if (!editor || !props.aiData) return;
+    let rawText = normalize(editor?.state.doc.textBetween(0, editor?.state.doc.content.size, "\n"))
+    props.aiData.forEach((data: Response) => {
+      data.points.forEach((point: Point) => {
+        point.highlighted_text.forEach((text: string) => {
+          // Start of GPT Code
+          editor.state.doc.descendants((node, pos) => {
+            if (!node.isText || !node.text) return true;
+          
+            const raw = node.text;
+            const matchIndex = raw.toLowerCase().indexOf(text.toLowerCase());
+          
+            if (matchIndex !== -1) {
+              const from = pos + matchIndex;
+              const to = from + text.length;
+              editor.chain().setTextSelection({ from, to }).setMark("highlight", { color: point.color }).run();
+              return false; // stop walking this node
+            }
+    
+            return true;
+          })
+          // End
+        })
+      })
+
+
+    })
+  }, [editor, props.aiData])
+
+
+
 
   let getHeadingVal = (level: number) => {
     switch (level) {
@@ -56,6 +124,7 @@ const Editor = (props: EditorProps) => {
         return "p"
     }
   }
+
 
   let changeHeading = (e: ChangeEvent<HTMLSelectElement>) => {
     switch (e.target.value) {
@@ -82,6 +151,7 @@ const Editor = (props: EditorProps) => {
     }
   }
 
+
   const [selectedWordCount, setSelectedWordCount] = useState(0);
   useEffect(() => {
     if (editor?.state.selection) {
@@ -94,6 +164,7 @@ const Editor = (props: EditorProps) => {
   console.log(editor?.getAttributes('heading'))
   return (
     <>
+
 
       <EditorContent className="editorContent" editor={editor} />
       <BubbleMenu className="menu bubbleMenu" editor={editor}>
@@ -109,6 +180,7 @@ const Editor = (props: EditorProps) => {
           <option value="h5">Heading 5</option>
           <option value="h6">Heading 6</option>
         </select>
+
 
         <button onClick={() => editor?.chain().focus().toggleBold().run()} className={"bubbleBtn" + (editor?.isActive('bold') ? ' active' : '')} style={{ fontWeight: "800" }}>B</button>
         <button onClick={() => editor?.chain().focus().toggleItalic().run()} className={"bubbleBtn" + (editor?.isActive('italic') ? ' active' : '')} style={{ fontStyle: "italic" }}>I</button>
@@ -126,7 +198,9 @@ const Editor = (props: EditorProps) => {
             props.review(text);
           }
 
+
         }} style={{ 'display': selectedWordCount < 25 ? 'none' : 'block' }}>Ai</button>
+
 
       </BubbleMenu >
       <FloatingMenu tippyOptions={{ placement: "left", offset: [0, 30] }} className="menu floatingMenu" editor={editor}>
@@ -142,6 +216,7 @@ const Editor = (props: EditorProps) => {
           <option value="h6">h6</option>
         </select>
 
+
         <button onClick={() => editor?.chain().focus().toggleBold().run()} className={"bubbleBtn" + (editor?.isActive('bold') ? ' active' : '')} style={{ fontWeight: "800" }}>B</button>
         <button onClick={() => editor?.chain().focus().toggleItalic().run()} className={"bubbleBtn" + (editor?.isActive('italic') ? ' active' : '')} style={{ fontStyle: "italic" }}>I</button>
         <button onClick={() => editor?.chain().focus().toggleUnderline().run()} className={"bubbleBtn" + (editor?.isActive('underline') ? ' active' : '')} style={{ textDecoration: "underline" }}>U</button>
@@ -155,4 +230,6 @@ const Editor = (props: EditorProps) => {
   )
 }
 
+
 export default Editor
+

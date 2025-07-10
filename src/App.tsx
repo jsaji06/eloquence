@@ -15,7 +15,7 @@ export default function App() {
         <Route path="/verification" element={<EmailVerification />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>
-        <Route path="/editor" element={<EditDocument />}></Route>
+        <Route path="/editor/:document_id" element={<EditDocument />}></Route>
       </Routes>
     </BrowserRouter>
   )

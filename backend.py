@@ -22,6 +22,8 @@ class WritingInput(BaseModel):
 class Point(BaseModel):
     type_of_point:Literal['refutation', 'counterpoint', 'question', 'dilemma']
     content:str
+    highlighted_text:list[str]
+    color:str
 
 class Subsection(BaseModel):
     points:list[Point]
@@ -52,7 +54,7 @@ Text to analyze:
 Instructions:
 - Create 3-6 subsections maximum
 - Keep titles brief (under 8 words)
-- Include key content for each section
+- Parse the exact subsection that matches above. If there are two paragraphs under one section, include both. 
 - Focus on main themes and arguments
 """)     
 
@@ -64,10 +66,36 @@ Subsection to analyze:
 {writing}
 </writing_content>
 
-Generate exactly 3 points that challenge, question, or explore this content. Each point should be:
+BEFORE analyzing, first list out 5-10 key phrases or sentences from the subsection above. Write them exactly as they appear:
+
+Key phrases from text:
+1. "[copy exact phrase 1]"
+2. "[copy exact phrase 2]" 
+3. "[copy exact phrase 3]"
+4. "[copy exact phrase 4]"
+5. "[copy exact phrase 5]"
+
+Now generate exactly 3 critical points that challenge, question, or explore this content. Each point should be:
 - One of: refutation, counterpoint, question, or dilemma
 - Concise but thoughtful
 - Directly related to the content
+
+For EACH point, reference ONE of the key phrases you listed above. Use the EXACT same text you copied - do not modify it.
+
+Color Assignment Rules:
+- Subsection 1: Use blue tones 
+- Subsection 2: Use green tones 
+- Subsection 3: Use red tones 
+- Subsection 4: Use purple tones 
+- Subsection 5: Use orange tones 
+- Subsection 6: Use yellow tones 
+- The colors should be light but distinct from one another.
+
+This subsection number is #{subsection_number}
+
+Format each point as:
+Point [X] (Color: [hex_code]): [Your critical point]
+Referenced text: "[exact phrase from your list above]"
 
 Be concise in your analysis.
 """)
@@ -80,11 +108,11 @@ def get_suggestions(state):
     print(sections)
     subsections = []
     for i in range(len(sections)):
-        new_prompt = PROMPT.invoke({"writing": sections[i].content})
+        print(sections[i].content)
+        new_prompt = PROMPT.invoke({"writing": sections[i].content, "subsection_number": i+1})
         header = sections[i].title
         content = sections[i].content
         response = socrates.with_structured_output(Subsection).invoke(new_prompt)
-        print(response)
         dictionary = {"header": header, "points":response.points}
         subsections.append(dictionary)
     print(subsections)
