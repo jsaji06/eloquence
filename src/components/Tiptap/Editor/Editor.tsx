@@ -30,6 +30,9 @@ interface EditorProps {
   title: string;
   setRecentlyModified: Dispatch<SetStateAction<Timestamp | undefined>>
   aiData: Response[]
+  feedback:Array<any>
+  setFeedback:Dispatch<SetStateAction<Array<any>>>
+  feedbackPanel:boolean
 }
 
 
@@ -47,10 +50,6 @@ const Editor = (props: EditorProps) => {
       props.setText(editor.getHTML());
       updateDocument(props.docId, undefined, editor.getHTML(), undefined);
       props.setRecentlyModified(Timestamp.now());
-
-
-
-
     }
   })
 
@@ -73,9 +72,10 @@ const Editor = (props: EditorProps) => {
   }
 
   useEffect(() => {
-    editor?.chain().focus().selectAll().unsetHighlight().run()
+    editor?.chain().focus().selectAll().unsetHighlight().setTextSelection(0).run()
     if (!editor || !props.aiData) return;
     let rawText = normalize(editor?.state.doc.textBetween(0, editor?.state.doc.content.size, "\n"))
+    if(props.feedbackPanel !== true){
     props.aiData.forEach((data: Response) => {
       data.points.forEach((point: Point) => {
         point.highlighted_text.forEach((text: string) => {
@@ -89,7 +89,7 @@ const Editor = (props: EditorProps) => {
             if (matchIndex !== -1) {
               const from = pos + matchIndex;
               const to = from + text.length;
-              editor.chain().setTextSelection({ from, to }).setMark("highlight", { color: point.color }).run();
+              editor.chain().setTextSelection({ from, to }).setMark("highlight", { color: point.color }).setTextSelection(0).run();
               return false; // stop walking this node
             }
     
@@ -101,9 +101,31 @@ const Editor = (props: EditorProps) => {
 
 
     })
-  }, [editor, props.aiData])
-
-
+  } else {
+    props.feedback.map((subsection, i) => {
+      subsection.point.highlighted_text.map((text:string) => {
+          // Start of GPT Code
+          editor.state.doc.descendants((node, pos) => {
+            if (!node.isText || !node.text) return true;
+          
+            const raw = normalize(node.text);
+            const matchIndex = raw.toLowerCase().indexOf(normalize(text).toLowerCase());
+          
+            if (matchIndex !== -1) {
+              const from = pos + matchIndex;
+              const to = from + text.length;
+              editor.chain().setTextSelection({ from, to }).setMark("highlight", { color: subsection.point.color }).setTextSelection(to).run();
+              return false; // stop walking this node
+            }
+    
+            return true;
+          })
+          // End 
+      })
+    })
+  }
+  console.log("Dick", props.feedbackPanel);
+  }, [editor, props.aiData, props.feedbackPanel, props.feedback])
 
 
   let getHeadingVal = (level: number) => {
@@ -161,11 +183,9 @@ const Editor = (props: EditorProps) => {
       setSelectedWordCount(count);
     }
   })
-  console.log(editor?.getAttributes('heading'))
+
   return (
     <>
-
-
       <EditorContent className="editorContent" editor={editor} />
       <BubbleMenu className="menu bubbleMenu" editor={editor}>
         <p style={{ 'whiteSpace': 'nowrap', 'margin': '0', 'padding': '0 15px' }}> {selectedWordCount} words</p>

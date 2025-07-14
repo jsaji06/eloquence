@@ -1,5 +1,5 @@
 export type Point = {
-    type_of_point: string;
+    type_of_point: 'refutation' | 'counterpoint' | 'question' | 'dilemma';
     content: string;
     highlighted_text:Array<string>;
     color:string;
@@ -15,3 +15,9 @@ export type UserInformation = {
     lastName:string;
     documents:Array<string>;
 }
+
+// export type Feedbacl
+
+// export interface AdviceResponse {
+//     point:
+// }

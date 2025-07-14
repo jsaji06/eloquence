@@ -4,8 +4,11 @@ import { getFirestore } from "firebase/firestore";
 import { updateDoc, doc } from "firebase/firestore";
 import { type Response } from "../Types";
 
+
+console.log(import.meta.env.VITE_API_KEY)
+
 const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
+    apiKey: import.meta.env.VITE_API_KEY,
     authDomain: "eloquence-39ed6.firebaseapp.com",
     projectId: "eloquence-39ed6",
     storageBucket: "eloquence-39ed6.firebasestorage.app",
