@@ -13,12 +13,13 @@ import './style.css'
 import { updateDocument } from '../../HelperFunctions'
 import { Timestamp } from 'firebase/firestore'
 import { type Response, type Point } from '../../../Types'
-
+import { type ActiveText } from '../../../Types'
 
 const html_tag_regex = new RegExp("<[^>]+>")
 
 
 const extensions = [StarterKit, Heading, Underline, Highlight.configure({ multicolor: true }), TextStyle, Color, Placeholder.configure({ placeholder: "Your masterpiece begins here. To enable AI features, write at least 25 words. This editor has Markdown support.", emptyEditorClass: "empty-editor" })]
+
 
 
 interface EditorProps {
@@ -33,6 +34,7 @@ interface EditorProps {
   feedback:Array<any>
   setFeedback:Dispatch<SetStateAction<Array<any>>>
   feedbackPanel:boolean
+  activeText:ActiveText;
 }
 
 
@@ -55,24 +57,48 @@ const Editor = (props: EditorProps) => {
 
 
   useEffect(() => {
-    if (editor && props.text !== editor.getHTML()) {
-      editor.commands.setContent(props.text);
-    }
-  }, [editor, props.text]);
-
-  function normalize(text:string){
-    return text
-    .replace(/[\u2018\u2019]/g, "'")  // smart single quotes
-    .replace(/[\u201C\u201D]/g, '"')  // smart double quotes
-    .replace(/\u2013|\u2014/g, "-")   // en/em dashes
-    .replace(/&nbsp;/g, " ")          // non-breaking space
-    .replace(/\s+/g, " ")             // collapse whitespace
-    .trim()
-    .toLowerCase();
-  }
-
-  useEffect(() => {
+    // console.log("active text", props.activeText)
+    const container = document.querySelector(".editorContainer");
     editor?.chain().focus().selectAll().unsetHighlight().setTextSelection(0).run()
+    if(!props.activeText) return
+    if(props.activeText?.text.trim() !== "" && props.feedbackPanel){
+      let found = false;
+    editor?.state.doc.descendants((node, pos) => {
+      if (!node.isText || !node.text) return true;
+    
+      const raw = node.text;
+      const matchIndex = raw.toLowerCase().indexOf(props.activeText.text.toLowerCase());
+    
+      if (matchIndex !== -1) {
+        const from = pos + matchIndex;
+        const to = from + props.activeText.text.length;
+        editor?.chain().setTextSelection({ from, to }).setMark("highlight", { color: props.activeText.color }).setTextSelection(0).run();
+        // Start of GPT-generated code
+        const dom = editor.view.domAtPos(from);
+      // Find the element at those coordinates
+        const el = dom.node.nodeType === 3 ? dom.node.parentElement : dom.node as HTMLElement;
+
+      // Ensure the element exists and is inside the scroll container
+        if (el && container?.contains(el)) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+        // If element is outside or deeply nested, fallback to manual scroll
+          const coords = editor.view.coordsAtPos(from);
+          const containerRect = container?.getBoundingClientRect();
+          if (!coords || !containerRect || !container) return;
+          const scrollY =(coords.top - containerRect.top + container.scrollTop - container.clientHeight / 2);
+
+          container?.scrollTo({ top: scrollY, behavior: "smooth" });
+      } // End of GPT-generated code
+        found = true;
+        return false; // stop walking this node
+      }
+
+      return true;
+    })
+    if(found) return;
+  }  
+  editor?.chain().focus().selectAll().unsetHighlight().setTextSelection(0).run()
     if (!editor || !props.aiData) return;
     let rawText = normalize(editor?.state.doc.textBetween(0, editor?.state.doc.content.size, "\n"))
     if(props.feedbackPanel !== true){
@@ -125,7 +151,28 @@ const Editor = (props: EditorProps) => {
     })
   }
   console.log("Dick", props.feedbackPanel);
-  }, [editor, props.aiData, props.feedbackPanel, props.feedback])
+  }, [editor, props.aiData, props.feedbackPanel, props.feedback, props.activeText.text, props.activeText.color])
+
+  useEffect(() => {
+    if (editor && props.text !== editor.getHTML()) {
+      editor.commands.setContent(props.text);
+    }
+  }, [editor, props.text]);
+
+  function normalize(text:string){
+    return text
+    .replace(/[\u2018\u2019]/g, "'")  // smart single quotes
+    .replace(/[\u201C\u201D]/g, '"')  // smart double quotes
+    .replace(/\u2013|\u2014/g, "-")   // en/em dashes
+    .replace(/&nbsp;/g, " ")          // non-breaking space
+    .replace(/\s+/g, " ")             // collapse whitespace
+    .trim()
+    .toLowerCase();
+  }
+
+  // useEffect(() => {
+    
+  // }, [])
 
 
   let getHeadingVal = (level: number) => {

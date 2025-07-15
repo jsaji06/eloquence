@@ -15,6 +15,7 @@ import Loading from '../Loading/Loading';
 import { updateDocument } from '../HelperFunctions';
 import { getAuth } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
+import './style.css'
 
 
 function EditDocument() {
@@ -33,8 +34,10 @@ function EditDocument() {
  const [recentlyModified, setRecentlyModified] = useState<Timestamp>();
  const [loading, setLoading] = useState(false);
  const [feedbackPanel, setFeedbackPanel] = useState(false);
+ const [activeText, setActiveText] = useState("");
+ const [activeColor, setActiveColor] = useState("");
 
-
+console.log("DIHHHEIFORHI, ", activeText)
  const db = getFirestore();
  const auth = getAuth();
 
@@ -130,8 +133,6 @@ function EditDocument() {
              navigate("/dashboard")
            }}><FontAwesomeIcon icon={faArrowLeft} /></button>
            <div className="menuHeader" style={{width:"fit-content"}}>
-
-
              {(() => {
                return <><p className="saved">{wordCount} words</p>●<p className='time'>Last modified {recentlyModified && recentlyModified.toDate().getMonth() + 1}/{recentlyModified?.toDate().getDate()}/{recentlyModified?.toDate().getFullYear()} {recentlyModified && (
                  recentlyModified.toDate().getHours() > 12
@@ -146,14 +147,14 @@ function EditDocument() {
              ●<FontAwesomeIcon title={"Hello"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
            </div>
            <Header docId={document_id!} setTitle={setTitle} title={title} />
-           <Editor feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />
+           <Editor activeText={{"text": activeText, "color": activeColor}} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />
            <button style={{ display: wordCount < 25 || (aiPanelActive || loadingPanel) ? "none" : "flex" }} className="aiBtn" onClick={() => {
              review()
            }}><FontAwesomeIcon className="icon" icon={faBrain} /> <p>Review with AI</p> </button>
          </Panel>
          <PanelResizeHandle disabled={!aiPanelActive} className="resizeHandle" />
          <Panel className="panel aiPanel" minSize={40} style={{ display: aiPanelActive ? "block" : 'none' }}>
-           <AISummary setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
+           <AISummary setActiveText={setActiveText} setActiveColor={setActiveColor} setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
          </Panel>
        </PanelGroup>
      </div >

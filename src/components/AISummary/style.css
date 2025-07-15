@@ -47,3 +47,7 @@ nav.panelNav {
     padding:0;
 
 }
+
+.feedbackView {
+    display:flex;
+}

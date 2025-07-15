@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX, faArrowLeft, faAmbulance, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { type Point } from '../../Types';
+import Alert from '../Alert/Alert';
+import Feedback from '../Feedback/Feedback';
 
 
 interface AISummaryProps {
@@ -16,12 +18,15 @@ interface AISummaryProps {
   setFeedback:Dispatch<SetStateAction<Array<any>>>;
   feedbackPanel:boolean;
   setFeedbackPanel:Dispatch<SetStateAction<boolean>>;
+  setActiveText: Dispatch<SetStateAction<string>>;
+  setActiveColor: Dispatch<SetStateAction<string>>;
+
 }
 
 export default function AISummary(props: AISummaryProps) {
   const [selectedPoints, setSelectedPoints] = useState<Array<Point>>([]);
-  // const [betterAnalysisView, setBetterAnalysisView] = useState(false);
   const [loadMorePanel, setLoadMorePanel] = useState(false);
+  const [message, setMessage] = useState<string | undefined>(undefined)
 
   let getExtraFeedback = () => {
     setLoadMorePanel(true);
@@ -49,10 +54,14 @@ export default function AISummary(props: AISummaryProps) {
       // setMoreAnalysis(data.response)
       props.setFeedback(data.response)
     })
+    .catch(err => {
+      setMessage("A problem occured. Please try again.")
+    })
   }
 
   return (
     <>
+  {message && <Alert message={message} setMessage={setMessage} />}
   <div className="aiSummaryPanel">
   
     {!props.feedbackPanel && (
@@ -149,23 +158,8 @@ export default function AISummary(props: AISummaryProps) {
           </p>
 
           {props.feedback?.map((subsection:any, i:number) => {
-          console.log(subsection)
           return (            
-            <div className="subsectionView" style={{backgroundColor: subsection.point.color}}>
-            <div className='header' style={{backgroundColor: subsection.point.color}}>
-                <h2>Point {i+1}</h2>
-                <FontAwesomeIcon className="icon" icon={faPlus} />
-            </div>
-            <div className='content' style={{padding:"20px"}}>
-                <p>{subsection.point.content}</p>
-                <ul>
-                  {subsection.advice.map((adv:any) => {
-                    console.log(adv);
-                    return (<li>{adv}</li>)
-          })}
-                </ul>
-            </div>
-        </div>
+            <Feedback setActiveColor={props.setActiveColor} setActiveText={props.setActiveText} feedback={subsection} index={i} />
           )})}
         </div>
         </>

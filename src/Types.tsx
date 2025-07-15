@@ -16,6 +16,11 @@ export type UserInformation = {
     documents:Array<string>;
 }
 
+export interface ActiveText {
+    text:string;
+    color:string;
+}
+
 // export type Feedbacl
 
 // export interface AdviceResponse {

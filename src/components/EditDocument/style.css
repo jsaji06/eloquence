@@ -1,0 +1,19 @@
+.eContainer {
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+  
+  .editorContainer {
+    height: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editorContainer button {
+    flex-grow:0;
+    align-self: flex-start;
+  } 

@@ -176,8 +176,10 @@ def retrieve_advice(selected_points):
         
         Return only a JSON object with a single key `advice` containing a list of strings.
         """)
+        print("create model")
         socrates = create_socrates()
         advices = []
+        print(len(selected_points), selected_points)
         for point in selected_points:
             print(point)
             prompt = MORE_ADVICE_PROMPT.invoke({'advice':point['content']})
