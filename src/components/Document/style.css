@@ -1,6 +1,6 @@
-.documentView {
+/* .documentView {
     width:250px;
-    height:250px;
+    height:auto;
     background-color: rgb(204, 204, 204);
     position:relative;
     padding:30px;
@@ -15,9 +15,19 @@ h4 {
 
 p.docContent {
    display: -webkit-box;
-  -webkit-line-clamp: 3;   /* Number of lines to show */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size:14px;
 }
+
+.bottom {
+  display:flex;
+  align-items: center;
+  gap:20px;
+}
+
+.bottom * {
+  font-size:12px;
+} */

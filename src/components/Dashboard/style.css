@@ -1,4 +1,4 @@
-.dashboard {
+/* .dashboard {
     min-width:100vw;
     height: 100%;
 }
@@ -6,8 +6,6 @@
 nav {
     display:flex;
     align-items: center;
-    /* justify-content: center; */
-    /* gap:500px; */
     padding:45px;
 }
 
@@ -67,4 +65,4 @@ nav .icons {
 nav button {
     flex-grow: 0;
     flex:0;
-}
+} */

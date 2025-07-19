@@ -1,13 +1,11 @@
-
+/* 
 .aiPanel {
-    /* margin-bottom:50px; */
     background-color: var(--menu-background);
 }
 .subsectionView .header {
     padding: 20px;
     display: flex;
     background-color: var(--primary-color);
-    /* border-bottom:1px solid white; */
     border-radius:2px;
     align-items: center;
 }
@@ -36,19 +34,16 @@
 
 .subtext {
     color:#2e2e2e;
-    /* margin:0; */
 }
 
 .pointText {
     font-size:15px;
-    /* margin:0; */
 }
 
 .circle {
     width:10px;
     height:10px;
     border:1px solid black;
-
     border-radius:100px;
 }
 
@@ -60,4 +55,4 @@
 .circle .active{
     background-color:black;
 
-}
+} */

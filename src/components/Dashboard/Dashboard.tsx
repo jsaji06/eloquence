@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
-import { getFirestore, getDoc, doc, type DocumentData, addDoc, collection, arrayUnion, updateDoc, DocumentSnapshot } from 'firebase/firestore';
+import { getFirestore, getDoc, doc, type DocumentData, addDoc, collection, arrayUnion, updateDoc, DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { onSnapshot } from 'firebase/firestore';
+import { onSnapshot, query, where } from 'firebase/firestore';
 import Document from "../Document/Document";
 import "./style.css"
 import Loading from '../Loading/Loading';
+
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function Dashboard() {
     useEffect(() => {
         setLoading(true)
         let unsubscribeUserDoc: (() => void) | undefined;
+        let unsubUser: (() => void) | undefined;
         const unsubscribed = onAuthStateChanged(auth, (auth_user) => {
             if (!auth_user) {
                 navigate("/")
@@ -29,38 +31,33 @@ export default function Dashboard() {
             }
             else {
                 let userID = auth_user.uid;
-                let userDocRef = doc(db, "users", userID!);
-                unsubscribeUserDoc = onSnapshot(userDocRef, async (userDocSnap: DocumentSnapshot) => {
-                    if (userDocSnap.exists()) {
-                        let data = userDocSnap.data();
-                        setUserInfo(data)
-                        if (data.documents) {
-                            const docs = await Promise.all(data.documents.map(async (documentID: string) => {
-                                try {
-                                    let docRef = doc(db, "documents", documentID);
-                                    let docSnap = await getDoc(docRef)
-                                    console.log(docSnap.data());
-                                    return docSnap.exists() ? { ...docSnap.data(), id: documentID } : null;
+                let userRef = doc(db, "users", userID!)
+                unsubUser = onSnapshot(userRef, async (userSnap: DocumentSnapshot) => setUserInfo(userSnap.data()))
 
-                                } catch (err) {
-                                    console.log(err);
-                                    return null;
+                let userDocRef = query(collection(db, "documents"), where("ownerId", "==", userID));
+                unsubscribeUserDoc = onSnapshot(userDocRef, async (userDocSnap: QuerySnapshot) => {
+                    console.log("dihh", userDocSnap);
+                    let docs: any = []
 
-                                }
-                            }))
-                            setDocuments(docs.filter(Boolean));
-                            setLoading(false);
-                        }
+                    userDocSnap.forEach(test => {
+                        let doc = test.data()
 
-                    }
+                        if (!doc.trash) docs.push({ ...doc, id: test.id })
+                        console.log("lmaoew", docs)
+
+                    })
+                    setDocuments(docs);
                 })
 
+                setLoading(false)
             }
         })
         return () => {
             // clean up both listeners on unmount
+
             unsubscribed();
             if (unsubscribeUserDoc) unsubscribeUserDoc();
+            if (unsubUser) unsubUser()
         };
     }, [navigate, db, auth])
 
@@ -68,8 +65,8 @@ export default function Dashboard() {
         try {
             let signout = await signOut(auth);
             navigate("/")
-        } catch(err){
-            
+        } catch (err) {
+
         }
     }
 
@@ -79,7 +76,8 @@ export default function Dashboard() {
             title: "",
             content: "",
             dateCreated: new Date(),
-            recentlyModified: new Date()
+            recentlyModified: new Date(),
+            trash: false
         })
 
         let id = docRef.id;
@@ -95,9 +93,9 @@ export default function Dashboard() {
             <div className="dashboard">
                 {loading && <Loading />}
                 <nav>
-                    <h1>Welcome, {userInfo?.firstName}. </h1>
+
                     <div className="icons">
-                        <button onClick={() => createDocument()}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
+                        <button onClick={() => { setLoading(true); createDocument() }}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
                         <div className="test" style={{ position: "relative" }}>
                             <button
                                 onClick={() => setOpen(!open)}
@@ -122,15 +120,20 @@ export default function Dashboard() {
                     </div>
                 </nav>
                 <div className="dashContainer">
-                    <h3>Here are your documents</h3>
+                    <div className="dashHeader">
+                        <h1>Welcome, {userInfo?.firstName}. </h1>
+                        <p>Below are your documents. Click on the title to proceed to editing.</p>
+                    </div>
                     <div className="documentContainer">
-                        {documents && [...Array(Math.ceil(documents.length / 4))].map((_, rowIndex) => {
-                            const rowDocs = documents.slice(rowIndex * 4, rowIndex * 4 + 4);
+                        {documents && [...Array(Math.ceil(documents.length / 3))].map((_, rowIndex) => {
+                            const rowDocs = documents.slice(rowIndex * 3, rowIndex * 3 + 3);
                             return (
                                 <div className="row" key={rowIndex}>
-                                    {rowDocs.map((document: object, i: number) => (
-                                        <Document key={i} document={document} />
-                                    ))}
+                                    {rowDocs.map((document: DocumentData, i: number) => {
+                                        return (
+                                            <Document key={i} document={document} />
+                                        )
+                                    })}
                                 </div>
                             );
                         })}

@@ -54,3 +54,14 @@ export let updateDocument = async (documentId: string, title?: string, content?:
         console.log(err);
     }
 }
+
+export let trashDocument = async (documentId:string) => {
+    const update: any = {
+        trash:true
+    }
+    try {
+        await updateDoc(doc(db, "documents", documentId), update);
+    } catch(err) {
+        console.log(err)
+    }
+}

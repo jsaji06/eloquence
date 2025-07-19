@@ -1,4 +1,4 @@
-.eContainer {
+/* .eContainer {
     height: 100vh;
     display: flex;
     overflow: hidden;
@@ -13,7 +13,7 @@
     flex-direction: column;
   }
 
-  .editorContainer button {
+  .editorContainer #exitDoc {
     flex-grow:0;
     align-self: flex-start;
-  } 
+  }  */
