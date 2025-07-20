@@ -654,3 +654,7 @@ input[type="color"]::-webkit-color-swatch {
 .editor{
     color:white;
 }
+
+.google * {
+    margin:0 5px;
+}

@@ -103,10 +103,6 @@ def create_socrates():
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to initialize model.")
 
-# def get_word_count(essay:str):
-#     html_tag_regex = re.compile(r"<[^>]+>")
-#     return len(essay.split(" ").filter(lambda word:  word.replace(html_tag_regex, "") != ""))
-
 def divide_text(essay:str):
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
@@ -122,17 +118,16 @@ def divide_text(essay:str):
         segments = get_segments(sentences, splits)
         return segments
     except ValueError:
-        penalty = get_penalty(docmats, 1)  # ✅ FIXED
-        splits = split_optimal(embeddings, penalty=penalty)
-        segments = get_segments(sentences, splits)
-        return segments
+        raise Exception("The structure of your writing is not valid. The AI feature works best with essays/writing pieces.")
+    
     
     for i, segment in enumerate(segments):
         print(f"\n--- Segment {i+1} ---")
-        condition = "".join(segment).strip()
-        if condition:
+        condition = "".join(segment)
+        print(condition)
+        if condition != "":
             subsections.append("<NEW_SENTENCE>".join(segment))
-    print(len(subsections), "subsection")
+    
     return subsections
 
 def retrieve_points(state:SocratesState):
@@ -191,23 +186,25 @@ def retrieve_points(state:SocratesState):
         socrates = create_socrates()
         points = []
         for i in range(len(subsections)):
-            print(i + 1, " / ", len(subsections))
-            prompt = PROMPT.invoke({"subsection_number": i + 1, "writing": subsections[i]})
-            point = socrates.with_structured_output(Response).invoke(prompt)
-            point_list = point.points
-            new_list = []
-            seen_list = set()
-            for j in range(len(point_list)):
-                point_list[j]['color'] = COLORS[i][j]
-            for j in range(len(point_list)):
-                highlights = tuple(point_list[j]["highlighted_text"])
-                if highlights not in seen_list:
-                    point_list[j]["color"] = COLORS[i][j]
-                    new_list.append(point_list[j])
-                    seen_list.add(highlights)
-
-            point.points = new_list
-            points.append(point)
+            if subsections[i] != [""]:
+                print(i + 1, " / ", len(subsections), subsections[i])
+                prompt = PROMPT.invoke({"subsection_number": i + 1, "writing": subsections[i]})
+                point = socrates.with_structured_output(Response).invoke(prompt)
+                point_list = point.points
+                new_list = []
+                seen_list = set()
+                for j in range(len(point_list)):
+                    point_list[j]['color'] = COLORS[i][j]
+                for j in range(len(point_list)):
+                    highlights = tuple(point_list[j]["highlighted_text"])
+                    if highlights not in seen_list:
+                        point_list[j]["color"] = COLORS[i][j]
+                        new_list.append(point_list[j])
+                        seen_list.add(highlights)
+                point.points = new_list
+                points.append(point)
+            else: print("ldk")
+            
         state = {**state, "response":points}
         return state
     except Exception as e:

@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router';
 import Overlay from "../Overlay/Overlay";
 import Alert from "../Alert/Alert";
 import './style.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 export default function Login() {
     const navigate = useNavigate()
@@ -38,9 +40,7 @@ export default function Login() {
                             setError("Invalid password or email; please try again.")
                         })
                 }}>Login</button>
-                <div className="options">
-                    <div className="loginOptions">
-                        <button type="submit" onClick={e => {
+                        <button type="submit" className="google" onClick={e => {
                             loginWithGoogle(e)
                                 .then((_) => {
                                     navigate("/dashboard")
@@ -48,10 +48,8 @@ export default function Login() {
                                 .catch(_ => {
                                     setError("An error occured. Please try again.")
                                 })
-                        }} >Login with Google</button>
-                        <button type="submit" >Login with Facebook</button>
-                        <button type="submit" >Login with Apple</button>
-                    </div>
+                        }} ><FontAwesomeIcon icon={faGoogle} />Login with Google</button>
+                <div className="options">
                     <div className="otherOptions">
                         <a href='/signup'>New to Eloquence?</a>
                         <a href='/forgot-password'>Forgot your password?</a>

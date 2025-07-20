@@ -42,8 +42,6 @@ export default function Signup() {
                 <div className="options">
                     <div className="loginOptions">
                         <button type="submit" onClick={e => loginWithGoogle(e)} >Login with Google</button>
-                        <button type="submit" >Login with Facebook</button>
-                        <button type="submit" >Login with Apple</button>
                     </div>
                     <div className="otherOptions">
                         <a href='/login'>Already have an account?</a>
