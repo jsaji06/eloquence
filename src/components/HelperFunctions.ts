@@ -2,10 +2,8 @@ import { initializeApp } from "firebase/app"
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { getFirestore } from "firebase/firestore";
 import { updateDoc, doc } from "firebase/firestore";
-import { type Response } from "../Types";
+import { type Response, type FeedbackResponse } from "../Types";
 
-
-console.log(import.meta.env.VITE_API_KEY)
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -33,7 +31,7 @@ export let loginWithGoogle = (e: React.MouseEvent<HTMLButtonElement>) => {
     return signInWithPopup(auth, provider)
 }
 
-export let updateDocument = async (documentId: string, title?: string, content?: string, aiData?: Response[]) => {
+export let updateDocument = async (documentId: string, title?: string, content?: string, aiData?: Response[], feedback?: FeedbackResponse[]) => {
     const update: any = {
         recentlyModified: new Date()
     }
@@ -46,6 +44,9 @@ export let updateDocument = async (documentId: string, title?: string, content?:
     }
     if(aiData) {
         update.aiData = aiData;
+    }
+    if(feedback){
+        update.feedback = feedback;
     }
     try {
         await updateDoc(doc(db, "documents", documentId), update);

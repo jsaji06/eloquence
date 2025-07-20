@@ -19,6 +19,11 @@
     --syntax-green: #51cf66;    /* Strings/comments */
     --syntax-purple: #da77f2;   /* Variables/constants */
 }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
     font-family: "Playfair Display";
@@ -56,9 +61,10 @@ body, html {
 }
 
 button {
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-primary);
     color: var(--text-primary);
-    border: none;
+
+    border: 1px solid var(--text-primary);
     font-family: "DM Sans";
     padding: 15px;
     border-radius: 10px;
@@ -66,7 +72,7 @@ button {
 }
 
 button:hover {
-    background-color: var(--accent);
+    background-color: var(--text-primary);
     color: var(--bg-primary);
     cursor: pointer;
     transition: .5s;
@@ -151,6 +157,11 @@ select:hover {
 .editorContainer #exitDoc {
     flex-grow: 0;
     align-self: flex-start;
+}
+
+.editorContent {
+    width:100%;
+    height:100%;
 }
 
 .container {
@@ -370,6 +381,14 @@ p.docContent {
     flex-direction: row;
     padding: 12.5px 30px;
 }
+button.bubbleBtn {
+    background-color: var(--bg-secondary);
+}
+
+.bubbleBtn:hover {
+    background-color: var(--text-secondary);
+    color:var(--bg-secondary)
+}
 
 .floatingMenu {
     padding: 30px 12.5px;
@@ -463,11 +482,11 @@ p.docContent {
 
 .circle:hover {
     cursor: pointer;
-    background-color: var(--accent);
+    background-color: var(--text-primary);
 }
 
 .circle .active {
-    background-color: var(--accent);
+    background-color: var(--text-primary);
 }
 
 /* Login Components */
@@ -509,7 +528,7 @@ p.docContent {
 /* Alert/Modal Components */
 .overlay {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 2;
     position: absolute;
@@ -519,11 +538,11 @@ p.docContent {
 
 .alert {
     z-index: 3;
-    width: 450px;
+    width: 500px;
     height: auto;
     background-color: var(--bg-secondary);
     margin: 0;
-    padding: 75px;
+    padding:85px 60px;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -552,8 +571,8 @@ p.docContent {
 
 /* Utility Classes */
 .active {
-    background-color: var(--accent);
-    color: var(--text-primary);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
 }
 
 .exit {
@@ -563,9 +582,14 @@ p.docContent {
 }
 
 .exitIcon {
-    flex-grow: 0;
+    /* flex-grow: 0;
     flex-shrink: 0;
-    align-self: flex-start;
+    align-self: flex-end; */
+    position:absolute;
+    top:0;
+    right:0;
+    padding:45px;
+
 }
 
 .exitIcon:hover {
@@ -625,4 +649,8 @@ input[type="color"]::-webkit-color-swatch {
 
 .docHeader:hover {
     text-decoration:underline;
+}
+
+.editor{
+    color:white;
 }

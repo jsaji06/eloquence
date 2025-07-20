@@ -51,43 +51,49 @@ const Editor = (props: EditorProps) => {
       props.setRecentlyModified(Timestamp.now());
     }
   })
-
   useEffect(() => {
+
     if (editor && props.text !== editor.getHTML()) {
       editor.commands.setContent(props.text);
     }
-    setTimeout(() => {
-      editor?.chain().focus().selectAll().unsetHighlight().setTextSelection(0).run()
-      const doc = editor?.state.doc;
-      if (!doc || !doc.textContent.trim()) {
-        return;
-      }
-      if (!props.activeText) return
-      if (props.activeText?.text.trim() !== "" && props.feedbackPanel) {
-        return highlight(editor, props.activeText.text, props.activeText.color)
-      }
-      editor?.chain().focus().selectAll().unsetHighlight().setTextSelection(0).run()
-      if (!editor || !props.aiData) return;
-      if (props.feedbackPanel !== true) {
+  }, [props.text])
+  useEffect(() => {
+    const doc = editor?.state.doc;
+    if (!doc || !doc.textContent.trim()) {
+      return;
+    }
+    if (!props.activeText) return
 
-        props.aiData.forEach((data: Response) => {
-          data.points.forEach((point: Point) => {
-            point.highlighted_text.forEach((text: string) => {
-              return highlight(editor, text, point.color)
-            })
+    if (!editor || !props.aiData) return;
+    if (props.feedbackPanel !== true) {
+      editor?.chain().setTextSelection({ from: 0, to: editor.state.doc.content.size }).unsetMark("highlight").unsetHighlight().run()
+      props.aiData.forEach((data: Response) => {
+        data.points.forEach((point: Point) => {
+          point.highlighted_text.forEach((text: string) => {
+            highlight(editor, text, point.color)
+            return;
           })
-
-
         })
-      } else {
-        props.feedback.map((subsection, i) => {
+
+
+      })
+      editor?.chain().setTextSelection(0)
+    } else {
+        editor?.chain().setTextSelection({ from: 0, to: editor.state.doc.content.size }).unsetMark("highlight").unsetHighlight().run()
+        props.feedback.map((subsection:any, i) => {
+        if (subsection.highlighted) {
           subsection.point.highlighted_text.map((text: string) => {
-            return highlight(editor, text, subsection.point.color)
+            let positions = findText(editor, text)
+            console.log(positions)
+            highlight(editor, text, subsection.point.color)
+            return;
           })
-        })
-      }
-    }, 30)
-  }, [editor, props.aiData, props.feedbackPanel, props.feedback, props.activeText.text, props.activeText.color, props.text])
+        }
+      })
+
+    }
+
+  }, [editor, props.aiData, props.feedbackPanel, props.feedback, props.activeText.text, props.activeText.color])
 
   // Utility to normalize quotes and whitespace
   const normalize = (str: string) =>
@@ -97,22 +103,31 @@ const Editor = (props: EditorProps) => {
       .replace(/[\u200B-\u200D\uFEFF]/g, '')
       .trim();
 
-  function highlight(editor:TiptapEditor, text:string, color:string){ 
+  function findText(editor:TiptapEditor, text:string){
     const normalizedRaw = normalize(editor.getText());
     const normIndex = normalizedRaw.indexOf(normalize(text));
     if (normIndex !== -1) {
       let from = normIndex + 1;
-      let to = normIndex + text.length+1
+      let to = normIndex + text.length + 1
       let offset = (editor.getText().slice(from).length) - normalize(editor.getText().slice(from)).length
-      from+=offset
+      from += offset
+      return {from, to}
+    }
+    else return null
+  }
+  function highlight(editor: TiptapEditor, text: string, color: string) {
+    let positions = findText(editor, text);
+    if(positions){
+      let from = positions.from;
+      let to = positions.to;
       editor.chain()
         .setTextSelection({ from, to })
         .setMark("highlight", { color: color })
-        .setTextSelection(0)
+        .setTextSelection(from)
+        .unsetMark("highlight")
+        .unsetHighlight()
         .run()
-      return false;
-    }  
-    return true;
+    }
   }
 
 

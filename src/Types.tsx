@@ -12,10 +12,11 @@ export type Response = {
     points: Array<Point>;
 }
 
-export type UserInformation = {
-    firstName: string;
-    lastName: string;
-    documents: Array<string>;
+export interface UserInformation extends DocumentData {
+    firstName: string,
+    lastName: string,
+    nameOAuth?:string,
+    documents: Array<string>
 }
 
 export interface ActiveText {
@@ -29,7 +30,13 @@ export interface Doc extends DocumentData {
     content: string,
     dateCreated: Timestamp,
     recentlyModified: Timestamp,
-    trash: boolean
+    trash: boolean,
+    // feedback:Array<any>
+}
+
+export type FeedbackResponse = {
+    advices:Array<string>;
+    point:Point;
 }
 
 // export type Feedbacl

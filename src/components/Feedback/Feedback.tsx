@@ -13,6 +13,8 @@ interface FeedbackProps {
     index:number
     setActiveText: Dispatch<SetStateAction<string>>
     setActiveColor: Dispatch<SetStateAction<string>>
+    feedbackList: Array<any>
+    setFeedbackList: Dispatch<SetStateAction<Array<any>>>
 }
 
 export default function Feedback(props: FeedbackProps) {
@@ -22,16 +24,21 @@ export default function Feedback(props: FeedbackProps) {
     return (
         <>
         <div className="subsectionView feedback" style={{backgroundColor: props.feedback.point.color}} onClick={e =>{ 
-            props.setActiveText(props.feedback.point.highlighted_text[0])
-            props.setActiveColor(props.feedback.point.color)
+            
         }}>
             <div className='header' style={{backgroundColor: props.feedback.point.color}}>
                 <h2>Point {props.index+1}</h2>
                 <FontAwesomeIcon className="icon" icon={collapsed ? faMinus : faPlus} onClick={e => {
                     setCollapsed(!collapsed)
-                    if(!collapsed){
-                    props.setActiveText("") 
-                    }
+                    let newList = [...props.feedbackList]
+                    newList[props.index].highlighted = !collapsed;
+                    props.setFeedbackList(newList)
+                    // if(!collapsed){
+                    // props.setActiveText("")
+                    // } else {
+                    //     props.setActiveText(props.feedback.point.highlighted_text[0])
+                    //     props.setActiveColor(props.feedback.point.color)
+                    // }
                 }}
                   />
             </div>
@@ -39,7 +46,7 @@ export default function Feedback(props: FeedbackProps) {
                 <p>{props.feedback.point.content}</p>
                 <ul>
                   {props.feedback.advice.map((adv:any) => {
-                    console.log(adv);
+
                     return (<li>{adv}</li>)
           })}
                 </ul>

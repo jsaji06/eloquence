@@ -61,13 +61,17 @@ function EditDocument() {
             console.log(document);
             if (document.exists()) {
               let data = document.data();
+              setLoading(false);
               setTitle(data.title);
               setText(data.content);
               setRecentlyModified(data.recentlyModified);
-              setLoading(false);
               if (data.aiData) {
                 setAIData(data.aiData);
                 setAiPanelActive(true)
+              }
+              if(data.feedback){
+                setFeedback(data.feedback);
+                setFeedbackPanel(true);
               }
             }
           } catch (err) {
@@ -96,6 +100,7 @@ function EditDocument() {
       setFeedback([])
       setLoadingPanel(true);
       setAiPanelActive(true);
+      
       fetch("http://localhost:8000/get_points", {
         method: "POST",
         body: JSON.stringify({
@@ -161,7 +166,7 @@ function EditDocument() {
           </Panel>
           <PanelResizeHandle disabled={!aiPanelActive} className="resizeHandle" />
           <Panel className="panel aiPanel" minSize={40} style={{ display: aiPanelActive ? "block" : 'none' }}>
-            <AISummary setActiveText={setActiveText} setActiveColor={setActiveColor} setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
+            <AISummary docId={document_id!} setActiveText={setActiveText} setActiveColor={setActiveColor} setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
           </Panel>
         </PanelGroup>
       </div >

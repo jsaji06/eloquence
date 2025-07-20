@@ -22,7 +22,7 @@ export default function Document(props: DocumentProps) {
   const year = props.document.recentlyModified.toDate().getFullYear();
   return (
     <>
-      {message && <Alert message={message} setMessage={setMessage} customButtonHandler={() => trashDocument(props.document.id)} />}
+      {message && <Alert customButtonText="Delete" message={message} setMessage={setMessage} customButtonHandler={() => trashDocument(props.document.id)} />}
       {message && <Overlay />}
       <div className="documentView" onClick={e => {
         e.preventDefault();
@@ -34,7 +34,8 @@ export default function Document(props: DocumentProps) {
         <div className="bottom">
           <p>Last modified {month}/{day}/{year}</p>
           <div className="icons">
-            <FontAwesomeIcon icon={faTrash} style={{ color: 'var(--text-primary)' }} onClick={() => {
+            <FontAwesomeIcon icon={faTrash} style={{ color: 'var(--text-primary)' }} onClick={(e) => {
+              e.stopPropagation()
               setMessage("You are about to trash this document. Click the button to confirm this action, or click the X to cancel this action.")
               // trashDocument(props.document.id)
             }} />

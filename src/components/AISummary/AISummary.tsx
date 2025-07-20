@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { type Point } from '../../Types';
 import Alert from '../Alert/Alert';
 import Feedback from '../Feedback/Feedback';
+import { updateDocument } from '../HelperFunctions';
 
 
 interface AISummaryProps {
@@ -20,6 +21,7 @@ interface AISummaryProps {
   setFeedbackPanel:Dispatch<SetStateAction<boolean>>;
   setActiveText: Dispatch<SetStateAction<string>>;
   setActiveColor: Dispatch<SetStateAction<string>>;
+  docId:string;
 
 }
 
@@ -53,6 +55,7 @@ export default function AISummary(props: AISummaryProps) {
       setLoadMorePanel(false);
       // setMoreAnalysis(data.response)
       props.setFeedback(data.response)
+      updateDocument(props.docId, undefined, undefined, undefined, data.response);
     })
     .catch(err => {
       setMessage("A problem occured. Please try again.")
@@ -107,7 +110,7 @@ export default function AISummary(props: AISummaryProps) {
             Collapse each section to view what we suggested you cover/think
             about for the corresponding header. The color of the highlighted text corresponds to the color-coded section of our feedback.
           </p>
-          {selectedPoints.length > 0 && <button style={{backgroundColor:"#141414", color:"#b8b8b8", marginBottom:"20px"}} onClick={e => {
+          {selectedPoints.length > 0 && <button style={{backgroundColor:"", marginBottom:"20px"}} onClick={e => {
             e.preventDefault();
             getExtraFeedback();
           }}>Get extra feedback</button>}
@@ -159,7 +162,7 @@ export default function AISummary(props: AISummaryProps) {
 
           {props.feedback?.map((subsection:any, i:number) => {
           return (            
-            <Feedback setActiveColor={props.setActiveColor} setActiveText={props.setActiveText} feedback={subsection} index={i} />
+            <Feedback setActiveColor={props.setActiveColor} setActiveText={props.setActiveText} feedback={subsection} index={i} feedbackList={props.feedback} setFeedbackList={props.setFeedback} />
           )})}
         </div>
         </>

@@ -4,18 +4,19 @@ import { useNavigate } from 'react-router-dom'
 import { getFirestore, getDoc, doc, type DocumentData, addDoc, collection, arrayUnion, updateDoc, DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { onSnapshot, query, where } from 'firebase/firestore';
+import { onSnapshot, query, where, setDoc } from 'firebase/firestore';
 import Document from "../Document/Document";
 import "./style.css"
 import Loading from '../Loading/Loading';
+import { type Doc, type UserInformation } from '../../Types';
 
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const db = getFirestore()
     const auth = getAuth();
-    let [userInfo, setUserInfo] = useState<DocumentData>();
-    const [documents, setDocuments] = useState<DocumentData>([]);
+    let [userInfo, setUserInfo] = useState<UserInformation>();
+    const [documents, setDocuments] = useState<Doc[]>();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -30,23 +31,22 @@ export default function Dashboard() {
                 return;
             }
             else {
+                console.log(auth_user)
                 let userID = auth_user.uid;
                 let userRef = doc(db, "users", userID!)
-                unsubUser = onSnapshot(userRef, async (userSnap: DocumentSnapshot) => setUserInfo(userSnap.data()))
+                unsubUser = onSnapshot(userRef, async (userSnap: DocumentSnapshot) => {
+                    setUserInfo({ ...userSnap.data(), "nameOauth": auth_user.displayName })
+                })
 
                 let userDocRef = query(collection(db, "documents"), where("ownerId", "==", userID));
                 unsubscribeUserDoc = onSnapshot(userDocRef, async (userDocSnap: QuerySnapshot) => {
-                    console.log("dihh", userDocSnap);
                     let docs: any = []
-
                     userDocSnap.forEach(test => {
                         let doc = test.data()
-
                         if (!doc.trash) docs.push({ ...doc, id: test.id })
-                        console.log("lmaoew", docs)
 
                     })
-                    setDocuments(docs);
+                    setDocuments(docs.sort((a:Doc, b:Doc) =>  b.recentlyModified - a.recentlyModified));
                 })
 
                 setLoading(false)
@@ -77,12 +77,12 @@ export default function Dashboard() {
             content: "",
             dateCreated: new Date(),
             recentlyModified: new Date(),
-            trash: false
+            trash: false,
         })
 
         let id = docRef.id;
         let userID = auth!.currentUser!.uid;
-        await updateDoc(doc(db, "users", userID), {
+        await setDoc(doc(db, "users", userID), {
             documents: arrayUnion(id)
         })
         navigate("/editor/" + id);
@@ -121,7 +121,7 @@ export default function Dashboard() {
                 </nav>
                 <div className="dashContainer">
                     <div className="dashHeader">
-                        <h1>Welcome, {userInfo?.firstName}. </h1>
+                        <h1>Welcome, {userInfo?.firstName ?? userInfo?.nameOauth}. </h1>
                         <p>Below are your documents. Click on the title to proceed to editing.</p>
                     </div>
                     <div className="documentContainer">

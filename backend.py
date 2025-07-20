@@ -103,19 +103,29 @@ def create_socrates():
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to initialize model.")
 
+# def get_word_count(essay:str):
+#     html_tag_regex = re.compile(r"<[^>]+>")
+#     return len(essay.split(" ").filter(lambda word:  word.replace(html_tag_regex, "") != ""))
+
 def divide_text(essay:str):
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
+    word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
     model = SentenceTransformer("all-MiniLM-L6-v2")
 
     embeddings = model.encode(sentences)
     subsections = []
     # Wrap embeddings in a list to simulate 1 document with all sentence embeddings
     docmats = [embeddings]  # ✅ This is what get_penalty expects
-
-    penalty = get_penalty(docmats, 10)  # ✅ FIXED
-    splits = split_optimal(embeddings, penalty=penalty)
-    segments = get_segments(sentences, splits)
-    # return segments
+    try:
+        penalty = get_penalty(docmats, max(word_count // 100, 1))  # ✅ FIXED
+        splits = split_optimal(embeddings, penalty=penalty)
+        segments = get_segments(sentences, splits)
+        return segments
+    except ValueError:
+        penalty = get_penalty(docmats, 1)  # ✅ FIXED
+        splits = split_optimal(embeddings, penalty=penalty)
+        segments = get_segments(sentences, splits)
+        return segments
     
     for i, segment in enumerate(segments):
         print(f"\n--- Segment {i+1} ---")
@@ -124,39 +134,6 @@ def divide_text(essay:str):
             subsections.append("<NEW_SENTENCE>".join(segment))
     print(len(subsections), "subsection")
     return subsections
-# def divide_text(state:SocratesState):
-#     try:
-#         print("Divide text started")
-#         DIVIDE_TEXT_PROMPT = PromptTemplate.from_template("""
-#         You are a careful, exact, and hyper-precise assistant. Divide this text into clear subsections with titles and content.
-
-#         Text to analyze:
-#         <writing_content>
-#         {writing}
-#         </writing_content>
-
-#         Instructions:
-#         - Create 3-6 subsections maximum
-#         - Keep titles brief (under 8 words)
-#         - Parse the exact subsection that matches above. If there are two paragraphs under one section, include both.
-#         - Focus on main themes and arguments
-        
-#         CRITICAL CHARACTER PRESERVATION:
-#         - DO NOT alter or stylize any characters, punctuation, or quotation marks.
-#         - If the original text contains "hello world" it must appear as "hello world" (not 'hello world' or "hello world")
-#         - The output must contain exact substrings from the original text.
-#         - This is a strict token-preserving task. Do not rephrase anything.
-#         - Copy and paste the text exactly as it appears.
-#         """)
-#         socrates = create_socrates()
-        
-#         prompt = DIVIDE_TEXT_PROMPT.invoke({"writing": state['user_essay']})
-#         subsections = socrates.with_structured_output(SubsectionList).invoke(prompt).subsections
-#         state = {**state, "subsections": subsections}
-#         return state
-#     except Exception as e:
-#         print(e)
-#         raise
 
 def retrieve_points(state:SocratesState):
     subsections = divide_text(state['user_essay']['writing'])
