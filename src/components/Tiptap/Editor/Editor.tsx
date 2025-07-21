@@ -15,6 +15,9 @@ import { Timestamp } from 'firebase/firestore'
 import { type Response, type Point } from '../../../Types'
 import { type ActiveText } from '../../../Types'
 import { type Editor as TiptapEditor } from '@tiptap/react'
+import { pointsAtCell } from '@tiptap/pm/tables'
+import { useRef } from 'react'
+import debounce from 'lodash.debounce';
 
 const html_tag_regex = new RegExp("<[^>]+>")
 
@@ -34,6 +37,7 @@ interface EditorProps {
   feedbackPanel: boolean
   activeText: ActiveText;
   aiPanel: boolean
+  setAiData: Dispatch<SetStateAction<Response[] | undefined>>
 }
 
 const Editor = (props: EditorProps) => {
@@ -46,11 +50,48 @@ const Editor = (props: EditorProps) => {
       }
     },
     onUpdate: ({ editor }) => {
-      props.setText(editor.getHTML());
-      updateDocument(props.docId, undefined, editor.getHTML(), undefined);
-      props.setRecentlyModified(Timestamp.now());
-    }
+      debounce(() => {
+        props.setText(editor.getHTML());
+        props.setRecentlyModified(Timestamp.now());
+        updateDocument(props.docId, undefined, editor.getHTML(), undefined);
+      }, 500)
+    },
   })
+  let dataRef = useRef(props.aiData || [])
+
+  useEffect(() => {
+    dataRef.current = props.aiData || []
+    console.log(dataRef.current);
+  }, [props.aiData])
+
+  useEffect(() => {
+      document.querySelector(".editor")?.addEventListener("click", (e: Event) => {
+        const target = e.target as HTMLElement
+        if (target.tagName === "MARK") {
+          let highlightedContent = target.textContent!;
+        let subsection = dataRef.current.filter(response => response.points.some(point => {
+          return point.highlighted_text.includes(highlightedContent);
+        }))
+        if(!subsection) return;
+        let newData = dataRef.current.map((data, i) => {
+          let newDataInfo = {...data}
+          if (data === subsection[0]) {
+            newDataInfo.collapsed = true;
+            let newPoints = newDataInfo.points.map((point, j) => ({
+              ...point,
+              active: point.highlighted_text.includes(highlightedContent)
+            }))
+            newDataInfo.points = newPoints;
+          } else {
+            newDataInfo.collapsed = false;
+          }
+          return newDataInfo
+        })
+        if(newData) props.setAiData(newData);
+      }
+  })
+
+  }, [editor])
   useEffect(() => {
 
     if (editor && props.text !== editor.getHTML()) {
@@ -79,12 +120,11 @@ const Editor = (props: EditorProps) => {
       })
       editor?.chain().setTextSelection(0)
     } else {
-        editor?.chain().setTextSelection({ from: 0, to: editor.state.doc.content.size }).unsetMark("highlight").unsetHighlight().run()
-        props.feedback.map((subsection:any, i) => {
+      editor?.chain().setTextSelection({ from: 0, to: editor.state.doc.content.size }).unsetMark("highlight").unsetHighlight().run()
+      props.feedback.map((subsection: any, i) => {
         if (subsection.highlighted) {
           subsection.point.highlighted_text.map((text: string) => {
             let positions = findText(editor, text)
-            console.log(positions)
             highlight(editor, text, subsection.point.color)
             return;
           })
@@ -103,7 +143,7 @@ const Editor = (props: EditorProps) => {
       .replace(/[\u200B-\u200D\uFEFF]/g, '')
       .trim();
 
-  function findText(editor:TiptapEditor, text:string){
+  function findText(editor: TiptapEditor, text: string) {
     const normalizedRaw = normalize(editor.getText());
     const normIndex = normalizedRaw.indexOf(normalize(text));
     if (normIndex !== -1) {
@@ -111,13 +151,13 @@ const Editor = (props: EditorProps) => {
       let to = normIndex + text.length + 1
       let offset = (editor.getText().slice(from).length) - normalize(editor.getText().slice(from)).length
       from += offset
-      return {from, to}
+      return { from, to }
     }
     else return null
   }
   function highlight(editor: TiptapEditor, text: string, color: string) {
     let positions = findText(editor, text);
-    if(positions){
+    if (positions) {
       let from = positions.from;
       let to = positions.to;
       editor.chain()
@@ -210,7 +250,7 @@ const Editor = (props: EditorProps) => {
         <button onClick={() => editor?.chain().focus().toggleOrderedList().run()} className={"bubbleBtn" + (editor?.isActive('orderedList') ? ' active' : '')}><FontAwesomeIcon icon={faListOl} /></button>
         <button onClick={() => editor?.chain().focus().toggleBulletList().run()} className={"bubbleBtn" + (editor?.isActive('bulletList') ? ' active' : '')}><FontAwesomeIcon icon={faList} /></button>
         <button onClick={() => editor?.chain().focus().toggleCodeBlock().run()} className={"bubbleBtn" + (editor?.isActive('codeBlock') ? ' active' : '')}>{"</>"}</button>
-        <input id="colorPicker" type="color" onInput={(e) => editor?.chain().focus().setColor(e.currentTarget.value).run()} value={editor?.getAttributes("textStyle").color ?? "#b8b8b8"} style={{ 'backgroundColor': editor?.getAttributes("textStyle").color ?? "#b8b8b8" }} />
+        <input id="colorPicker" type="color" onInput={(e) => editor?.chain().focus().setColor(e.currentTarget.value).run()} value={editor?.getAttributes("textStyle").color ?? "#d6c195"} style={{ 'backgroundColor': editor?.getAttributes("textStyle").color ?? "#d6c195" }} />
         <button onClick={() => {
           if (editor?.state.selection) {
             const { from, to } = editor?.state.selection;

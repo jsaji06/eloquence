@@ -22,6 +22,7 @@ interface AISummaryProps {
   setActiveText: Dispatch<SetStateAction<string>>;
   setActiveColor: Dispatch<SetStateAction<string>>;
   docId:string;
+  setAiData:Dispatch<SetStateAction<Response[] | undefined>>
 
 }
 
@@ -116,7 +117,7 @@ export default function AISummary(props: AISummaryProps) {
           }}>Get extra feedback</button>}
 
           {props.aiData?.map((subsection:Response) => (
-            <SubsectionView subsection={subsection} points={selectedPoints} setPoints={setSelectedPoints} />
+            <SubsectionView subsection={subsection} points={selectedPoints} setPoints={setSelectedPoints} aiData={props.aiData} setAiData={props.setAiData} />
           ))}
         </div>
         </>

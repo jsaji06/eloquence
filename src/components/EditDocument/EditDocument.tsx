@@ -38,7 +38,6 @@ function EditDocument() {
   const [activeText, setActiveText] = useState("");
   const [activeColor, setActiveColor] = useState("");
 
-  console.log("DIHHHEIFORHI, ", activeText)
   const db = getFirestore();
   const auth = getAuth();
 
@@ -58,7 +57,6 @@ function EditDocument() {
           setLoading(true);
           try {
             let document = await getDoc(d);
-            console.log(document);
             if (document.exists()) {
               let data = document.data();
               setLoading(false);
@@ -75,7 +73,6 @@ function EditDocument() {
               }
             }
           } catch (err) {
-            console.log(err);
             navigate("/login");
           }
         }
@@ -159,14 +156,14 @@ function EditDocument() {
               ●<FontAwesomeIcon title={"Hello"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
             </div>
             <Header docId={document_id!} setTitle={setTitle} title={title} />
-            <Editor activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />
+            <Editor setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />
             <button style={{ display: wordCount < 25 || (aiPanelActive || loadingPanel) ? "none" : "flex" }} className="aiBtn" onClick={() => {
               review()
             }}><FontAwesomeIcon className="icon" icon={faBrain} /> <p>Review with AI</p> </button>
           </Panel>
           <PanelResizeHandle disabled={!aiPanelActive} className="resizeHandle" />
           <Panel className="panel aiPanel" minSize={40} style={{ display: aiPanelActive ? "block" : 'none' }}>
-            <AISummary docId={document_id!} setActiveText={setActiveText} setActiveColor={setActiveColor} setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
+            <AISummary setAiData={setAIData} docId={document_id!} setActiveText={setActiveText} setActiveColor={setActiveColor} setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
           </Panel>
         </PanelGroup>
       </div >

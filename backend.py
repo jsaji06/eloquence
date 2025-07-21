@@ -64,6 +64,7 @@ class Point(TypedDict):
     highlighted_text:list[str]
     # remove later on
     color:str
+    active:bool = True
 
 class Advice(BaseModel):
     advice:list[str]
@@ -71,6 +72,7 @@ class Advice(BaseModel):
 class Response(BaseModel):
     header: str
     points: list[Point]
+    collapsed:bool = False
 
 class FeedbackInput(TypedDict):
     points:list[Point]

@@ -5,11 +5,13 @@ export type Point = {
     content: string;
     highlighted_text: Array<string>;
     color: string;
+    active:boolean
 }
 
 export type Response = {
     header: string;
     points: Array<Point>;
+    collapsed:boolean;
 }
 
 export interface UserInformation extends DocumentData {

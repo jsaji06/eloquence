@@ -13,11 +13,7 @@
     /* --text-primary: #e8ddc3;   Elegant cream */
     /* --text-secondary: #d6c195; Refined cream */ 
     
-    /* Syntax highlighting colors */
-    --syntax-red: #ff6b6b;      /* Error/keywords */
-    --syntax-blue: #4dabf7;     /* Functions/types */
-    --syntax-green: #51cf66;    /* Strings/comments */
-    --syntax-purple: #da77f2;   /* Variables/constants */
+
 }
 html, body {
     height: 100%;
@@ -657,4 +653,8 @@ input[type="color"]::-webkit-color-swatch {
 
 .google * {
     margin:0 5px;
+}
+
+mark:hover{
+    cursor:pointer;
 }
