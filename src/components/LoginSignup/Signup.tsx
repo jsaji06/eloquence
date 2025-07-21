@@ -39,10 +39,8 @@ export default function Signup() {
                         setError("There was an error in registering your account. Please try again later.")
                     }
                 }}>Signup</button>
+                <button type="submit" onClick={e => loginWithGoogle(e)} >Login with Google</button>
                 <div className="options">
-                    <div className="loginOptions">
-                        <button type="submit" onClick={e => loginWithGoogle(e)} >Login with Google</button>
-                    </div>
                     <div className="otherOptions">
                         <a href='/login'>Already have an account?</a>
                         <a href='/forgot-password'>Forgot your password?</a>

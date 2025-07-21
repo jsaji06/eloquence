@@ -40,11 +40,18 @@ export default function SubsectionView(props: SubsectionViewProps) {
                         props.setAiData(aiData)
 
                         if(!props.subsection.collapsed) {
+                            
                             props.aiData.map((data, i) => {
-                                data.points.map(point => {
-                                    point.active = true;
-                                    return point
-                                })
+                                if(data === props.subsection) {
+                                    data.points.map((point, i)=>{
+                                        point.active = true
+                                        return point
+                                    })
+                                }
+                                // data.points.map(point => {
+                                //     point.active = true;
+                                //     return point
+                                // })
                                 return data
 
                             })

@@ -68,6 +68,20 @@ const Editor = (props: EditorProps) => {
       document.querySelector(".editor")?.addEventListener("click", (e: Event) => {
         const target = e.target as HTMLElement
         if (target.tagName === "MARK") {
+          dataRef.current.map((data, i) => {
+            // if(data === props.subsection) {
+                data.points.map((point, i)=>{
+                    point.active = true
+                    return point
+                })
+            // }
+            // data.points.map(point => {
+            //     point.active = true;
+            //     return point
+            // })
+            return data
+
+        })
           let highlightedContent = target.textContent!;
         let subsection = dataRef.current.filter(response => response.points.some(point => {
           return point.highlighted_text.includes(highlightedContent);
