@@ -19,46 +19,73 @@ export default function Dashboard() {
     const [documents, setDocuments] = useState<Doc[]>();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [authenticated, setAuthenticated] = useState(true);
 
+    useEffect(() => {
+        if (!authenticated) {
+            navigate("/")
+            return;
+        }
+    }, [authenticated])
     // let userID = user?.uid;
     useEffect(() => {
         setLoading(true)
         let unsubscribeUserDoc: (() => void) | undefined;
         let unsubUser: (() => void) | undefined;
+
         const unsubscribed = onAuthStateChanged(auth, (auth_user) => {
-            if (!auth_user) {
-                navigate("/")
-                return;
-            }
-            else {
-                console.log(auth_user)
-                let userID = auth_user.uid;
-                let userRef = doc(db, "users", userID!)
-                unsubUser = onSnapshot(userRef, async (userSnap: DocumentSnapshot) => {
+            // if (!auth_user) {
+            //     console.log("@E#R#J")
+            //     setAuthenticated(false)
+            // }
+            // else {
+
+            console.log("WE@#()R#()JR(@J RJOFIEWOKD")
+
+            console.log(auth_user)
+            let userID = auth_user.uid;
+            let userRef = doc(db, "users", userID!)
+            
+            unsubUser = onSnapshot(userRef, async (userSnap: DocumentSnapshot) => {
+                // if (!userSnap.data()) {
+                    // console.log("Inauthenticating!")
+                    // setAuthenticated(false)
+                // }
+                // else {
+                console.log("Testing 1")
                     setUserInfo({ ...userSnap.data(), "nameOauth": auth_user.displayName })
-                })
+                    let userDocRef = query(collection(db, "documents"), where("ownerId", "==", userID));
+                    unsubscribeUserDoc = onSnapshot(userDocRef, async (userDocSnap: QuerySnapshot) => {
+                        let docs: any = []
+                        userDocSnap.forEach(test => {
+                            let doc = test.data()
+                            if (!doc.trash) docs.push({ ...doc, id: test.id })
 
-                let userDocRef = query(collection(db, "documents"), where("ownerId", "==", userID));
-                unsubscribeUserDoc = onSnapshot(userDocRef, async (userDocSnap: QuerySnapshot) => {
-                    let docs: any = []
-                    userDocSnap.forEach(test => {
-                        let doc = test.data()
-                        if (!doc.trash) docs.push({ ...doc, id: test.id })
-
+                        })
+                        setDocuments(docs.sort((a: Doc, b: Doc) => b.recentlyModified - a.recentlyModified));
                     })
-                    setDocuments(docs.sort((a:Doc, b:Doc) =>  b.recentlyModified - a.recentlyModified));
-                })
 
-                setLoading(false)
+
+                    setLoading(false)
+                    setAuthenticated(true)
+                // }
+            })
+            console.log("LMFOPW", userInfo)
+            if (userInfo) {
+
+
+                // }
             }
-        })
-        return () => {
-            // clean up both listeners on unmount
 
-            unsubscribed();
-            if (unsubscribeUserDoc) unsubscribeUserDoc();
-            if (unsubUser) unsubUser()
-        };
+            return () => {
+                // clean up both listeners on unmount
+
+                unsubscribed();
+                if (unsubscribeUserDoc) unsubscribeUserDoc();
+                if (unsubUser) unsubUser()
+            };
+
+        })
     }, [navigate, db, auth])
 
     let logout = async () => {
@@ -83,6 +110,7 @@ export default function Dashboard() {
         let id = docRef.id;
         let userID = auth!.currentUser!.uid;
         await setDoc(doc(db, "users", userID), {
+            ...userInfo,
             documents: arrayUnion(id)
         })
         navigate("/editor/" + id);
