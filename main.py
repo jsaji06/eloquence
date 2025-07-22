@@ -25,7 +25,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=['https://eloquence-68ro.onrender.com'],
     allow_headers=['*'],
-    allow_methods=['*']
+    allow_methods=['*'],
+    allow_credentials=True
 )
 
 class UserInput(TypedDict):
