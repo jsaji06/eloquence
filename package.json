@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "frontend": "react-scripts start",
+    "backend": "uvicorn main:app --reload --port 8000",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\" "
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -23,6 +26,7 @@
     "@tiptap/pm": "^2.23.0",
     "@tiptap/react": "^2.23.0",
     "@tiptap/starter-kit": "^2.23.0",
+    "concurrently": "^9.2.0",
     "dotenv": "^17.2.0",
     "firebase": "^11.10.0",
     "i": "^0.3.7",
