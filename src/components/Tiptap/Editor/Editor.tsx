@@ -38,6 +38,7 @@ interface EditorProps {
   activeText: ActiveText;
   aiPanel: boolean
   setAiData: Dispatch<SetStateAction<Response[] | undefined>>
+  setMessage:Dispatch<SetStateAction<string | undefined>>
 }
 
 const Editor = (props: EditorProps) => {
@@ -50,11 +51,11 @@ const Editor = (props: EditorProps) => {
       }
     },
     onUpdate: ({ editor }) => {
-      debounce(() => {
+      // debounce(() => {
         props.setText(editor.getHTML());
         props.setRecentlyModified(Timestamp.now());
         updateDocument(props.docId, undefined, editor.getHTML(), undefined);
-      }, 500)
+      // }, 5)
     },
   })
   let dataRef = useRef(props.aiData || [])
@@ -237,6 +238,9 @@ const Editor = (props: EditorProps) => {
       const { from, to } = editor?.state.selection;
       let text = editor?.state.doc.textBetween(from, to);
       let count = text.split(" ").filter(word => word.replace(html_tag_regex, "") != "").length
+      if(count >= 1500) {
+        props.setMessage("Your content has exceeded 1500 words. Please note AI functionality will only work for writings under 1500 words.") 
+      }
       setSelectedWordCount(count);
     }
   })

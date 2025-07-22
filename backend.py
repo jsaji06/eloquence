@@ -1,3 +1,9 @@
+"""
+This is the backend file for Eloquence. Below, you will see how I have established the LangGraph workflow that this application utilizes, as well as a relatively simple API I have created that puts said workflow to use.
+
+Application powered by Claude Sonnet 3.5 by Anthropic.
+"""
+
 from pydantic import BaseModel, field_validator
 from typing import Optional, Literal, TypedDict
 from fastapi import FastAPI, HTTPException
@@ -13,6 +19,7 @@ from textsplit.tools import get_penalty, get_segments
 from textsplit.algorithm import split_optimal
 import re
 
+# Create FastAPI backend and connect to React
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -30,39 +37,12 @@ class Subsection(TypedDict):
 
 class SubsectionList(BaseModel):
     subsections: list[Subsection]
-    # @field_validator("subsections", mode="before")
-    # @classmethod
-    # def parse_subsections(cls, value):
-    #     if isinstance(value, str):
-    #         try:
-    #             # Clean up common JSON issues
-    #             value = value.strip()
-    #             if not value.startswith('['):
-    #                 # Maybe it's wrapped in extra text
-    #                 import re
-    #                 json_match = re.search(r'\[.*\]', value, re.DOTALL)
-    #                 if json_match:
-    #                     value = json_match.group()
-    #                 else:
-    #                     raise ValueError("No valid JSON array found")
-                
-    #             parsed = json.loads(value)
-    #             if not isinstance(parsed, list):
-    #                 raise ValueError("Expected JSON array")
-    #             return parsed
-    #         except json.JSONDecodeError as e:
-    #             raise ValueError(f"Invalid JSON string for subsections: {e}")
-    #     elif isinstance(value, list):
-    #         return value
-    #     else:
-    #         raise ValueError("subsections must be a list or valid JSON string")
     
 
 class Point(TypedDict):
     type_of_point: Literal['refutation', 'counterpoint', 'question', 'dilemma']
     content:str
     highlighted_text:list[str]
-    # remove later on
     color:str
     active:bool = True
 
@@ -87,6 +67,16 @@ class SocratesState(TypedDict):
     response:list[Response]
     
 COLORS = [
+    ["#2e1a26", "#472b3a", "#6b3e53"], 
+    ["#123029", "#1c4a3f", "#2e6c5b"], 
+    ["#1c1c2e", "#2c2c4a", "#45456d"],
+    ["#2d1c10", "#4a2f1f", "#6e442e"],
+    ["#12282b", "#1f484e", "#30686f"], 
+    ["#2a1a2f", "#442a4c", "#6c3e73"],  
+    ["#2e2017", "#4c392a", "#6d513f"],  
+    ["#1a232a", "#2e3a45", "#445867"], 
+    ["#1e2916", "#33452a", "#4f653d"],  
+    ["#131d30", "#243458", "#375187"], 
     ["#3e0f1c", "#5a1a2a", "#822c3f"],
     ["#0d2a20", "#124636", "#1e5d47"],
     ["#161731", "#25264c", "#393868"],
@@ -96,8 +86,13 @@ COLORS = [
     ["#331b12", "#512a1d", "#703b2b"],
     ["#1b1f23", "#2f353c", "#49535c"],
     ["#1a1f16", "#2f3726", "#475439"],
-    ["#111c2e", "#1d2e4a", "#2e4670"]
+    ["#111c2e", "#1d2e4a", "#2e4670"],
+    
 ]
+
+"""
+Initializes Claude Sonnet 3.5 model.
+"""
 def create_socrates():
     try:
         socrates = init_chat_model("anthropic:claude-3-5-sonnet-20241022", max_tokens=5000, max_retries=2, timeout=60)
@@ -105,36 +100,35 @@ def create_socrates():
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to initialize model.")
 
-def divide_text(essay:str):
+"""
+This method is responsible for intelligently dividing the user's writing into subsections using a pre-trained machine learning model. 
+"""
+def divide_text(state:SocratesState):
+    print("DIVIDING TEXT")
+    essay = state['user_essay']['writing']
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
+    
     model = SentenceTransformer("all-MiniLM-L6-v2")
 
     embeddings = model.encode(sentences)
     subsections = []
-    # Wrap embeddings in a list to simulate 1 document with all sentence embeddings
-    docmats = [embeddings]  # ✅ This is what get_penalty expects
+    docmats = [embeddings]  
     try:
-        penalty = get_penalty(docmats, max(word_count // 100, 1))  # ✅ FIXED
+        penalty = get_penalty(docmats, max((word_count // 100) + 3, 1)) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
-        return segments
+        return {"subsections":segments}
     except ValueError:
         raise Exception("The structure of your writing is not valid. The AI feature works best with essays/writing pieces.")
-    
-    
-    for i, segment in enumerate(segments):
-        print(f"\n--- Segment {i+1} ---")
-        condition = "".join(segment)
-        print(condition)
-        if condition != "":
-            subsections.append("<NEW_SENTENCE>".join(segment))
-    
-    return subsections
 
+"""
+Method to retreive initial feedback on user's writings.
+
+Each subsection will contain at most 3 critical points. These points come under the form of questions, refutations, dilemmas, and/or counterpoints, in hopes of getting the user to think deeper about their ideas/arguments they want to discuss in their writings.
+"""
 def retrieve_points(state:SocratesState):
-    subsections = divide_text(state['user_essay']['writing'])
-    print(subsections)
+    subsections = state['subsections']
     try:
         print("starting to retrieve points")
         PROMPT = PromptTemplate.from_template("""
@@ -213,6 +207,12 @@ def retrieve_points(state:SocratesState):
         print(e)
         raise
     
+"""
+As mentioned above, each subsection contains three points for the user to think about. 
+
+The user has the ability to choose up to 3 points to gain more specifc feedback on deepening the substance of their writings & potentially overcome the specific pitfall that the AI had detected initially.
+"""
+
 def retrieve_advice(selected_points):
     try:
         MORE_ADVICE_PROMPT = PromptTemplate.from_template("""
@@ -238,37 +238,31 @@ def retrieve_advice(selected_points):
         print(e)
         raise
 
-
+# Establish LangGraph workflow (divide text into subsections -> retrieve analysis on each subsection)
 workflow = StateGraph(SocratesState)
-# workflow.add_node("divide_text", divide_text)
+workflow.add_node("divide_text", divide_text)
 workflow.add_node("get_points", retrieve_points)
 
-# workflow.add_edge(START, "divide_text")
-# workflow.add_edge("divide_text", "get_points")
-workflow.add_edge(START, "get_points")
+workflow.add_edge(START, "divide_text")
+workflow.add_edge("divide_text", "get_points")
 workflow.add_edge("get_points", END)
 
 workflow = workflow.compile()
 
+# API Endpoint to retrieve points / start intitial workflow
 @app.post("/get_points")
 def get_points(writing:UserInput):
    print("starting workflow")
    output = workflow.invoke({"user_essay":writing})
    return output['response']
 
+# API Endpoint to get more extensive feedback 
 @app.post("/get_advice")
 def get_advice(points:FeedbackInput):
     
     advices = retrieve_advice(points['points'])
-    print("advices", advices, len(advices))
     response = []
     for i in range(len(advices)):
-        test = {"advice": advices[i], "point": points['points'][i]}
-        response.append(test)
-    print(len(response), response)
+        res = {"advice": advices[i], "point": points['points'][i]}
+        response.append(res)
     return {"response":response}
-    # res = [{"advices": advices[i], "point": points['points'][i]} for i in range(len(points))]
-    # print(res)
-    # return {"response":res}
-    
-        

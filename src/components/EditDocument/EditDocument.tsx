@@ -156,8 +156,8 @@ function EditDocument() {
               ●<FontAwesomeIcon title={"Hello"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
             </div>
             <Header docId={document_id!} setTitle={setTitle} title={title} />
-            <Editor setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />
-            <button style={{ display: wordCount < 25 || (aiPanelActive || loadingPanel) ? "none" : "flex" }} className="aiBtn" onClick={() => {
+            <Editor setMessage={setMessage} setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />
+            <button style={{ display: (wordCount < 25 || wordCount >= 1500) || (aiPanelActive || loadingPanel) ? "none" : "flex" }} className="aiBtn" onClick={() => {
               review()
             }}><FontAwesomeIcon className="icon" icon={faBrain} /> <p>Review with AI</p> </button>
           </Panel>
