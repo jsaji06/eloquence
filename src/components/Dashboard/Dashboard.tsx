@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
-import { getFirestore, getDoc, doc, type DocumentData, addDoc, collection, arrayUnion, updateDoc, DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
+import { getFirestore, doc, type DocumentData, addDoc, collection, arrayUnion, DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
 import { onSnapshot, query, where, setDoc } from 'firebase/firestore';
 import Document from "../Document/Document";
 import "./style.css"
@@ -41,8 +41,9 @@ export default function Dashboard() {
             let userRef = doc(db, "users", userID!)
             
             unsubUser = onSnapshot(userRef, async (userSnap: DocumentSnapshot) => {
+                
                 if(userSnap.exists()){
-                    setUserInfo({ ...userSnap.data(), "nameOauth": auth_user.displayName })
+                    setUserInfo({ ...userSnap.data(), "nameOauth": auth_user.displayName } as unknown as UserInformation)
                     let userDocRef = query(collection(db, "documents"), where("ownerId", "==", userID));
                     unsubscribeUserDoc = onSnapshot(userDocRef, async (userDocSnap: QuerySnapshot) => {
                         let docs: any = []

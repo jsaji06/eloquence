@@ -2,9 +2,8 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import Heading from '@tiptap/extension-heading'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder';
-import { doc, updateDoc, getFirestore } from 'firebase/firestore'
 import './style.css'
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { updateDocument } from '../../HelperFunctions';
 
 const extensions = [StarterKit, Heading.configure({
@@ -20,7 +19,6 @@ interface HeaderProps {
   setTitle: (value: string) => void
 }
 
-const db = getFirestore();
 
 const Header = (props: HeaderProps) => {
   const editor = useEditor({
@@ -31,7 +29,7 @@ const Header = (props: HeaderProps) => {
       attributes: {
         class: 'header',
       },
-      handleKeyDown(view, event) {
+      handleKeyDown(_, event) {
         if (event.key === 'Enter') return true
       },
     },

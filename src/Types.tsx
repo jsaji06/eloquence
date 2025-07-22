@@ -31,7 +31,7 @@ export interface Doc extends DocumentData {
     title: string,
     content: string,
     dateCreated: Timestamp,
-    recentlyModified: Timestamp,
+    recentlyModified: number,
     trash: boolean,
     // feedback:Array<any>
 }
