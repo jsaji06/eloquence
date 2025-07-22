@@ -30,7 +30,7 @@ app.add_middleware(
     # ],
     allow_origins=[
         # "*",
-        "https://eloquence-joshua-sajis-projects.vercel.app/",
+        "https://eloquence-joshua-sajis-projects.vercel.app",
         "http://localhost:5173"
     ],
     allow_headers=["*"],
