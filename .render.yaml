@@ -1,7 +1,7 @@
 services:
 - type: web
   name: eloquence
-  env: python
-  runtime: python-3.10.13
+  env: docker
   buildCommand: pip install -r requirements.txt
-  startCommand: your-start-command
+  startCommand: uvicorn main:app --reload
+  autoDeploy: true
