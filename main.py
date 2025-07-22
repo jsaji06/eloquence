@@ -23,7 +23,7 @@ import re
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['https://eloquence-68ro.onrender.com'],
+    allow_origins=['https://eloquence-eight.vercel.app'],
     allow_headers=['*'],
     allow_methods=['*'],
     allow_credentials=True
