@@ -1,6 +1,5 @@
 import { Routes, BrowserRouter, Route } from "react-router-dom";
 import EditDocument from "./components/EditDocument/EditDocument";
-import Landing from "./components/Landing/Landing";
 import Login from "./components/LoginSignup/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Signup from './components/LoginSignup/Signup';
@@ -10,8 +9,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />}></Route>
-        <Route path="/login" element={<Login />}></Route>
+        <Route path="/" element={<Login />}></Route>
         <Route path="/verification" element={<EmailVerification />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>
