@@ -111,7 +111,7 @@ def create_socrates():
 """
 This method is responsible for intelligently dividing the user's writing into subsections using a pre-trained machine learning model. 
 """
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer("paraphrase-MiniLM-L3-v2")
 def divide_text(state:SocratesState):
     print("DIVIDING TEXT")
     essay = state['user_essay']
