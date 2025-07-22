@@ -7,6 +7,8 @@ import { type Response, type FeedbackResponse } from "../Types";
 console.log('FIREBASE_KEY:', process.env.FIREBASE_KEY);
 console.log('FIREBASE_KEY length:', process.env.FIREBASE_KEY?.length);
 console.log('FIREBASE_KEY first 10 chars:', process.env.FIREBASE_KEY?.substring(0, 10));
+console.log('All env vars:', Object.keys(process.env));
+console.log('NODE_ENV:', process.env.NODE_ENV);
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_KEY,

@@ -24,3 +24,4 @@ venv/
 # Optional: ignore build artifacts
 *.tsbuildinfo
 .vercel
+.env*.local
