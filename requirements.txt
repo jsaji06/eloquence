@@ -68,7 +68,7 @@ optree==0.11.0
 orjson==3.10.18
 ormsgpack==1.10.0
 packaging==24.2
-pandas==2.2.2
+pandas==2.2.2 --only-binary=pandas
 parso==0.8.4
 pexpect==4.9.0
 pillow==11.2.1
