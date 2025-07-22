@@ -23,12 +23,15 @@ import re
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://eloquence-eight.vercel.app', "https://eloquence-68ro.onrender.com", "http://eloquence-joshua-sajis-projects.vercel.app"],
-    allow_headers=['*'],
-    allow_methods=['*'],
-    allow_credentials=True
+    allow_origins=[
+        "https://eloquence-eight.vercel.app",
+        "https://eloquence-68ro.onrender.com",
+        "https://eloquence-joshua-sajis-projects.vercel.app"
+    ],
+    allow_headers=["*"],
+    allow_methods=["*"],
+    allow_credentials=True,
 )
-
 class UserInput(TypedDict):
     writing:str
 

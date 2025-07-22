@@ -121,6 +121,7 @@ function EditDocument() {
 
         })
         .catch(_ => {
+          console.log(_)
           setLoadingPanel(false);
           setAiPanelActive(false);
           setMessage("An error occured. Please try again.");
