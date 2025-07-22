@@ -6,7 +6,6 @@ import "./style.css";
 import { type Point } from '../../Types.tsx';
 import { type Dispatch } from 'react';
 import Alert from '../Alert/Alert.tsx';
-import Overlay from '../Overlay/Overlay.tsx';
 
 interface SubsectionViewProps {
     subsection: Response;
@@ -23,7 +22,6 @@ export default function SubsectionView(props: SubsectionViewProps) {
     return (
         <>
             {message && <Alert message={message} setMessage={setMessage} />}
-            {message && <Overlay />}
             <div className="subsectionView">
                 <div className='header'>
                     <h2>{props.subsection.header}</h2>

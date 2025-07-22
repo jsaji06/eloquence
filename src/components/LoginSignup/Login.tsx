@@ -22,7 +22,6 @@ export default function Login() {
     return (
         <>
             {error && <Alert setMessage={setError} message={error} />}
-            {error && <Overlay />}
             <form className="login">
                 <h1>Login to Eloquence</h1>
                 {/* <form> */}

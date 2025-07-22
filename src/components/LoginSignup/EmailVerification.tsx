@@ -3,7 +3,6 @@ import { getAuth } from 'firebase/auth'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getFirestore, collection, setDoc, doc } from 'firebase/firestore';
 import Alert from "../Alert/Alert"
-import Overlay from "../Overlay/Overlay";
 
 const auth = getAuth();
 const db = getFirestore();
@@ -51,8 +50,9 @@ export default function () {
     })
     return (
         <>
+        
             {error && <Alert setMessage={setError} message={error} />}
-            {error && <Overlay />}
+            
             <div className="login">
                 <h1>We have sent a verification link to your email.</h1>
                 <p>Please check your inbox, or spam/junk. If you have successfully verified, please click the button below.</p>

@@ -1,12 +1,8 @@
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, type SetStateAction } from 'react';
-import { type Response } from '../../Types.tsx';
 import "./style.css";
-import { type Point } from '../../Types.tsx';
 import { type Dispatch } from 'react';
-import Alert from '../Alert/Alert.tsx';
-import Overlay from '../Overlay/Overlay.tsx';
  
 interface FeedbackProps {
     feedback:any
@@ -19,7 +15,6 @@ interface FeedbackProps {
 
 export default function Feedback(props: FeedbackProps) {
     const [collapsed, setCollapsed] = useState(false);
-    const [message, setMessage] = useState<string | undefined>(undefined)
 
     return (
         <>
@@ -33,12 +28,6 @@ export default function Feedback(props: FeedbackProps) {
                     let newList = [...props.feedbackList]
                     newList[props.index].highlighted = !collapsed;
                     props.setFeedbackList(newList)
-                    // if(!collapsed){
-                    // props.setActiveText("")
-                    // } else {
-                    //     props.setActiveText(props.feedback.point.highlighted_text[0])
-                    //     props.setActiveColor(props.feedback.point.color)
-                    // }
                 }}
                   />
             </div>

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { loginWithGoogle } from "../HelperFunctions.ts";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import Alert from "../Alert/Alert.tsx";
-import Overlay from "../Overlay/Overlay.tsx";
 
 export default function Signup() {
     const [firstName, setFirstName] = useState("");
@@ -15,7 +14,6 @@ export default function Signup() {
     return (
         <>
             {error && <Alert setMessage={setError} message={error} />}
-            {error && <Overlay />}
             <form className="login">
                 <h1>Join Eloquence</h1>
                 <input type="text" placeholder='Enter your first name...' required onChange={e => setFirstName(e.target.value)} />
