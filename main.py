@@ -23,10 +23,13 @@ import re
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
+    # allow_origins=[
+    #     "https://eloquence-eight.vercel.app",
+    #     "https://eloquence-68ro.onrender.com",
+    #     "https://eloquence-joshua-sajis-projects.vercel.app"
+    # ],
     allow_origins=[
-        "https://eloquence-eight.vercel.app",
-        "https://eloquence-68ro.onrender.com",
-        "https://eloquence-joshua-sajis-projects.vercel.app"
+        "*"
     ],
     allow_headers=["*"],
     allow_methods=["*"],
@@ -109,7 +112,7 @@ This method is responsible for intelligently dividing the user's writing into su
 """
 def divide_text(state:SocratesState):
     print("DIVIDING TEXT")
-    essay = state['user_essay']['writing']
+    essay = state['user_essay']
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
     
