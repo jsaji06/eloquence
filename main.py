@@ -29,7 +29,8 @@ app.add_middleware(
     #     "https://eloquence-joshua-sajis-projects.vercel.app"
     # ],
     allow_origins=[
-        "https://eloquence-joshua-sajis-projects.vercel.app/editor/Vwk4tGomkFr66uFvFWLX",
+        # "*",
+        "https://eloquence-joshua-sajis-projects.vercel.app/",
         "http://localhost:5173"
     ],
     allow_headers=["*"],
