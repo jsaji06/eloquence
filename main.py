@@ -254,8 +254,10 @@ workflow.add_edge("get_points", END)
 workflow = workflow.compile()
 
 # API Endpoint to retrieve points / start intitial workflow
+from fastapi import Request
 @app.post("/get_points")
-def get_points(writing:UserInput):
+async def get_points(writing:Request):
+   print(writing)
    print("starting workflow")
    output = workflow.invoke({"user_essay":writing})
    return output['response']
