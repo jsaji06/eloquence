@@ -23,7 +23,7 @@ import re
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:5173'],
+    allow_origins=['https://eloquence-68ro.onrender.com'],
     allow_headers=['*'],
     allow_methods=['*']
 )
