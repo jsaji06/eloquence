@@ -15,9 +15,7 @@ import { Timestamp } from 'firebase/firestore'
 import { type Response, type Point } from '../../../Types'
 import { type ActiveText } from '../../../Types'
 import { type Editor as TiptapEditor } from '@tiptap/react'
-import { pointsAtCell } from '@tiptap/pm/tables'
 import { useRef } from 'react'
-import debounce from 'lodash.debounce';
 
 const html_tag_regex = new RegExp("<[^>]+>")
 
@@ -51,11 +49,9 @@ const Editor = (props: EditorProps) => {
       }
     },
     onUpdate: ({ editor }) => {
-      // debounce(() => {
         props.setText(editor.getHTML());
         props.setRecentlyModified(Timestamp.now());
         updateDocument(props.docId, undefined, editor.getHTML(), undefined);
-      // }, 5)
     },
   })
   let dataRef = useRef(props.aiData || [])
@@ -69,17 +65,11 @@ const Editor = (props: EditorProps) => {
       document.querySelector(".editor")?.addEventListener("click", (e: Event) => {
         const target = e.target as HTMLElement
         if (target.tagName === "MARK") {
-          dataRef.current.map((data, i) => {
-            // if(data === props.subsection) {
-                data.points.map((point, i)=>{
+          dataRef.current.map((data, _) => {
+                data.points.map((point, _)=>{
                     point.active = true
                     return point
                 })
-            // }
-            // data.points.map(point => {
-            //     point.active = true;
-            //     return point
-            // })
             return data
 
         })
@@ -88,11 +78,11 @@ const Editor = (props: EditorProps) => {
           return point.highlighted_text.includes(highlightedContent);
         }))
         if(!subsection) return;
-        let newData = dataRef.current.map((data, i) => {
+        let newData = dataRef.current.map((data, _) => {
           let newDataInfo = {...data}
           if (data === subsection[0]) {
             newDataInfo.collapsed = true;
-            let newPoints = newDataInfo.points.map((point, j) => ({
+            let newPoints = newDataInfo.points.map((point, _) => ({
               ...point,
               active: point.highlighted_text.includes(highlightedContent)
             }))
@@ -136,10 +126,9 @@ const Editor = (props: EditorProps) => {
       editor?.chain().setTextSelection(0)
     } else {
       editor?.chain().setTextSelection({ from: 0, to: editor.state.doc.content.size }).unsetMark("highlight").unsetHighlight().run()
-      props.feedback.map((subsection: any, i) => {
+      props.feedback.map((subsection: any, _) => {
         if (subsection.highlighted) {
           subsection.point.highlighted_text.map((text: string) => {
-            let positions = findText(editor, text)
             highlight(editor, text, subsection.point.color)
             return;
           })

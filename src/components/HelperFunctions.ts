@@ -6,7 +6,7 @@ import { type Response, type FeedbackResponse } from "../Types";
 
 
 const firebaseConfig = {
-    apiKey: process.env.ANTHROPIC_KEY,
+    apiKey: process.env.FIREBASE_KEY,
     authDomain: "eloquence-39ed6.firebaseapp.com",
     projectId: "eloquence-39ed6",
     storageBucket: "eloquence-39ed6.firebasestorage.app",

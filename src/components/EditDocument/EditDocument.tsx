@@ -9,7 +9,7 @@ import Alert from '../Alert/Alert';
 import Overlay from '../Overlay/Overlay';
 import { type Response } from '../../Types';
 import { useParams } from 'react-router-dom';
-import { doc, getFirestore, getDoc, Timestamp, updateDoc } from 'firebase/firestore';
+import { doc, getFirestore, getDoc, Timestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import { updateDocument } from '../HelperFunctions';
@@ -138,7 +138,7 @@ function EditDocument() {
         {message && <Overlay />}
         <PanelGroup direction="horizontal" className="eContainer">
           <Panel minSize={40} className='editorContainer panel' style={{ overflowY: "scroll", height: "100%;" }}>
-            <button id="exitDoc" onClick={e => {
+            <button id="exitDoc" onClick={() => {
               navigate("/dashboard")
             }}><FontAwesomeIcon icon={faArrowLeft} /></button>
             <div className="menuHeader" style={{ width: "fit-content" }}>

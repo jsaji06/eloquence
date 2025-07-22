@@ -18,12 +18,12 @@ export default function Feedback(props: FeedbackProps) {
 
     return (
         <>
-        <div className="subsectionView feedback" style={{backgroundColor: props.feedback.point.color}} onClick={e =>{ 
+        <div className="subsectionView feedback" style={{backgroundColor: props.feedback.point.color}} onClick={() =>{ 
             
         }}>
             <div className='header' style={{backgroundColor: props.feedback.point.color}}>
                 <h2>Point {props.index+1}</h2>
-                <FontAwesomeIcon className="icon" icon={collapsed ? faMinus : faPlus} onClick={e => {
+                <FontAwesomeIcon className="icon" icon={collapsed ? faMinus : faPlus} onClick={() => {
                     setCollapsed(!collapsed)
                     let newList = [...props.feedbackList]
                     newList[props.index].highlighted = !collapsed;

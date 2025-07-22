@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { loginWithEmail, loginWithGoogle } from '../HelperFunctions'
 import { useNavigate } from 'react-router';
-import Overlay from "../Overlay/Overlay";
 import Alert from "../Alert/Alert";
 import './style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

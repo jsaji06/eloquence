@@ -16,7 +16,7 @@ interface SubsectionViewProps {
 }
 
 export default function SubsectionView(props: SubsectionViewProps) {
-    const [collapsed, setCollapsed] = useState(false);
+    const [_, setCollapsed] = useState(false);
     const [message, setMessage] = useState<string | undefined>(undefined)
 
     return (
@@ -28,7 +28,7 @@ export default function SubsectionView(props: SubsectionViewProps) {
                     <FontAwesomeIcon className="icon" icon={props.subsection.collapsed ? faMinus : faPlus} onClick={() => {
                         setCollapsed(!props.subsection.collapsed); 
 
-                        let aiData = props.aiData.map((data, i) => {
+                        let aiData = props.aiData.map((_, i) => {
                             if(props.aiData[i] === props.subsection){
                                 props.aiData[i].collapsed = !props.subsection.collapsed;
                                 return props.aiData[i]
@@ -39,17 +39,14 @@ export default function SubsectionView(props: SubsectionViewProps) {
 
                         if(!props.subsection.collapsed) {
                             
-                            props.aiData.map((data, i) => {
+                            props.aiData.map((data, _) => {
                                 if(data === props.subsection) {
-                                    data.points.map((point, i)=>{
+                                    data.points.map((point, _)=>{
                                         point.active = true
                                         return point
                                     })
                                 }
-                                // data.points.map(point => {
-                                //     point.active = true;
-                                //     return point
-                                // })
+                               
                                 return data
 
                             })
@@ -63,7 +60,7 @@ export default function SubsectionView(props: SubsectionViewProps) {
                             return (
                                 <div className="point" style={{ backgroundColor: point.color }}>
                                     <div className="select">
-                                        <div className={"circle " + (props.points.includes(point) ? "active" : "")} onClick={e => {
+                                        <div className={"circle " + (props.points.includes(point) ? "active" : "")} onClick={() => {
                                             if (!props.points.includes(point)) {
                                                 if (props.points.length >= 3) {
                                                     setMessage("You can only select up to three points.")
