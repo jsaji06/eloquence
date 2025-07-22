@@ -264,11 +264,14 @@ workflow = workflow.compile()
 from fastapi import Request
 @app.post("/get_points")
 async def get_points(writing:Request):
-   print(writing)
+   print("req received")
    body = await writing.json()
-   print(body)
+   print("body: ", body)
    writing = body.get("writing")
-   print("starting workflow")
+   print(f"Writing text length: {len(writing_text) if writing_text else 'None'}")
+   if not writing_text:
+        raise HTTPException(status_code=400, detail="No writing content provided")
+   print("invoking")
    output = workflow.invoke({"user_essay":writing})
    return output['response']
 
