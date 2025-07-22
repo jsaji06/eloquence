@@ -4,6 +4,9 @@ import { getFirestore } from "firebase/firestore";
 import { updateDoc, doc } from "firebase/firestore";
 import { type Response, type FeedbackResponse } from "../Types";
 
+console.log('FIREBASE_KEY:', process.env.FIREBASE_KEY);
+console.log('FIREBASE_KEY length:', process.env.FIREBASE_KEY?.length);
+console.log('FIREBASE_KEY first 10 chars:', process.env.FIREBASE_KEY?.substring(0, 10));
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_KEY,
