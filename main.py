@@ -116,16 +116,19 @@ def divide_text(state:SocratesState):
     essay = state['user_essay']
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
-    
+    print("INITIATING MODEL")
     model = SentenceTransformer("all-MiniLM-L6-v2")
-
+    print("MODEL INITIATED")
     embeddings = model.encode(sentences)
     subsections = []
-    docmats = [embeddings]  
+    docmats = [embeddings]
+    print("ATTEMPTING TO DIVIDE")  
     try:
+        print("GETTING PENALTIES")
         penalty = get_penalty(docmats, max((word_count // 100) + 3, 1)) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
+        print("RETRIEVEED SEGMENTS")
         return {"subsections":segments}
     except ValueError:
         raise Exception("The structure of your writing is not valid. The AI feature works best with essays/writing pieces.")
