@@ -268,8 +268,8 @@ async def get_points(writing:Request):
    body = await writing.json()
    print("body: ", body)
    writing = body.get("writing")
-   print(f"Writing text length: {len(writing_text) if writing_text else 'None'}")
-   if not writing_text:
+   print(f"Writing text length: {len(writing) if writing else 'None'}")
+   if not writing:
         raise HTTPException(status_code=400, detail="No writing content provided")
    print("invoking")
    output = workflow.invoke({"user_essay":writing})
