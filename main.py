@@ -259,6 +259,7 @@ from fastapi import Request
 async def get_points(writing:Request):
    print(writing)
    body = await writing.json()
+   print(body)
    writing = body.get("writing")
    print("starting workflow")
    output = workflow.invoke({"user_essay":writing})
