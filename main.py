@@ -25,11 +25,10 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*",
-    #     "https://eloquence-eight.vercel.app",
-    # "https://eloquence-68ro.onrender.com",
-    #     "https://eloquence-joshua-sajis-projects.vercel.app",
-    #     "https://eloquence-git-main-joshua-sajis-projects.vercel.app"
+        "https://eloquence-eight.vercel.app",
+    "https://eloquence-68ro.onrender.com",
+        "https://eloquence-joshua-sajis-projects.vercel.app",
+        "https://eloquence-git-main-joshua-sajis-projects.vercel.app"
     ],
     allow_headers=["*"],
     allow_methods=["*"],
