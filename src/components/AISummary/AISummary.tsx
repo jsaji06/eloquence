@@ -3,7 +3,7 @@ import './style.css'
 import { type Response } from '../../Types';
 import SubsectionView from '../SubsectionView/SubsectionView';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faX, faArrowLeft, faAmbulance } from '@fortawesome/free-solid-svg-icons';
+import { faX, faArrowLeft, faComments } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { type Point } from '../../Types';
 import Alert from '../Alert/Alert';
@@ -98,7 +98,7 @@ export default function AISummary(props: AISummaryProps) {
       }}
     />
     {props.feedback.length > 0  && <FontAwesomeIcon
-      icon={faAmbulance}
+      icon={faComments}
       className="icon exit"
       onClick={() => {
         props.setFeedbackPanel(true)

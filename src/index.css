@@ -252,6 +252,11 @@ nav.panelNav {
     border-radius: 10px;
     /* box-shadow: 20px 20px rgba(29, 29, 29, 0.3); */
     transition: .5s;
+    overflow-wrap: break-word;
+}
+
+.documentView h4 {
+    overflow-wrap: break-word;
 }
 
 .documentView:before {

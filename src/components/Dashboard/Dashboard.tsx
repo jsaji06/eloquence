@@ -112,12 +112,12 @@ export default function Dashboard() {
                             ><FontAwesomeIcon icon={faUser} /></button>
                             {open && (
                                 <div className="dropdown">
-                                    <button>
+                                    {/* <button>
                                         Profile
                                     </button>
                                     <button>
                                         Settings
-                                    </button>
+                                    </button> */}
                                     <button onClick={(e) => {
                                         e.preventDefault();
                                         logout()

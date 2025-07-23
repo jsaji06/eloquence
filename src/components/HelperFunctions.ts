@@ -3,6 +3,7 @@ import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvide
 import { getFirestore } from "firebase/firestore";
 import { updateDoc, doc } from "firebase/firestore";
 import { type Response, type FeedbackResponse } from "../Types";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 console.log('FIREBASE_KEY:', import.meta.env);
 
@@ -66,4 +67,15 @@ export let trashDocument = async (documentId:string) => {
     } catch(err) {
         console.log(err)
     }
+}
+
+export let forgotPassword = async (email:string) => {
+    const auth = getAuth(app);
+    try {
+       await sendPasswordResetEmail(auth, email)
+       console.log("Yay!");
+    }
+    catch(err){
+        console.log(err);
+    }   
 }
