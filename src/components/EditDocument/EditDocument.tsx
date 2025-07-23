@@ -74,7 +74,7 @@ function EditDocument() {
               }
             }
           } catch (err) {
-            console.log(err)
+            console.log("ERRORFINWOERMK", err)
             navigate("/");
           }
         }
