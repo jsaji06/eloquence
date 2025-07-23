@@ -5,6 +5,7 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 import Overlay from '../Overlay/Overlay';
 
 interface AlertProps {
+    header?:string;
     message?: string
     setMessage: Dispatch<SetStateAction<string | undefined>>
     customButtonHandler?: () => void
@@ -17,7 +18,7 @@ export default function Alert(props: AlertProps) {
         {props.message && <Overlay />}
         <div className="alert">
             <FontAwesomeIcon icon={faX} className="exitIcon" onClick={() => props.setMessage(undefined)} style={{display:props.customButtonHandler ? "block" : "none"}} />
-            <h1>Error</h1>
+            <h1>{props.header ? props.header : "Error"}</h1>
             <p>{props.message}</p>
             <button onClick={() => {
                 props.setMessage(undefined)

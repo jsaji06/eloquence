@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { forgotPassword } from '../HelperFunctions';
+import Alert from '../Alert/Alert';
+import { useNavigate } from 'react-router-dom';
 export default function ForgotPassword() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
+    const [message, setMessage] = useState<string | undefined>()
   return (
+    <>
+    {message && <Alert customButtonText="" header="Password Reset Email Sent" message={message} setMessage={setMessage} customButtonHandler={() => navigate("/")} />}
     <form className="login">
         <h1>Forgot your password?</h1>
         <p>No worries, enter your email and we'll get it sorted.</p>
@@ -12,6 +18,8 @@ export default function ForgotPassword() {
         <button type="submit" onClick={async (e) => {
             e.preventDefault();
             await forgotPassword(email);
+            setMessage("An email to change your password was sent to your inbox. Check your spam too. Proceed to log in only after you have successfully logged in.")
+            
         }}>Send Password Reset Email</button>
         <div className="options">
             <div className="otherOptions">
@@ -20,5 +28,6 @@ export default function ForgotPassword() {
             </div>
         </div>
     </form>
+    </>
   )
 }
