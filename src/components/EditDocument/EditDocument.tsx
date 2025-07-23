@@ -16,7 +16,7 @@ import { updateDocument } from '../HelperFunctions';
 import { getAuth } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import './style.css'
-
+import { type FeedbackResponse } from '../../Types';
 
 function EditDocument() {
 
@@ -30,7 +30,7 @@ function EditDocument() {
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [aiData, setAIData] = useState<Response[]>();
-  const [feedback, setFeedback] = useState<Array<any>>([]);
+  const [feedback, setFeedback] = useState<Array<FeedbackResponse>>([]);
   const [message, setMessage] = useState<string | undefined>(undefined)
   const [recentlyModified, setRecentlyModified] = useState<Timestamp>();
   const [loading, setLoading] = useState(false);
@@ -120,7 +120,7 @@ function EditDocument() {
           setLoadingPanel(false);
           setAIData(data);
           setFeedback([]);
-          updateDocument(document_id!, undefined, undefined, data, undefined);
+          updateDocument(document_id!, undefined, undefined, data, []);
         })
         .catch(_ => {
           setLoadingPanel(false);

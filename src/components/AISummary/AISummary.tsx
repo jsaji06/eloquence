@@ -9,14 +9,14 @@ import { type Point } from '../../Types';
 import Alert from '../Alert/Alert';
 import Feedback from '../Feedback/Feedback';
 import { updateDocument } from '../HelperFunctions';
-
+import {type FeedbackResponse} from '../../Types'
 
 interface AISummaryProps {
   loading: boolean;
   aiData: Response[];
   setAiPanelActive: Dispatch<SetStateAction<boolean>>;
-  feedback:Array<any>;
-  setFeedback:Dispatch<SetStateAction<Array<any>>>;
+  feedback:Array<FeedbackResponse>;
+  setFeedback:Dispatch<SetStateAction<Array<FeedbackResponse>>>;
   feedbackPanel:boolean;
   setFeedbackPanel:Dispatch<SetStateAction<boolean>>;
   setActiveText: Dispatch<SetStateAction<string>>;
