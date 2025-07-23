@@ -18,6 +18,7 @@ from sklearn.cluster import DBSCAN
 from textsplit.tools import get_penalty, get_segments
 from textsplit.algorithm import split_optimal
 import re
+from functools import lru_cache
 
 # Create FastAPI backend and connect to React
 app = FastAPI()
@@ -98,6 +99,10 @@ COLORS = [
     
 ]
 
+@lru_cache(maxsize=1)
+def get_sentence_transformer():
+    return SentenceTransformer("paraphrase-MiniLM-L3-v2")
+
 """
 Initializes Claude Sonnet 3.5 model.
 """
@@ -111,14 +116,13 @@ def create_socrates():
 """
 This method is responsible for intelligently dividing the user's writing into subsections using a pre-trained machine learning model. 
 """
-model = SentenceTransformer("paraphrase-MiniLM-L3-v2")
 def divide_text(state:SocratesState):
     print("DIVIDING TEXT")
     essay = state['user_essay']
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
     print("INITIATING MODEL")
-    
+    model = get_sentence_transformer()
     print("MODEL INITIATED")
     embeddings = model.encode(sentences)
     subsections = []
