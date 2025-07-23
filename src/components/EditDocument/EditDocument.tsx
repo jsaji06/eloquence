@@ -117,8 +117,7 @@ function EditDocument() {
           setLoadingPanel(false);
           setAIData(data);
           setFeedback([]);
-          updateDocument(document_id!, undefined, undefined, data);
-
+          updateDocument(document_id!, undefined, undefined, data, undefined);
         })
         .catch(_ => {
           console.log(_)
