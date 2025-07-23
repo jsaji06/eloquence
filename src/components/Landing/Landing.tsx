@@ -34,7 +34,7 @@ useEffect(() => {
       <div className="main">
         <div className="one">
           <h1>Eloquence: Where Better Writing Begins</h1>
-          <p>Behind every great piece of writing is rigorous thinking. Eloquence pushes you beyond grammar into the heart of your ideas—where true clarity lives.</p>
+          <p>Eloquence pushes you beyond grammar into the heart of your ideas—where true clarity lives.</p>
           <div className="mainImage">
             <img src={mainImg} />
           </div>
