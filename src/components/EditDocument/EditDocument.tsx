@@ -68,8 +68,7 @@ function EditDocument() {
                 setAIData(data.aiData);
                 setAiPanelActive(true)
               }
-              if(data.feedback){
-                console.log(data)
+              if(data.feedback.length > 0){
                 setFeedback(data.feedback);
                 setFeedbackPanel(true);
               }
