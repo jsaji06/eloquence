@@ -48,7 +48,8 @@ export let updateDocument = async (documentId: string, title?: string, content?:
         update.aiData = aiData;
     }
     if(feedback){
-        update.feedback = feedback;
+        if(feedback.length > 0)
+            update.feedback = feedback;
     }
     try {
         await updateDoc(doc(db, "documents", documentId), update);
