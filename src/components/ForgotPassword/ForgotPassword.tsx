@@ -18,7 +18,7 @@ export default function ForgotPassword() {
         <button type="submit" onClick={async (e) => {
             e.preventDefault();
             await forgotPassword(email);
-            setMessage("An email to change your password was sent to your inbox. Check your spam too. Proceed to log in only after you have successfully logged in.")
+            setMessage("An email to change your password was sent to your inbox. Check your spam too. Proceed to log in only after you have successfully reset your password. If you remembered your password, you can disregard the email and proceed to login as normal.")
             
         }}>Send Password Reset Email</button>
         <div className="options">
