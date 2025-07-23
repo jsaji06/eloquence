@@ -13,7 +13,6 @@ interface DocumentProps {
 }
 
 export default function Document(props: DocumentProps) {
-  console.log(props.document)
   const navigate = useNavigate();
   const [message, setMessage] = useState<string | undefined>()
   const month = props.document.recentlyModified.toDate().getMonth() + 1;

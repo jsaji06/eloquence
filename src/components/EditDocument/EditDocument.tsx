@@ -44,6 +44,7 @@ function EditDocument() {
 
 
   useEffect(() => {
+    
     const unsubscribed = onAuthStateChanged(auth, (auth_user) => {
       if (!auth_user) {
         setMessage("You've been signed out. Redirecting you.")
@@ -72,8 +73,8 @@ function EditDocument() {
                 if (data.feedback.length > 0) {
                   setFeedback(data.feedback);
                   setFeedbackPanel(true);
-                } 
-              }
+                } else setFeedback([]);
+              } 
             }
           } catch (_) {
             navigate("/");
@@ -101,7 +102,8 @@ function EditDocument() {
       setLoadingPanel(true);
       setAiPanelActive(true);
 
-      fetch("https://eloquence-68ro.onrender.com/get_points", {
+      // fetch("https://eloquence-68ro.onrender.com/get_points", {
+      fetch("http://localhost:8000/get_points", {
         method: "POST",
         body: JSON.stringify({
           writing: writing ?? text,

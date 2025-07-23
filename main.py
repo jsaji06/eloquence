@@ -25,14 +25,15 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://eloquence-eight.vercel.app",
-    "https://eloquence-68ro.onrender.com",
-        "https://eloquence-joshua-sajis-projects.vercel.app",
-        "https://eloquence-git-main-joshua-sajis-projects.vercel.app"
+        "*",
+    #     "https://eloquence-eight.vercel.app",
+    # "https://eloquence-68ro.onrender.com",
+    #     "https://eloquence-joshua-sajis-projects.vercel.app",
+    #     "https://eloquence-git-main-joshua-sajis-projects.vercel.app"
     ],
     allow_headers=["*"],
     allow_methods=["*"],
-    # allow_credentials=True,
+    allow_credentials=True,
 )
 class UserInput(TypedDict):
     writing:str
@@ -114,23 +115,17 @@ def create_socrates():
 This method is responsible for intelligently dividing the user's writing into subsections using a pre-trained machine learning model. 
 """
 def divide_text(state:SocratesState):
-    print("DIVIDING TEXT")
     essay = state['user_essay']
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
-    print("INITIATING MODEL")
     model = get_sentence_transformer()
-    print("MODEL INITIATED")
     embeddings = model.encode(sentences)
     subsections = []
     docmats = [embeddings]
-    print("ATTEMPTING TO DIVIDE")  
     try:
-        print("GETTING PENALTIES")
         penalty = get_penalty(docmats, max((word_count // 100) + 3, 1)) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
-        print("RETRIEVEED SEGMENTS")
         return {"subsections":segments}
     except ValueError:
         raise Exception("The structure of your writing is not valid. The AI feature works best with essays/writing pieces.")
@@ -143,7 +138,6 @@ Each subsection will contain at most 3 critical points. These points come under 
 def retrieve_points(state:SocratesState):
     subsections = state['subsections']
     try:
-        print("starting to retrieve points")
         PROMPT = PromptTemplate.from_template("""
         You are Socrates. Analyze this subsection and create exactly 3 critical points.
 
@@ -196,7 +190,6 @@ def retrieve_points(state:SocratesState):
         points = []
         for i in range(len(subsections)):
             if subsections[i] != [""]:
-                print(i + 1, " / ", len(subsections), subsections[i])
                 prompt = PROMPT.invoke({"subsection_number": i + 1, "writing": subsections[i]})
                 point = socrates.with_structured_output(Response).invoke(prompt)
                 point_list = point.points
@@ -212,12 +205,10 @@ def retrieve_points(state:SocratesState):
                         seen_list.add(highlights)
                 point.points = new_list
                 points.append(point)
-            else: print("ldk")
             
         state = {**state, "response":points}
         return state
     except Exception as e:
-        print(e)
         raise
     
 """
@@ -236,19 +227,14 @@ def retrieve_advice(selected_points):
         
         Return only a JSON object with a single key `advice` containing a list of strings.
         """)
-        print("create model")
         socrates = create_socrates()
         advices = []
-        print(len(selected_points), selected_points)
         for point in selected_points:
-            print(point)
             prompt = MORE_ADVICE_PROMPT.invoke({'advice':point['content']})
             advice = socrates.with_structured_output(Advice).invoke(prompt).advice
-            print(advice)
             advices.append(advice)
         return advices
     except Exception as e:
-        print(e)
         raise
 
 # Establish LangGraph workflow (divide text into subsections -> retrieve analysis on each subsection)
