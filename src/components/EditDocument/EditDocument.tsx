@@ -72,7 +72,7 @@ function EditDocument() {
                 if (data.feedback.length > 0) {
                   setFeedback(data.feedback);
                   setFeedbackPanel(true);
-                }
+                } 
               }
             }
           } catch (_) {
@@ -120,7 +120,7 @@ function EditDocument() {
           setLoadingPanel(false);
           setAIData(data);
           setFeedback([]);
-          updateDocument(document_id!, undefined, undefined, data, []);
+          updateDocument(document_id!, undefined, undefined, data, undefined);
         })
         .catch(_ => {
           setLoadingPanel(false);
