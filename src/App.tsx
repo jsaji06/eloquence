@@ -4,6 +4,7 @@ import Login from "./components/LoginSignup/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Signup from './components/LoginSignup/Signup';
 import EmailVerification from './components/LoginSignup/EmailVerification';
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 export default function App() {
   return (
