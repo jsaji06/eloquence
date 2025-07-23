@@ -5,8 +5,6 @@ import { updateDoc, doc } from "firebase/firestore";
 import { type Response, type FeedbackResponse } from "../Types";
 import { sendPasswordResetEmail } from "firebase/auth";
 
-console.log('FIREBASE_KEY:', import.meta.env);
-
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_KEY,
     authDomain: "eloquence-39ed6.firebaseapp.com",
