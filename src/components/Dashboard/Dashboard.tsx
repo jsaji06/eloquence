@@ -11,7 +11,6 @@ import Loading from '../Loading/Loading';
 import { type Doc, type UserInformation } from '../../Types';
 import Alert from '../Alert/Alert';
 export default function Dashboard() {
-    console.log("Was good wit it bros")
     const navigate = useNavigate();
     const db = getFirestore()
     const auth = getAuth();

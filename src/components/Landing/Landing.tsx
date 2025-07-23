@@ -7,7 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-
+import mainImg from './mainimg.png'
 export default function Landing() {
 
 useEffect(() => {
@@ -36,7 +36,7 @@ useEffect(() => {
           <h1>Eloquence: Where Better Writing Begins</h1>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
           <div className="mainImage">
-            <img src="src/components/Landing/Group 155.png" />
+            <img src={mainImg} />
           </div>
           <button onClick={() => navigate("/signup")}>Get started</button>
         </div>

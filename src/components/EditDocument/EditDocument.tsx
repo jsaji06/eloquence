@@ -75,8 +75,7 @@ function EditDocument() {
                 }
               }
             }
-          } catch (err) {
-            console.log("ERRORFINWOERMK", err)
+          } catch (_) {
             navigate("/");
           }
         }
@@ -124,7 +123,6 @@ function EditDocument() {
           updateDocument(document_id!, undefined, undefined, data, []);
         })
         .catch(_ => {
-          console.log(_)
           setLoadingPanel(false);
           setAiPanelActive(false);
           setMessage("An error occured. Please try again.");
