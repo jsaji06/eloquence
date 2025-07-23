@@ -54,6 +54,7 @@ function EditDocument() {
       else {
         let getDocument = async () => {
           let d = doc(db, "documents", document_id!);
+
           setLoading(true);
           try {
             let document = await getDoc(d);
@@ -118,7 +119,7 @@ function EditDocument() {
           setLoadingPanel(false);
           setAIData(data);
           setFeedback([]);
-          updateDocument(document_id!, undefined, undefined, data, undefined);
+          updateDocument(document_id!, undefined, undefined, data, []);
         })
         .catch(_ => {
           console.log(_)
