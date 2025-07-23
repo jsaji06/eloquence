@@ -23,7 +23,7 @@ export default function ForgotPassword() {
         }}>Send Password Reset Email</button>
         <div className="options">
             <div className="otherOptions">
-                <a href='/login'>Remembered your password?</a>
+                <a href='/'>Remembered your password?</a>
                 <a href='/signup'>Don't have an account?</a>
             </div>
         </div>
