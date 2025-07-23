@@ -24,14 +24,7 @@ from functools import lru_cache
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=[
-    #     "https://eloquence-eight.vercel.app",
-    #     "https://eloquence-68ro.onrender.com",
-    #     "https://eloquence-joshua-sajis-projects.vercel.app"
-    # ],
     allow_origins=[
-        # "*",
-        # "*"
         "https://eloquence-eight.vercel.app",
     "https://eloquence-68ro.onrender.com",
         "https://eloquence-joshua-sajis-projects.vercel.app",
@@ -121,7 +114,7 @@ This method is responsible for intelligently dividing the user's writing into su
 """
 def divide_text(state:SocratesState):
     print("DIVIDING TEXT")
-    essay = state['user_essay']
+    essay = state['user_essay']['writing']
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
     print("INITIATING MODEL")
@@ -269,13 +262,13 @@ workflow.add_edge("get_points", END)
 workflow = workflow.compile()
 
 # API Endpoint to retrieve points / start intitial workflow
-from fastapi import Request
+
 @app.post("/get_points")
-async def get_points(writing:Request):
+def get_points(writing:UserInput):
    print("req received")
-   body = await writing.json()
+#    body = await writing.json()
    print("body: ", body)
-   writing = body.get("writing")
+#    writing = body.get("writing")
    print(f"Writing text length: {len(writing) if writing else 'None'}")
    if not writing:
         raise HTTPException(status_code=400, detail="No writing content provided")
