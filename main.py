@@ -31,7 +31,10 @@ app.add_middleware(
     # ],
     allow_origins=[
         # "*",
-        "*"
+        # "*"
+        "https://eloquence-eight.vercel.app",
+    "https://eloquence-68ro.onrender.com",
+        "https://eloquence-joshua-sajis-projects.vercel.app",
     ],
     allow_headers=["*"],
     allow_methods=["*"],
