@@ -74,7 +74,8 @@ function EditDocument() {
               }
             }
           } catch (err) {
-            navigate("/login");
+            console.log(err)
+            navigate("/");
           }
         }
         getDocument();
