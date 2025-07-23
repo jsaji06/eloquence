@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "frontend": "react-scripts start",
+    "frontend": "vite",
     "backend": "uvicorn main:app --reload --port 8000",
     "start": "concurrently \"npm run backend\" \"npm run frontend\" "
   },
@@ -26,6 +26,7 @@
     "@tiptap/pm": "^2.23.0",
     "@tiptap/react": "^2.23.0",
     "@tiptap/starter-kit": "^2.23.0",
+    "aos": "^2.3.4",
     "concurrently": "^9.2.0",
     "dotenv": "^17.2.0",
     "firebase": "^11.10.0",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@types/aos": "^3.0.7",
     "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",

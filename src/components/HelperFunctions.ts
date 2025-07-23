@@ -8,7 +8,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 console.log('FIREBASE_KEY:', import.meta.env);
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_KEY,
+    apiKey: import.meta.env.VITE_API_KEY,
     authDomain: "eloquence-39ed6.firebaseapp.com",
     projectId: "eloquence-39ed6",
     storageBucket: "eloquence-39ed6.firebasestorage.app",

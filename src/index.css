@@ -110,17 +110,6 @@ select:hover {
     transition: .5s;
 }
 
-/* Layout Components */
-.landingPage {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-}
-
 .dashboard {
     min-width: 100vw;
     height: 100%;
@@ -662,4 +651,121 @@ input[type="color"]::-webkit-color-swatch {
 
 mark:hover{
     cursor:pointer;
+}
+
+
+/* Layout Components */
+.landingPage {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg-secondary);
+    background: linear-gradient(135deg,var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    
+    
+}
+
+.landingPage .main {
+    display:flex;
+    flex-direction: column;
+    padding:50px 0;
+    gap:100px;
+    /* align-items: center;
+    justify-content: center;
+    min-height:100vh;
+    gap:15px; */
+
+}
+
+.main .one {
+    min-height:100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;   
+    gap:25px; 
+}
+
+.landingPage h1 {
+    font-size:72px;
+    inline-size:50%;
+    text-align: center;
+    
+}
+
+.landingPage p {
+    font-size:24px;
+    font-weight:200;
+}
+
+.landingPage nav {
+    display:flex;
+    padding:75px;
+    
+}
+
+.landingPage nav .right {
+    margin-left:auto;
+    display:flex;
+    gap:50px;
+    
+}
+
+.landingPage nav .right a {
+    color:var(--text-secondary);
+}
+
+.landingPage a {
+    text-decoration: none;
+    color:var(--text-primary);
+    font-family:"DM Sans";
+    font-size:1.1em;
+    font-weight:300;
+}
+
+.landingPage .two, .landingPage .three {
+    margin:0 150px;
+}
+
+.landingPage h2 {
+    font-size:64px;
+}
+
+.landingPage button {
+    border-radius: 0;
+    padding:15px 40px;
+}
+
+.features {
+    display:flex;
+    gap:100px;
+
+}
+
+.feature {
+    /* background-color: var(--bg-secondary); */
+    width:33%;
+    height:300px;
+}
+
+.feature h3 {
+    font-size:36px;
+}
+
+.feature h4 {
+    font-size:24px;
+}
+
+.feature p 
+{
+    font-size:18px;
+}
+
+.landingPage .three {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.landingPage .three .getStarted {
+    margin-left:auto
 }

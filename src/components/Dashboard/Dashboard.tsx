@@ -9,7 +9,7 @@ import Document from "../Document/Document";
 import "./style.css"
 import Loading from '../Loading/Loading';
 import { type Doc, type UserInformation } from '../../Types';
-
+import Alert from '../Alert/Alert';
 export default function Dashboard() {
     console.log("Was good wit it bros")
     const navigate = useNavigate();
@@ -20,10 +20,11 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [authenticated, setAuthenticated] = useState(true);
+    const [message, setMessage] = useState<string | undefined>()
 
     useEffect(() => {
         if (!authenticated) {
-            navigate("/")
+            navigate("/login")
             return;
         }
     }, [authenticated])
@@ -53,6 +54,8 @@ export default function Dashboard() {
                             if (!doc.trash) docs.push({ ...doc, id: test.id })
                         })
                         setDocuments(docs.sort((a: Doc, b: Doc) => b.recentlyModified - a.recentlyModified));
+                    }, (_) => {
+                        setMessage("There was an error trying to retrieve user documents. Please try again.")
                     })
                     setLoading(false)
                     setAuthenticated(true)
@@ -74,8 +77,8 @@ export default function Dashboard() {
         try {
             await signOut(auth);
             navigate("/")
-        } catch (err) {
-            console.log(err);
+        } catch (_) {
+            setMessage("There was an issue trying to sign you out; please try again.")
         }
     }
 
@@ -100,6 +103,7 @@ export default function Dashboard() {
 
     return (
         <>
+        {message && <Alert message={message} setMessage={setMessage} /> }
             <div className="dashboard">
                 {loading && <Loading />}
                 <nav>
