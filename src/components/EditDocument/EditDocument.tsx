@@ -41,7 +41,7 @@ function EditDocument() {
   const db = getFirestore();
   const auth = getAuth();
 
-  
+
 
   useEffect(() => {
     const unsubscribed = onAuthStateChanged(auth, (auth_user) => {
@@ -68,9 +68,11 @@ function EditDocument() {
                 setAIData(data.aiData);
                 setAiPanelActive(true)
               }
-              if(data.feedback.length > 0){
-                setFeedback(data.feedback);
-                setFeedbackPanel(true);
+              if (data.feedback) {
+                if (data.feedback.length > 0) {
+                  setFeedback(data.feedback);
+                  setFeedbackPanel(true);
+                }
               }
             }
           } catch (err) {
@@ -99,7 +101,7 @@ function EditDocument() {
       setFeedback([])
       setLoadingPanel(true);
       setAiPanelActive(true);
-      
+
       fetch("https://eloquence-68ro.onrender.com/get_points", {
         method: "POST",
         body: JSON.stringify({
