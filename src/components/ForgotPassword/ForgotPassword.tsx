@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react';
 import { forgotPassword } from '../HelperFunctions';
 export default function ForgotPassword() {
@@ -12,7 +11,6 @@ export default function ForgotPassword() {
         <br />
         <button type="submit" onClick={async (e) => {
             e.preventDefault();
-            // let auth = getAuth();
             await forgotPassword(email);
         }}>Send Password Reset Email</button>
         <div className="options">
