@@ -34,7 +34,7 @@ useEffect(() => {
       <div className="main">
         <div className="one">
           <h1>Eloquence: Where Better Writing Begins</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+          <p>Behind every great piece of writing is rigorous thinking. Eloquence pushes you beyond grammar into the heart of your ideas—where true clarity lives.</p>
           <div className="mainImage">
             <img src={mainImg} />
           </div>
@@ -62,7 +62,7 @@ useEffect(() => {
           </div>
         </div>
         <div className="three">
-          <h2>Let's make you a better writer.</h2>
+          <h2>Become a better writer today.</h2>
           <button className="getStarted" onClick={() => navigate("/signup")}>Sign up for free</button>
         </div>
       </div>
