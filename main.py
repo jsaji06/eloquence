@@ -28,6 +28,7 @@ app.add_middleware(
         "https://eloquence-eight.vercel.app",
     "https://eloquence-68ro.onrender.com",
         "https://eloquence-joshua-sajis-projects.vercel.app",
+        "https://eloquence-git-main-joshua-sajis-projects.vercel.app"
     ],
     allow_headers=["*"],
     allow_methods=["*"],
