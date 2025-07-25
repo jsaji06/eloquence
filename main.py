@@ -25,6 +25,8 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "www.eloquenceai.org",
+        "https://eloquenceai.org",
         "https://eloquence-eight.vercel.app",
     "https://eloquence-68ro.onrender.com",
         "https://eloquence-joshua-sajis-projects.vercel.app",
