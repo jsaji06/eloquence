@@ -38,7 +38,7 @@ export default function Login() {
                             setError("Invalid password or email; please try again.")
                         })
                 }}>Login</button>
-                        <button type="submit" onClick={e => {
+                        <button type="button" onClick={e => {
                             loginWithGoogle(e)
                                 .then((_) => {
                                     navigate("/dashboard")

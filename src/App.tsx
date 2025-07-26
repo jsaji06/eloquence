@@ -6,12 +6,13 @@ import Signup from './components/LoginSignup/Signup';
 import EmailVerification from './components/LoginSignup/EmailVerification';
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import Landing from "./components/Landing/Landing";
-
+import Guest from "./components/Guest/Guest"
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />}></Route>
+        <Route path="/guesteditor" element={<Guest />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/verification" element={<EmailVerification />}></Route>
         <Route path="/signup" element={<Signup />}></Route>

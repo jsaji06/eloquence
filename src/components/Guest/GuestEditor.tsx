@@ -9,11 +9,9 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
 import TextStyle from "@tiptap/extension-text-style";
-import './style.css'
-import { updateDocument } from '../../HelperFunctions'
-import { Timestamp } from 'firebase/firestore'
-import { type Response, type Point } from '../../../Types'
-import { type ActiveText } from '../../../Types'
+import '../../index.css'
+import { type Response, type Point } from '../../Types'
+import { type ActiveText } from '../../Types'
 import { type Editor as TiptapEditor } from '@tiptap/react'
 import { useRef } from 'react'
 
@@ -22,13 +20,11 @@ const html_tag_regex = new RegExp("<[^>]+>")
 const extensions = [StarterKit, Heading, Underline, Highlight.configure({ multicolor: true }), TextStyle, Color, Placeholder.configure({ placeholder: "Your masterpiece begins here. To enable AI features, write at least 25 words. This editor has Markdown support.", emptyEditorClass: "empty-editor" })]
 
 interface EditorProps {
-  docId: string;
   text: string;
   setText: (value: string) => void;
   review: (value?: string) => void
   loading: boolean;
   title: string;
-  setRecentlyModified: Dispatch<SetStateAction<Timestamp | undefined>>
   aiData: Response[]
   feedback: Array<any>
   setFeedback: Dispatch<SetStateAction<Array<any>>>
@@ -37,9 +33,11 @@ interface EditorProps {
   aiPanel: boolean
   setAiData: Dispatch<SetStateAction<Response[] | undefined>>
   setMessage: Dispatch<SetStateAction<string | undefined>>
+  setActions?:Dispatch<SetStateAction<number>>
+
 }
 
-const Editor = (props: EditorProps) => {
+const GuestEditor = (props: EditorProps) => {
   const editor = useEditor({
     extensions,
     content: props.text,
@@ -50,21 +48,22 @@ const Editor = (props: EditorProps) => {
     },
     onUpdate: ({ editor }) => {
       props.setText(editor.getHTML());
-      props.setRecentlyModified(Timestamp.now());
-      updateDocument(props.docId, undefined, editor.getHTML(), undefined);
     },
   })
   let dataRef = useRef(props.aiData || [])
 
   useEffect(() => {
     dataRef.current = props.aiData || []
-    console.log(dataRef.current);
   }, [props.aiData])
+
+
 
   useEffect(() => {
     document.querySelector(".editor")?.addEventListener("click", (e: Event) => {
       const target = e.target as HTMLElement
       if (target.tagName === "MARK") {
+        if(props.setActions)
+          props.setActions(prev => prev - 1)
         dataRef.current.map((data, _) => {
           data.points.map((point, _) => {
             point.active = true
@@ -148,10 +147,12 @@ const Editor = (props: EditorProps) => {
       .normalize('NFD') // Decompose characters
       .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
       .normalize('NFKC') // Recompose remaining characters
+      .replace(/[–—‑]/g, '-') // Normalize various dashes to hyphen-minus
       .trim();
 
   function findText(editor: TiptapEditor, text: string) {
     const normalizedRaw = normalize(editor.getText());
+    console.log(normalizedRaw)
     const normIndex = normalizedRaw.indexOf(normalize(text));
     if (normIndex !== -1) {
       let from = normIndex + 1;
@@ -174,7 +175,6 @@ const Editor = (props: EditorProps) => {
         .run()
     }
   }
-
 
 
   let getHeadingVal = (level: number) => {
@@ -297,5 +297,5 @@ const Editor = (props: EditorProps) => {
 }
 
 
-export default Editor
+export default GuestEditor
 

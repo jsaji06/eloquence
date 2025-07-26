@@ -117,6 +117,7 @@ This method is responsible for intelligently dividing the user's writing into su
 """
 def divide_text(state:SocratesState):
     essay = state['user_essay']
+    print(essay)
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
     model = get_sentence_transformer()
@@ -124,11 +125,15 @@ def divide_text(state:SocratesState):
     subsections = []
     docmats = [embeddings]
     try:
-        penalty = get_penalty(docmats, max((word_count // 100) + 3, 1)) # ✅ FIXED
+        penalty = get_penalty(docmats, max((word_count // 10), 50)) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
         return {"subsections":segments}
-    except ValueError:
+    except ValueError as e:
+        if "too short for given segment_len" in str(e):
+        # Fallback: treat entire text as one segment
+            return {"subsections": [sentences]}  # or however you want to handle short docs
+    else:
         raise Exception("The structure of your writing is not valid. The AI feature works best with essays/writing pieces.")
 
 """

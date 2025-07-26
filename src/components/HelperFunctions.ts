@@ -1,9 +1,8 @@
 import { initializeApp } from "firebase/app"
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
-import { getFirestore } from "firebase/firestore";
-import { updateDoc, doc } from "firebase/firestore";
 import { type Response, type FeedbackResponse } from "../Types";
 import { sendPasswordResetEmail } from "firebase/auth";
+import { getFirestore, doc, setDoc, updateDoc, collection, arrayUnion, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_KEY,
@@ -24,11 +23,12 @@ export let loginWithEmail = (e: React.MouseEvent<HTMLButtonElement>, email: stri
     const auth = getAuth(app);
     return signInWithEmailAndPassword(auth, email, password)
 }
-export let loginWithGoogle = (e: React.MouseEvent<HTMLButtonElement>) => {
+export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider()
     return signInWithPopup(auth, provider)
+
 }
 
 export let updateDocument = async (documentId: string, title?: string, content?: string, aiData?: Response[], feedback?: FeedbackResponse[]) => {
@@ -42,38 +42,52 @@ export let updateDocument = async (documentId: string, title?: string, content?:
     if (content) {
         update.content = content;
     }
-    if(aiData) {
+    if (aiData) {
         update.aiData = aiData;
     }
-    if(feedback){
+    if (feedback) {
         update.feedback = feedback;
-    } 
+    }
     try {
         await updateDoc(doc(db, "documents", documentId), update);
     }
-    catch(err){
+    catch (err) {
         console.log(err);
     }
 }
 
-export let trashDocument = async (documentId:string) => {
+export let trashDocument = async (documentId: string) => {
     const update: any = {
-        trash:true
+        trash: true
     }
     try {
         await updateDoc(doc(db, "documents", documentId), update);
-    } catch(err) {
+    } catch (err) {
         console.log(err)
     }
 }
 
-export let forgotPassword = async (email:string) => {
+export let forgotPassword = async (email: string) => {
     const auth = getAuth(app);
     try {
-       await sendPasswordResetEmail(auth, email)
-       console.log("Yay!");
+        await sendPasswordResetEmail(auth, email)
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-    }   
+    }
+}
+
+export let createDoc = async (id: string, document: any) => {
+    try {
+        let guestD = await addDoc(collection(db, "documents"), {
+            ...document,
+            ownerId: id
+        })
+        let docId = guestD.id;
+        await setDoc(doc(db, "users", id), { 
+            documents: arrayUnion(docId)
+        }, {merge:true})
+    } catch (err) {
+        console.log(err)
+    }
 }

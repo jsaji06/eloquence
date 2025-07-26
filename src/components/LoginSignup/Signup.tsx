@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { loginWithGoogle } from "../HelperFunctions.ts";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import Alert from "../Alert/Alert.tsx";
+import { createDoc } from '../HelperFunctions.ts';
+
 
 export default function Signup() {
     const [firstName, setFirstName] = useState("");
@@ -11,6 +13,9 @@ export default function Signup() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | undefined>(undefined);
     const navigate = useNavigate();
+    const location = useLocation();
+    const state = location.state;
+
     return (
         <>
             {error && <Alert setMessage={setError} message={error} />}
@@ -31,13 +36,27 @@ export default function Signup() {
                         let userCredentials = await createUserWithEmailAndPassword(auth, email, password);
                         let user = userCredentials.user;
                         await sendEmailVerification(user)
-                        navigate("/verification", { state: { firstName: firstName, lastName: lastName } })
+                        navigate("/verification", { state: { firstName: firstName, lastName: lastName, doc: state } })
 
                     } catch (error) {
                         setError("There was an error in registering your account. Please try again later.")
                     }
                 }}>Signup</button>
-                <button type="submit" onClick={e => loginWithGoogle(e)} >Login with Google</button>
+                <button type="button" onClick={ async (e) => {
+                    try {
+                    let user = await loginWithGoogle(e)
+                    if(state){
+                        try {
+                        await createDoc(user.user.uid, state);
+                        } catch(err) {
+                            console.log(err)
+                        }
+                    }
+                    navigate("/dashboard")
+                } catch(err){
+                    console.log(err)
+                }                    
+                }}>Login with Google</button>
                 <div className="options">
                     <div className="otherOptions">
                         <a href='/login'>Already have an account?</a>

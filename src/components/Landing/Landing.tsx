@@ -29,6 +29,7 @@ useEffect(() => {
         <div className="right">
           <a href="/login">Login</a>
           <a href="/signup">Signup</a>
+          <a href="/guesteditor">Use as Guest</a>
         </div>
       </nav>
       <div className="main">

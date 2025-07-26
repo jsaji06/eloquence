@@ -101,7 +101,6 @@ function EditDocument() {
       setFeedback([])
       setLoadingPanel(true);
       setAiPanelActive(true);
-
       fetch("https://eloquence-68ro.onrender.com/get_points", {
         method: "POST",
         body: JSON.stringify({

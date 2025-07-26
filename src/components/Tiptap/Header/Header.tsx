@@ -35,7 +35,8 @@ const Header = (props: HeaderProps) => {
     },
     onUpdate: async ({ editor }) => {
       props.setTitle(editor?.getJSON()?.content![0].content![0].text ?? "")
-      updateDocument(props.docId, editor?.getJSON()?.content![0].content![0].text, undefined, undefined);
+      if(props.docId !== "GUEST")
+        updateDocument(props.docId, editor?.getJSON()?.content![0].content![0].text, undefined, undefined);
     }
 
   })

@@ -18,24 +18,16 @@ export default function Dashboard() {
     const [documents, setDocuments] = useState<Doc[]>();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const [authenticated, setAuthenticated] = useState(true);
     const [message, setMessage] = useState<string | undefined>()
-
-    useEffect(() => {
-        if (!authenticated) {
-            navigate("/login")
-            return;
-        }
-    }, [authenticated])
 
     useEffect(() => {
         setLoading(true)
         let unsubscribeUserDoc: (() => void) | undefined;
         let unsubUser: (() => void) | undefined;
-
         const unsubscribed = onAuthStateChanged(auth, (auth_user) => {
             if(!auth_user) {
-                setAuthenticated(false)
+                
+                navigate("/login")
                 return;
             }
             let userID = auth_user.uid;
@@ -57,10 +49,9 @@ export default function Dashboard() {
                         setMessage("There was an error trying to retrieve user documents. Please try again.")
                     })
                     setLoading(false)
-                    setAuthenticated(true)
                 } else {
-                    setAuthenticated(false)
                     setLoading(false);
+                    navigate("/login")
                     return;
                 }
             })

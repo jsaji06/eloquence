@@ -3,6 +3,7 @@ import { getAuth } from 'firebase/auth'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getFirestore, collection, setDoc, doc } from 'firebase/firestore';
 import Alert from "../Alert/Alert"
+import { createDoc } from '../HelperFunctions';
 
 const auth = getAuth();
 const db = getFirestore();
@@ -14,6 +15,7 @@ export default function () {
 
     let firstName = location.state.firstName
     let lastName = location.state.lastName
+    let guestDoc = location.state.doc;
 
     const checkVerification = async () => {
         if (auth.currentUser) {
@@ -30,7 +32,8 @@ export default function () {
                     }
                     try {
                         await setDoc(docRef, newDoc)
-                        console.log("User successfully registered in database")
+                        await createDoc(id, guestDoc)
+                        console.log("User successfully registered in database & Created document")
                         navigate("/dashboard")
                     } catch(err){
                         console.log("dih", err)
