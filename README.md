@@ -10,24 +10,24 @@ Click [this link](https://eloquenceai.org) for the live application.
 
 ## Features
 
-	### Socratic AI Feedback
-        - Receive constructive suggestions that identify weak reasoning, vague phrasing, and logical gaps—not just grammar errors.
+### Socratic AI Feedback
+    - Receive constructive suggestions that identify weak reasoning, vague phrasing, and logical gaps—not just grammar errors.
 
-	###	Document Highlighting
-        - Feedback is visually mapped to your text with inline highlights and explanations.
+###	Document Highlighting
+    - Feedback is visually mapped to your text with inline highlights and explanations.
 
-	### Editor with Rich Formatting
-        - Built on Tiptap, offering a distraction-free interface for writing and editing.
+### Editor with Rich Formatting
+    - Built on Tiptap, offering a distraction-free interface for writing and editing.
 
-	### AI Summaries
-        - Quickly generate summaries to distill key points of your writing.
+### AI Summaries
+    - Quickly generate summaries to distill key points of your writing.
 
-	### Guest Feature
-        - Try Eloquence without an account; sign up to save your work.
+### Guest Feature
+    - Try Eloquence without an account; sign up to save your work.
 
 ⸻
 
-Tech Stack
+## Tech Stack
 	•	Frontend: React, TypeScript, Tiptap, CSS
 	•	Backend: FastAPI, LangGraph, LangChain
 	•	Authentication: Firebase Auth
