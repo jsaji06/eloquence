@@ -1,6 +1,6 @@
 ⸻
 
-Eloquence
+# Eloquence
 
 Eloquence is a writing assistant that helps you sharpen your ideas, not just your grammar. By analyzing structure, clarity, and argumentation, Eloquence guides users toward stronger, more coherent writing. Built for thinkers, students, and professionals who want more than just spelling and grammar fixes.
 
@@ -8,7 +8,8 @@ Click [this link](https://eloquenceai.org) for the live application.
 
 ⸻
 
-Features
+## Features
+
 	•	Socratic AI Feedback
 Receive constructive suggestions that identify weak reasoning, vague phrasing, and logical gaps—not just grammar errors.
 	•	Document Highlighting
@@ -31,19 +32,19 @@ Tech Stack
 
 ⸻
 
-🧠 Philosophy
+## 🧠 Philosophy
 
 Writing is one of the most effective communicators of ideas. However, with unpolished, unclear writing, some of the ideas the writer wants to communicate may be overlooked. Sometimes, peer reviewers may not be able to truly break an argument down. That's why Eloquence was built - Eloquence is not just your average peer reviewer. It's a thinking assistant. It's ultimate goal: make you a better thinker, not just a cleaner writer.
 
 ⸻
 
-🙋‍♀️ Contributions
+## 🙋‍♀️ Contributions
 
 This project is currently a solo build. However, feedback, suggestions, and pull requests are welcome. Feel free to open an issue or reach out.
 
 ⸻
 
-📄 License
+## 📄 License
 
 This project is licensed under All Rights Reserved.
 
