@@ -7,9 +7,11 @@ import EmailVerification from './components/LoginSignup/EmailVerification';
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import Landing from "./components/Landing/Landing";
 import Guest from "./components/Guest/Guest"
+import { Analytics } from "@vercel/analytics/react";
 export default function App() {
   return (
     <BrowserRouter>
+      <Analytics />
       <Routes>
         <Route path="/" element={<Landing />}></Route>
         <Route path="/guesteditor" element={<Guest />}></Route>
