@@ -1,34 +1,45 @@
 /* Consolidated CSS with Consistent Color Theme */
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
     /* Base theme */
-    --bg-primary: #0b0b0f;     /* Rich dark chocolate */
-    --bg-secondary: #10121a;   /* Deep mocha */
-    --text-primary: #e8ddc3;   /* Elegant cream */
-    --text-secondary: #d6c195; /* Refined cream */
+    --bg-primary: #0b0b0f;
+    /* Rich dark chocolate */
+    --bg-secondary: #10121a;
+    /* Deep mocha */
+    --text-primary: #e8ddc3;
+    /* Elegant cream */
+    --text-secondary: #d6c195;
+    /* Refined cream */
     /* /* --bg-primary: #120e09;     Rich dark chocolate */
     /* --bg-secondary: #251e16;   Deep mocha */
     /* --text-primary: #e8ddc3;   Elegant cream */
-    /* --text-secondary: #d6c195; Refined cream */ 
-    
+    /* --text-secondary: #d6c195; Refined cream */
+
 
 }
-html, body {
+
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
-  }
+}
+
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: "Playfair Display";
     font-weight: normal;
-    color:var(--text-primary)
+    color: var(--text-primary)
 }
 
 p {
-    color:var(--text-secondary)
+    color: var(--text-secondary)
 }
 
 h1 {
@@ -39,7 +50,8 @@ h4 {
     font-size: 24px;
 }
 
-p, li {
+p,
+li {
     font-family: "DM Sans";
     font-weight: 300;
     font-size: 15px;
@@ -48,7 +60,8 @@ p, li {
 }
 
 /* Base Elements */
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     background-color: var(--bg-primary);
@@ -113,8 +126,8 @@ select:hover {
 .dashboard {
     min-width: 100vw;
     height: 100%;
-    padding-top:5px;
-    padding-bottom:40px
+    padding-top: 5px;
+    padding-bottom: 40px
 }
 
 .eContainer {
@@ -137,16 +150,18 @@ select:hover {
     padding: 57.5px 150px;
     align-items: flex-start;
     justify-content: flex-start;
-    scroll-behavior: smooth; /* Add this for smoother scrolling */
+    scroll-behavior: smooth;
+    /* Add this for smoother scrolling */
 }
+
 .editorContainer #exitDoc {
     flex-grow: 0;
     align-self: flex-start;
 }
 
 .editorContent {
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
 }
 
 .container {
@@ -208,22 +223,22 @@ nav.panelNav {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap:150px;
+    gap: 150px;
 }
 
 .dashHeader {
     align-self: flex-start;
-    margin-left:60px;
+    margin-left: 60px;
 }
 
 .dashHeader h1 {
-    font-size:96px;
+    font-size: 96px;
     /* color:var(--text-secondary); */
 }
 
 .dashHeader p {
-    color:var(--text-secondary);
-    font-size:16px;
+    color: var(--text-secondary);
+    font-size: 16px;
 }
 
 
@@ -249,10 +264,12 @@ nav.panelNav {
 }
 
 .documentView:before {
-    content:'';
-    position:absolute;
-    top:0;left:0;right:0;
-    height:3px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
     background-color: var(--accent);
     border-radius: 15px;
 
@@ -281,11 +298,11 @@ p.docContent {
 }
 
 .bottom .icons {
-    margin-left:auto;
+    margin-left: auto;
 }
 
 .bottom .icons svg {
-    font-size:16px;
+    font-size: 16px;
 }
 
 .bottom * {
@@ -371,13 +388,14 @@ p.docContent {
     flex-direction: row;
     padding: 12.5px 30px;
 }
+
 button.bubbleBtn {
     background-color: var(--bg-secondary);
 }
 
 .bubbleBtn:hover {
     background-color: var(--text-secondary);
-    color:var(--bg-secondary)
+    color: var(--bg-secondary)
 }
 
 .floatingMenu {
@@ -532,7 +550,7 @@ button.bubbleBtn {
     height: auto;
     background-color: var(--bg-secondary);
     margin: 0;
-    padding:85px 60px;
+    padding: 85px 60px;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -575,10 +593,10 @@ button.bubbleBtn {
     /* flex-grow: 0;
     flex-shrink: 0;
     align-self: flex-end; */
-    position:absolute;
-    top:0;
-    right:0;
-    padding:45px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 45px;
 
 }
 
@@ -598,7 +616,8 @@ button.bubbleBtn {
     color: var(--text-secondary);
 }
 
-.saved, .time {
+.saved,
+.time {
     color: var(--text-secondary);
 }
 
@@ -638,134 +657,255 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .docHeader:hover {
-    text-decoration:underline;
+    text-decoration: underline;
 }
 
-.editor{
-    color:white;
+.editor {
+    color: white;
 }
 
 .google * {
-    margin:0 5px;
+    margin: 0 5px;
 }
 
-mark:hover{
-    cursor:pointer;
+mark:hover {
+    cursor: pointer;
 }
 
 
 /* Layout Components */
-.landingPage {
+/* .landingPage {
     width: 100%;
     min-height: 100vh;
     background: var(--bg-secondary);
-    background: linear-gradient(135deg,var(--bg-secondary) 0%, var(--bg-primary) 100%);
-    
-    
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+
+
 }
 
 .landingPage .main {
-    display:flex;
+    display: flex;
     flex-direction: column;
-    padding:50px 0;
-    gap:100px;
+    padding: 50px 0;
+    gap: 100px;
     /* align-items: center;
     justify-content: center;
     min-height:100vh;
     gap:15px; */
 
-}
+/* } */
 
 .main .one {
-    min-height:100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;   
-    gap:25px; 
+    justify-content: center;
+    text-align:center;
+    gap: 25px;
 }
 
 .landingPage h1 {
-    font-size:72px;
-    inline-size:50%;
+    font-size: 72px;
+    inline-size: 50%;
     text-align: center;
-    
+
 }
 
 .landingPage p {
-    font-size:24px;
-    font-weight:200;
+    font-size: 24px;
+    font-weight: 200;
 }
 
 .landingPage nav {
-    display:flex;
-    padding:75px;
-    
+    display: flex;
+    padding: 75px;
+
+}
+
+nav.hamburger {
+    padding:0;
 }
 
 .landingPage nav .right {
-    margin-left:auto;
-    display:flex;
-    gap:50px;
-    
+    margin-left: auto;
+    display: flex;
+    gap: 50px;
+
 }
 
 .landingPage nav .right a {
-    color:var(--text-secondary);
+    color: var(--text-secondary);
 }
 
 .landingPage a {
     text-decoration: none;
-    color:var(--text-primary);
-    font-family:"DM Sans";
-    font-size:1.1em;
-    font-weight:300;
+    color: var(--text-primary);
+    font-family: "DM Sans";
+    font-size: 1.1em;
+    font-weight: 300;
 }
 
-.landingPage .two, .landingPage .three {
-    margin:0 150px;
+.landingPage .two,
+.landingPage .three {
+    margin: 0 150px;
 }
 
 .landingPage h2 {
-    font-size:64px;
+    font-size: 64px;
 }
 
 .landingPage button {
     border-radius: 0;
-    padding:15px 40px;
+    padding: 15px 40px;
 }
 
 .features {
-    display:flex;
-    gap:100px;
+    display: flex;
+    gap: 100px;
 
 }
 
 .feature {
     /* background-color: var(--bg-secondary); */
-    width:33%;
-    height:300px;
+    width: 33%;
+    height: 300px;
 }
 
 .feature h3 {
-    font-size:36px;
+    font-size: 36px;
 }
 
 .feature h4 {
-    font-size:24px;
+    font-size: 24px;
 }
 
-.feature p 
-{
-    font-size:18px;
+.feature p {
+    font-size: 14px;
 }
 
 .landingPage .three {
-    display:flex;
+    display: flex;
     justify-content: space-between;
     align-items: center;
 
 }
+
 .landingPage .three .getStarted {
-    margin-left:auto
+    margin-left: auto
+}
+
+nav.hamburger {
+    display:none;
+}
+
+.collapsedLinks {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content:center;
+    align-items: center;
+    height:100vh;
+    width:100%;
+}
+.collapsedLinks .burgerLink {
+    height:20%;
+    width:100vw;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.burgerLink:hover {
+    background-color: var(--text-primary);
+    
+    cursor:pointer;
+}
+
+.burgerLink:hover a {
+    color:var(--bg-secondary);
+}
+
+@media (max-width:1300px) {
+    .landingPage h1 {
+        font-size: 64px;
+    }
+
+    .landingPage h2 {
+        font-size:48px;
+    }
+
+    .features {
+        display:block;
+    }
+
+    .feature {
+        width:100%;
+        text-align: center;
+    }
+
+    .landingPage h1, .landingPage h2, .landingPage h3, .landingPage h4, .landingPage h5, .landingPage h6 {
+        text-align: center;
+        width:100%;
+    }
+
+    /* .landingPage */
+} 
+
+@media(max-width:600px){
+    nav.landingNav {
+        display:none;
+    }
+
+    nav.hamburger {
+        display:flex;
+        flex-direction: column;
+        padding:50px 0;
+    }
+
+    .bars {
+        font-size:24px;
+    }
+
+    .bars {
+        cursor:pointer;
+    }
+
+
+
+    nav.navLink {
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width:100vw;
+        flex-direction: column;
+        margin-top:40px;
+    }
+    .landingPage h1 {
+        font-size:48px;
+    }
+
+    .landingPage h2 {
+        font-size:36px;
+    }
+    .landingPage h3 {
+        font-size:24px;
+    }
+    .landingPage img {
+        width:100%;
+        height:100%;
+    }
+
+    .landingPage .one {
+        padding:20px;
+    }
+
+    .landingPage .three {
+        display:block;
+        text-align: center;
+        padding:10px 0;
+    }
 }

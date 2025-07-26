@@ -5,23 +5,49 @@ import { faBrain } from "@fortawesome/free-solid-svg-icons"
 import { faComment } from "@fortawesome/free-solid-svg-icons"
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import mainImg from './mainimg.png'
+import { faBars } from "@fortawesome/free-solid-svg-icons"
+
 export default function Landing() {
 
-useEffect(() => {
-  AOS.init({
-    duration: 600, // Animation duration in ms
-    once: true, // Whether animation should happen only once
-    mirror: true // animate on scroll up too
-    
-  })
+  useEffect(() => {
+    AOS.init({
+      duration: 600, // Animation duration in ms
+      once: true, // Whether animation should happen only once
+      mirror: true // animate on scroll up too
 
-}, []);
+    })
+
+  }, []);
   const navigate = useNavigate();
+  let [collapsed, setCollapsed] = useState(false);
   return (
     <div className="landingPage" data-aos="fade-up">
+      <nav className="hamburger" data-aos="fade-up">
+        <div className="navLink">
+          <FontAwesomeIcon icon={faBars} style={{display:collapsed ? "none" : "block"}} className="bars" onClick={() => setCollapsed(collapsed => !collapsed)} />
+        </div>
+        <div className="collapsedLinks" style={{ display: collapsed ? "block" : "none" }}>
+          <br />
+          <div className="burgerLink" onClick={() => setCollapsed(false)}>
+            <a>Eloquence</a>
+          </div>
+          <br />
+          <div className="burgerLink" onClick={() => navigate("/login")}>
+            <a>Login</a>
+          </div>
+          <br />
+          <div className="burgerLink" onClick={() => navigate("/signup")}>
+            <a>Signup</a>
+          </div>
+          <br />
+          <div className="burgerLink" onClick={() => navigate("/guesteditor")}>
+            <a>Use as Guest</a>
+          </div>
+        </div>
+      </nav>
       <nav className="landingNav" data-aos="fade-up">
         <div className="left">
           <a>Eloquence</a>
@@ -32,7 +58,7 @@ useEffect(() => {
           <a href="/guesteditor">Use as Guest</a>
         </div>
       </nav>
-      <div className="main">
+      <div className="main" style={{display:collapsed ? "none" : "block"}}>
         <div className="one">
           <h1>Eloquence: Where Better Writing Begins</h1>
           <p>Eloquence pushes you beyond grammar into the heart of your ideas—where true clarity lives.</p>
@@ -50,15 +76,15 @@ useEffect(() => {
               <p>A sleek, minimal text editor aimed to make your writing experience simple.</p>
             </div>
             <div className="feature">
-            <h3><FontAwesomeIcon icon={faBrain} /></h3>
-            <h4>Socratic-based Feedback</h4>
-            <p>Powered using Anthropic's Claude AI model, your writing will receive feedback in the form of questions, counterpoints, refutations, and dilemmas. This feedback doesn't just make you a better writer: it makes you a better thinker.</p>
+              <h3><FontAwesomeIcon icon={faBrain} /></h3>
+              <h4>Socratic-based Feedback</h4>
+              <p>Powered using Anthropic's Claude AI model, your writing will receive feedback in the form of questions, counterpoints, refutations, and dilemmas. This feedback doesn't just make you a better writer: it makes you a better thinker.</p>
 
             </div>
             <div className="feature">
-            <h3><FontAwesomeIcon icon={faComment} /></h3>
-            <h4>High-Quality, no B.S Advice</h4>
-            <p>Get honest, quality feedback that helps make your writings clear, succinct, and of substance.</p>
+              <h3><FontAwesomeIcon icon={faComment} /></h3>
+              <h4>High-Quality, no B.S Advice</h4>
+              <p>Get honest, quality feedback that helps make your writings clear, succinct, and of substance.</p>
             </div>
           </div>
         </div>
