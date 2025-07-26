@@ -10,19 +10,19 @@ Click [this link](https://eloquenceai.org) for the live application.
 
 ## Features
 
-	•	Socratic AI Feedback
+	### Socratic AI Feedback
         - Receive constructive suggestions that identify weak reasoning, vague phrasing, and logical gaps—not just grammar errors.
 
-	•	Document Highlighting
+	###	Document Highlighting
         - Feedback is visually mapped to your text with inline highlights and explanations.
 
-	•	Editor with Rich Formatting
+	### Editor with Rich Formatting
         - Built on Tiptap, offering a distraction-free interface for writing and editing.
 
-	•	AI Summaries
+	### AI Summaries
         - Quickly generate summaries to distill key points of your writing.
 
-	•	Guest Feature
+	### Guest Feature
         - Try Eloquence without an account; sign up to save your work.
 
 ⸻
