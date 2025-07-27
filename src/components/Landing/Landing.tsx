@@ -60,31 +60,43 @@ export default function Landing() {
       </nav>
       <div className="main" style={{display:collapsed ? "none" : "block"}}>
         <div className="one">
-          <h1>Eloquence: Where Better Writing Begins</h1>
-          <p>Eloquence pushes you beyond grammar into the heart of your ideas—where true clarity lives.</p>
+          <h1>Eloquence: A writing tool that questions your ideas</h1>
+          <p>Get AI feedback that challenges your arguments, not just your grammar.</p>
+          <button onClick={() => navigate("/guesteditor")}>See it in action</button>
           <div className="mainImage">
             <img src={mainImg} />
           </div>
-          <button onClick={() => navigate("/signup")}>Get started</button>
         </div>
         <div className="two">
           <h2>Core Features</h2>
           <div className="features">
             <div className="feature">
-              <h3><FontAwesomeIcon icon={faEdit} /></h3>
-              <h4> Rich Text Editor</h4>
-              <p>A sleek, minimal text editor aimed to make your writing experience simple.</p>
+              <div className="featureContainer">
+                <div className="featureHeader">
+              <h3><FontAwesomeIcon icon={faBrain} /></h3>
+              <h4>A.I That Challenges Your Writing</h4>
+              </div>
+              <p>Get direct, Socratic-style feedback that challenges even your smallest ideas through probing questions, dilemmas, counterpoints and refutations. </p>
+              </div>
             </div>
             <div className="feature">
-              <h3><FontAwesomeIcon icon={faBrain} /></h3>
-              <h4>Socratic-based Feedback</h4>
-              <p>Powered using Anthropic's Claude AI model, your writing will receive feedback in the form of questions, counterpoints, refutations, and dilemmas. This feedback doesn't just make you a better writer: it makes you a better thinker.</p>
+              <div className="featureContainer">
+                <div className="featureHeader">
+              <h3><FontAwesomeIcon icon={faComment} /></h3>
+              <h4>Real, authentic analysis</h4>
+              </div>
+              <p>Eloquence isn't here to sugarcoat. It offers candid feedback and pinpoints any pitfalls in your ideas for you to critically think and expand upon them.</p>
+              </div>
 
             </div>
             <div className="feature">
-              <h3><FontAwesomeIcon icon={faComment} /></h3>
-              <h4>High-Quality, no B.S Advice</h4>
-              <p>Get honest, quality feedback that helps make your writings clear, succinct, and of substance.</p>
+              <div className="featureContainer">
+                <div className="featureHeader">
+              <h3><FontAwesomeIcon icon={faEdit} /></h3>
+              <h4>Elegant Writing Interface</h4>
+              </div>
+              <p>Offers a simple, rich text editor for distraction-less writing and thinking.</p>
+              </div>
             </div>
           </div>
         </div>

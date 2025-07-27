@@ -674,11 +674,20 @@ mark:hover {
 
 
 /* Layout Components */
-/* .landingPage {
+ .landingPage {
     width: 100%;
     min-height: 100vh;
     background: var(--bg-secondary);
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    background: hsla(228, 24%, 8%, 1);
+
+background: linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%, 5%, 1) 48%, hsla(228, 24%, 8%, 1) 100%);
+
+background: -moz-linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%, 5%, 1) 48%, hsla(228, 24%, 8%, 1) 100%);
+
+background: -webkit-linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%, 5%, 1) 48%, hsla(228, 24%, 8%, 1) 100%);
+
+filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#10121A", endColorstr="#0B0B0F", GradientType=1 );
+/* background-color: black; */
 
 
 }
@@ -693,7 +702,7 @@ mark:hover {
     min-height:100vh;
     gap:15px; */
 
-/* } */
+ } 
 
 .main .one {
     min-height: 100vh;
@@ -702,24 +711,26 @@ mark:hover {
     align-items: center;
     justify-content: center;
     text-align:center;
-    gap: 25px;
+    gap: 0px;
 }
 
 .landingPage h1 {
-    font-size: 72px;
+    font-size: 64px;
     inline-size: 50%;
     text-align: center;
+    padding:0;
+    margin:0;
 
 }
 
 .landingPage p {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 200;
 }
 
 .landingPage nav {
     display: flex;
-    padding: 75px;
+    padding: 40px;
 
 }
 
@@ -748,11 +759,11 @@ nav.hamburger {
 
 .landingPage .two,
 .landingPage .three {
-    margin: 0 150px;
+    margin: 0 75px;
 }
 
 .landingPage h2 {
-    font-size: 64px;
+    font-size: 48px;
 }
 
 .landingPage button {
@@ -762,26 +773,44 @@ nav.hamburger {
 
 .features {
     display: flex;
-    gap: 100px;
+    gap:15px;
+    /* gap: 100px; */
 
+}
+
+.featureHeader {
+    display: flex;
+    align-items: center;
+    gap:15px;
 }
 
 .feature {
-    /* background-color: var(--bg-secondary); */
-    width: 33%;
-    height: 300px;
+    background-color: var(--bg-secondary);
+
+/* padding:5px 15px; */
+    width: calc(33% - 37.5px);
+    padding:20px;
+    border-radius: 10px;
+    /* height: 300px; */
+    /* padding:5px 10px; */
 }
 
+
+.featureContainer {
+    padding:10px;
+}
+
+
 .feature h3 {
-    font-size: 36px;
+    font-size: 28px;
 }
 
 .feature h4 {
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .feature p {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .landingPage .three {
@@ -828,33 +857,54 @@ nav.hamburger {
     color:var(--bg-secondary);
 }
 
+.feature p {
+    margin:0;
+}
+
 @media (max-width:1300px) {
     .landingPage h1 {
-        font-size: 64px;
+        font-size: 48px;
     }
 
     .landingPage h2 {
-        font-size:48px;
+        font-size:36px;
     }
 
+} 
+
+@media (max-width:1050px) {
     .features {
         display:block;
     }
-
     .feature {
-        width:100%;
-        text-align: center;
+    min-width:90%;
+    margin:30px 0;
+    padding:30px;
+
     }
 
-    .landingPage h1, .landingPage h2, .landingPage h3, .landingPage h4, .landingPage h5, .landingPage h6 {
-        text-align: center;
-        width:100%;
+    .mainImage 
+    {
+        transform:scale(.75,.75);
     }
-
-    /* .landingPage */
 } 
 
-@media(max-width:600px){
+@media (max-width:800px) {
+    .mainImage 
+    {
+        transform:scale(.5,.5);
+    }
+
+    .one {
+        /* gap:300px; */
+    }
+    .landingPage h1, .landingPage h2 {
+        text-align: center;
+    }
+}
+
+
+@media(max-width:800px){
     nav.landingNav {
         display:none;
     }
@@ -907,5 +957,9 @@ nav.hamburger {
         display:block;
         text-align: center;
         padding:10px 0;
+    }
+    .mainImage 
+    {
+        transform:scale(.95,.95);
     }
 }
