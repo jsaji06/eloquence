@@ -954,12 +954,47 @@ nav.hamburger {
     }
 
     .landingPage .three {
-        display:block;
+        /* display:block; */
+        flex-direction: column;
         text-align: center;
         padding:10px 0;
     }
     .mainImage 
     {
         transform:scale(.95,.95);
+    }
+}
+
+@media(max-width:500px){
+    .landingPage h1 {
+        font-size:32px;
+    }
+    .landingPage h2 {
+        font-size:28px;
+    }
+
+    .landingPage h4 {
+        font-size:13px;
+    }
+    .landingPage p {
+        font-size:12px;
+    }
+
+    .featureHeader * {
+        text-align: center;
+        align-items: center;
+    }
+
+    .landingPage nav{
+        padding:15px;
+    }
+
+    .landingPage .main {
+        padding:0;
+    }
+
+    .landingPage .three {
+        display:block;
+
     }
 }
