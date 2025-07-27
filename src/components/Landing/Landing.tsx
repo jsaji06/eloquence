@@ -64,7 +64,7 @@ export default function Landing() {
           <p>Get AI feedback that challenges your arguments, not just your grammar.</p>
           <button onClick={() => navigate("/guesteditor")}>See it in action</button>
           <div className="mainImage">
-            <img src={mainImg} />
+            <img alt="Image of sample feedback for dummy paragraph" src={mainImg} />
           </div>
         </div>
         <div className="two">
