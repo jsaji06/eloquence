@@ -960,7 +960,7 @@ nav.hamburger {
     }
 }
 
-@media(max-width:500px){
+@media(max-width:750px){
     .landingPage h1 {
         font-size:32px;
     }
@@ -990,6 +990,10 @@ nav.hamburger {
 
     .landingPage .three {
         display:block;
+
+    }
+    .three * {
+        margin:10px 0;
 
     }
 }
