@@ -687,7 +687,6 @@ background: -moz-linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%
 background: -webkit-linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%, 5%, 1) 48%, hsla(228, 24%, 8%, 1) 100%);
 
 filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#10121A", endColorstr="#0B0B0F", GradientType=1 );
-/* background-color: black; */
 
 
 }
@@ -895,9 +894,6 @@ nav.hamburger {
         transform:scale(.5,.5);
     }
 
-    .one {
-        /* gap:300px; */
-    }
     .landingPage h1, .landingPage h2 {
         text-align: center;
     }
@@ -954,7 +950,6 @@ nav.hamburger {
     }
 
     .landingPage .three {
-        /* display:block; */
         flex-direction: column;
         text-align: center;
         padding:10px 0;
