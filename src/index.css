@@ -10,6 +10,9 @@
     --text-primary: #e8ddc3;
     /* Elegant cream */
     --text-secondary: #d6c195;
+    --accent-one: #060713;
+            --accent-two: #0f1925;
+            --accent-three: #060713;
     /* Refined cream */
     /* /* --bg-primary: #120e09;     Rich dark chocolate */
     /* --bg-secondary: #251e16;   Deep mocha */
@@ -677,8 +680,16 @@ mark:hover {
  .landingPage {
     width: 100%;
     min-height: 100vh;
-    background: var(--bg-secondary);
-    background: hsla(228, 24%, 8%, 1);
+    background: 
+                radial-gradient(circle at 20% 30%, var(--accent-one) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--accent-two) 0%, transparent 45%),
+                radial-gradient(circle at 40% 80%, var(--accent-three) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, var(--bg-secondary) 0%, transparent 60%),
+                linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background-size: 100% 100%;
+            /* animation: gradientShift 15s ease-in-out infinite; */
+    /* background: var(--bg-secondary); */
+    /* background: hsla(228, 24%, 8%, 1);
 
 background: linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%, 5%, 1) 48%, hsla(228, 24%, 8%, 1) 100%);
 
@@ -686,7 +697,8 @@ background: -moz-linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%
 
 background: -webkit-linear-gradient(315deg, hsla(228, 24%, 8%, 1) 0%, hsla(240, 15%, 5%, 1) 48%, hsla(228, 24%, 8%, 1) 100%);
 
-filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#10121A", endColorstr="#0B0B0F", GradientType=1 );
+filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#10121A", endColorstr="#0B0B0F", GradientType=1 ); */
+/* background: linear-gradient(135deg, #0b0b0f 0%, #10121a 100%); */
 
 
 }
