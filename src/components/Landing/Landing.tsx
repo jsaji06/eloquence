@@ -59,7 +59,7 @@ export default function Landing() {
         </div>
       </nav>
       <main className="main" style={{display:collapsed ? "none" : "block"}}>
-        <div role="region" className="one">
+        <div aria-label="Intro to Eloquence" className="one">
           <h1 role="banner">Eloquence: A writing tool that questions your ideas</h1>
           <p role="contentinfo">Get AI feedback that challenges your arguments, not just your grammar.</p>
           <button aria-label="Try Eloquence under guest mode" onClick={() => navigate("/guesteditor")}>See it in action</button>
@@ -67,7 +67,7 @@ export default function Landing() {
             <img alt="Image of sample feedback for dummy paragraph" src={mainImg} />
           </div>
         </div>
-        <div role="region" className="two">
+        <div aria-label="Key features of Eloquence" className="two">
           <h2>Core Features</h2>
           <div className="features">
             <div className="feature" aria-label="Key feature of Eloquence - A.I that challenges your writing">
@@ -98,7 +98,7 @@ export default function Landing() {
             </div>
           </div>
         </div>
-        <div role="region" className="three">
+        <div aria-label="Start using Eloquence" className="three">
           <h2>Become a better writer today.</h2>
           <button aria-label="Create an account and start using Eloquence" className="getStarted" onClick={() => navigate("/signup")}>Sign up for free</button>
         </div>
