@@ -32,19 +32,19 @@ export default function Landing() {
         <div className="collapsedLinks" style={{ display: collapsed ? "block" : "none" }}>
           <br />
           <div className="burgerLink" onClick={() => setCollapsed(false)}>
-            <a>Eloquence</a>
+            <a href="/">Eloquence</a>
           </div>
           <br />
           <div className="burgerLink" onClick={() => navigate("/login")}>
-            <a>Login</a>
+            <a href="/login">Login</a>
           </div>
           <br />
           <div className="burgerLink" onClick={() => navigate("/signup")}>
-            <a>Signup</a>
+            <a href="/signup">Signup</a>
           </div>
           <br />
           <div className="burgerLink" onClick={() => navigate("/guesteditor")}>
-            <a>Use as Guest</a>
+            <a href='/guesteditor'>Use as Guest</a>
           </div>
         </div>
       </nav>
@@ -58,51 +58,51 @@ export default function Landing() {
           <a href="/guesteditor">Use as Guest</a>
         </div>
       </nav>
-      <div className="main" style={{display:collapsed ? "none" : "block"}}>
-        <div className="one">
-          <h1 role="heading">Eloquence: A writing tool that questions your ideas</h1>
+      <main className="main" style={{display:collapsed ? "none" : "block"}}>
+        <div role="region" className="one">
+          <h1 role="banner">Eloquence: A writing tool that questions your ideas</h1>
           <p role="contentinfo">Get AI feedback that challenges your arguments, not just your grammar.</p>
-          <button onClick={() => navigate("/guesteditor")}>See it in action</button>
+          <button aria-label="Try Eloquence under guest mode" onClick={() => navigate("/guesteditor")}>See it in action</button>
           <div className="mainImage">
             <img alt="Image of sample feedback for dummy paragraph" src={mainImg} />
           </div>
         </div>
-        <div className="two">
-          <h2 role="heading">Core Features</h2>
+        <div role="region" className="two">
+          <h2>Core Features</h2>
           <div className="features">
-            <div className="feature">
+            <div className="feature" aria-label="Key feature of Eloquence - A.I that challenges your writing">
               <div className="featureContainer">
                 <div className="featureHeader">
-              <h3 role="heading"><FontAwesomeIcon icon={faBrain} /> A.I That Challenges Your Writing</h3>
+              <h3><FontAwesomeIcon icon={faBrain} /> A.I that challenges your writing</h3>
               </div>
-              <p role='contentinfo'>Get direct, Socratic-style feedback that challenges even your smallest ideas through probing questions, dilemmas, counterpoints and refutations. </p>
+              <p>Get direct, Socratic-style feedback that challenges even your smallest ideas through probing questions, dilemmas, counterpoints and refutations. </p>
               </div>
             </div>
-            <div className="feature">
+            <div className="feature" aria-label="Key feature of Eloquence - Real, authentic analysis">
               <div className="featureContainer">
                 <div className="featureHeader">
-              <h3 role="heading"><FontAwesomeIcon icon={faComment} /> Real, authentic analysis</h3>
+              <h3><FontAwesomeIcon icon={faComment} /> Real, authentic analysis</h3>
               </div>
-              <p role='contentinfo'>Eloquence isn't here to sugarcoat. It offers candid feedback and pinpoints any pitfalls in your ideas for you to critically think and expand upon them.</p>
+              <p>Eloquence isn't here to sugarcoat. It offers candid feedback and pinpoints any pitfalls in your ideas for you to critically think and expand upon them.</p>
               </div>
 
             </div>
-            <div className="feature">
+            <div className="feature" aria-label="Key feature of Eloquence - Elegant writing interface">
               <div className="featureContainer">
                 <div className="featureHeader">
-              <h3 role='heading'><FontAwesomeIcon icon={faEdit} /> Elegant Writing Interface </h3>
+              <h3><FontAwesomeIcon icon={faEdit} /> Elegant writing interface </h3>
               
               </div>
-              <p role='contentinfo'>Offers a simple, rich text editor for distraction-less writing and thinking.</p>
+              <p>Offers a simple, rich text editor for distraction-less writing and thinking.</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="three">
-          <h2 role='heading'>Become a better writer today.</h2>
-          <button className="getStarted" onClick={() => navigate("/signup")}>Sign up for free</button>
+        <div role="region" className="three">
+          <h2>Become a better writer today.</h2>
+          <button aria-label="Create an account and start using Eloquence" className="getStarted" onClick={() => navigate("/signup")}>Sign up for free</button>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
