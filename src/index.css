@@ -778,7 +778,7 @@ nav.hamburger {
 
 }
 
-.featureHeader {
+.featureHeader h3 {
     display: flex;
     align-items: center;
     gap:15px;
@@ -980,7 +980,7 @@ nav.hamburger {
         font-size:12px;
     }
 
-    .featureHeader * {
+    .featureHeader h3 {
         text-align: center;
         align-items: center;
     }
