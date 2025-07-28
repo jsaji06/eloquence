@@ -26,7 +26,6 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
         "www.eloquenceai.org",
         "https://www.eloquenceai.org",
         "https://eloquenceai.org",
@@ -258,11 +257,6 @@ async def retrieve_advice(selected_points):
         advices = [call_advice_model(point['content']) for point in selected_points]
         advices = await asyncio.gather(*advices)
         return advices
-        # for point in selected_points:
-        #     prompt = MORE_ADVICE_PROMPT.invoke({'advice':point['content']})
-        #     advice = socrates.with_structured_output(Advice).invoke(prompt).advice
-        #     advices.append(advice)
-        # return advices
     except Exception as e:
         raise
     # except InternalServerError as e:
