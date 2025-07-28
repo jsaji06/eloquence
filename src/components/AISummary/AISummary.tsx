@@ -23,6 +23,7 @@ interface AISummaryProps {
   setActiveColor: Dispatch<SetStateAction<string>>;
   docId:string;
   setAiData:Dispatch<SetStateAction<Response[] | undefined>>
+  actions?:number
   setActions?:Dispatch<SetStateAction<number>>
 
 }
@@ -33,8 +34,11 @@ export default function AISummary(props: AISummaryProps) {
   const [message, setMessage] = useState<string | undefined>(undefined)
 
   let getExtraFeedback = () => {
-    if(props.setActions)
+    if(props.setActions){
       props.setActions(prev => prev - 1)
+      if(props.actions && props.actions <= 0) return;
+    }
+
     setLoadMorePanel(true);
     props.setFeedback([])
     props.setFeedbackPanel(true);

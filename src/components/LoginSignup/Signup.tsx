@@ -48,13 +48,14 @@ export default function Signup() {
                     if(state){
                         try {
                         await createDoc(user.user.uid, state);
-                        } catch(err) {
-                            console.log(err)
+                        } catch(_) {
+                            setError("There was a problem in creating your doc - please try again later.")
                         }
                     }
                     navigate("/dashboard")
-                } catch(err){
-                    console.log(err)
+                } catch(_){
+                    setError("There was a problem signing in - please try again later.")
+                    
                 }                    
                 }}>Login with Google</button>
                 <div className="options">

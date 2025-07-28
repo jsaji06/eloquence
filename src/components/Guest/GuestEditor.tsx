@@ -80,7 +80,12 @@ const GuestEditor = (props: EditorProps) => {
         })
         let highlightedContent = target.textContent!;
         let subsection = dataRef.current.filter(response => response.points.some(point => {
-          return point.highlighted_text.includes(highlightedContent);
+          
+          return point.highlighted_text.some(text => {
+            let normedHigh = normalize(text)
+            let normedCont = normalize(highlightedContent)
+            return normedHigh === normedCont;
+          });
         }))
         if (!subsection) return;
         let newData = dataRef.current.map((data, _) => {
@@ -89,7 +94,7 @@ const GuestEditor = (props: EditorProps) => {
             newDataInfo.collapsed = true;
             let newPoints = newDataInfo.points.map((point, _) => ({
               ...point,
-              active: point.highlighted_text.includes(highlightedContent)
+              active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent))
             }))
             newDataInfo.points = newPoints;
           } else {
@@ -153,12 +158,11 @@ const GuestEditor = (props: EditorProps) => {
       .normalize('NFD') // Decompose characters
       .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
       .normalize('NFKC') // Recompose remaining characters
-      .replace(/[–—‑]/g, '-') // Normalize various dashes to hyphen-minus
+      .replace(/[–—‑−]/g, '-')
       .trim();
 
   function findText(editor: TiptapEditor, text: string) {
     const normalizedRaw = normalize(editor.getText());
-    console.log(normalizedRaw)
     const normIndex = normalizedRaw.indexOf(normalize(text));
     if (normIndex !== -1) {
       let from = normIndex + 1;

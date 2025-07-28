@@ -139,7 +139,7 @@ function EditDocument() {
                     </Panel>
                     <PanelResizeHandle disabled={!aiPanelActive} className="resizeHandle" />
                     <Panel className="panel aiPanel" minSize={40} style={{ display: aiPanelActive ? "block" : 'none' }}>
-                        <AISummary setActions={setActions} docId="GUEST" setAiData={setAIData} setActiveText={setActiveText} setActiveColor={setActiveColor} setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
+                        <AISummary actions={actions} setActions={setActions} docId="GUEST" setAiData={setAIData} setActiveText={setActiveText} setActiveColor={setActiveColor} setFeedbackPanel={setFeedbackPanel} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} setAiPanelActive={setAiPanelActive} aiData={aiData!} loading={loadingPanel} />
                     </Panel>
                 </PanelGroup>
             </div >

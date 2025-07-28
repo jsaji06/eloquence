@@ -58,7 +58,6 @@ const Editor = (props: EditorProps) => {
 
   useEffect(() => {
     dataRef.current = props.aiData || []
-    console.log(dataRef.current);
   }, [props.aiData])
 
   useEffect(() => {
@@ -84,7 +83,7 @@ const Editor = (props: EditorProps) => {
             newDataInfo.collapsed = true;
             let newPoints = newDataInfo.points.map((point, _) => ({
               ...point,
-              active: point.highlighted_text.includes(highlightedContent)
+              active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent))
             }))
             newDataInfo.points = newPoints;
           } else {
@@ -120,8 +119,6 @@ const Editor = (props: EditorProps) => {
             return;
           })
         })
-
-
       })
       editor?.chain().setTextSelection(0)
     } else {
@@ -148,6 +145,7 @@ const Editor = (props: EditorProps) => {
       .normalize('NFD') // Decompose characters
       .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
       .normalize('NFKC') // Recompose remaining characters
+      .replace(/[–—‑−]/g, '-')
       .trim();
 
   function findText(editor: TiptapEditor, text: string) {
