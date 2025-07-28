@@ -19,6 +19,7 @@ from textsplit.tools import get_penalty, get_segments
 from textsplit.algorithm import split_optimal
 import re
 from functools import lru_cache
+import asyncio
 
 # Create FastAPI backend and connect to React
 app = FastAPI()
@@ -102,7 +103,7 @@ COLORS = [
 
 @lru_cache(maxsize=1)
 def get_sentence_transformer():
-    return SentenceTransformer("paraphrase-MiniLM-L3-v2")
+    return SentenceTransformer("all-MiniLM-L6-v2")
 
 """
 Initializes Claude Sonnet 3.5 model.
@@ -127,9 +128,11 @@ def divide_text(state:SocratesState):
     subsections = []
     docmats = [embeddings]
     try:
-        penalty = get_penalty(docmats, max((word_count // 10), 50)) # ✅ FIXED
+        print(max((word_count // 10), 50), word_count // 10)
+        penalty = get_penalty(docmats, 10) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
+        print("Yerr", segments, len(segments))
         return {"subsections":segments}
     except ValueError as e:
         if "too short for given segment_len" in str(e):
@@ -143,10 +146,8 @@ Method to retreive initial feedback on user's writings.
 
 Each subsection will contain at most 3 critical points. These points come under the form of questions, refutations, dilemmas, and/or counterpoints, in hopes of getting the user to think deeper about their ideas/arguments they want to discuss in their writings.
 """
-def retrieve_points(state:SocratesState):
-    subsections = state['subsections']
-    try:
-        PROMPT = PromptTemplate.from_template("""
+async def call_model(subsection:str, index:int):
+    PROMPT = PromptTemplate.from_template("""
         You are Socrates. Analyze this subsection and create exactly 3 critical points.
 
         Subsection to analyze:
@@ -194,27 +195,34 @@ def retrieve_points(state:SocratesState):
 
         Be concise in your analysis.
         """)
-        socrates = create_socrates()
-        points = []
-        for i in range(len(subsections)):
-            if subsections[i] != [""]:
-                prompt = PROMPT.invoke({"subsection_number": i + 1, "writing": subsections[i]})
-                point = socrates.with_structured_output(Response).invoke(prompt)
-                point_list = point.points
-                new_list = []
-                seen_list = set()
-                for j in range(len(point_list)):
-                    point_list[j]['color'] = COLORS[i][j]
-                for j in range(len(point_list)):
-                    highlights = tuple(point_list[j]["highlighted_text"])
-                    if highlights not in seen_list:
-                        point_list[j]["color"] = COLORS[i][j]
-                        new_list.append(point_list[j])
-                        seen_list.add(highlights)
-                point.points = new_list
-                points.append(point)
-            
-        state = {**state, "response":points}
+    socrates = create_socrates()
+    
+    if subsection != [""]:
+        prompt = await PROMPT.ainvoke({"subsection_number": index + 1, "writing": subsection})
+        point = await socrates.with_structured_output(Response).ainvoke(prompt)
+        point_list = point.points
+        new_list = []
+        seen_list = set()
+        for j in range(len(point_list)):
+            point_list[j]['color'] = COLORS[index][j]
+        for j in range(len(point_list)):
+            highlights = tuple(point_list[j]["highlighted_text"])
+            if highlights not in seen_list:
+                point_list[j]["color"] = COLORS[index][j]
+                new_list.append(point_list[j])
+                seen_list.add(highlights)
+        point.points = new_list
+        return point
+    return None
+    
+
+async def retrieve_points(state:SocratesState):
+    subsections = state['subsections']
+    try:
+        
+        points = [call_model(subsection, i) for i, subsection in enumerate(subsections)]
+        results = await asyncio.gather(*points)
+        state = {**state, "response":results}
         return state
     except Exception as e:
         raise
@@ -225,7 +233,21 @@ As mentioned above, each subsection contains three points for the user to think 
 The user has the ability to choose up to 3 points to gain more specifc feedback on deepening the substance of their writings & potentially overcome the specific pitfall that the AI had detected initially.
 """
 
-def retrieve_advice(selected_points):
+async def call_advice_model(advice:str):
+    MORE_ADVICE_PROMPT = PromptTemplate.from_template("""
+        You are Socrates and have been requested to provide more insightful advice on the user's writing. The user has selected this for you to review and elaborate on:
+        {advice}
+
+        Provide the user 3–5 more specific, actionable suggestions that build on this feedback. Also take one or two bullet points to specifically outline your line of reasoning behind this piece of advice you have generated. Focus on helping me improve my writing by identifying precise areas to revise, clarify, or strengthen, and suggest what they could add, cut, or reframe.
+        
+        Return only a JSON object with a single key `advice` containing a list of strings.
+        """)
+    socrates = create_socrates()
+    prompt = await MORE_ADVICE_PROMPT.ainvoke({'advice':advice})
+    advice = await socrates.with_structured_output(Advice).ainvoke(prompt)
+    return advice.advice
+
+async def retrieve_advice(selected_points):
     try:
         MORE_ADVICE_PROMPT = PromptTemplate.from_template("""
         You are Socrates and have been requested to provide more insightful advice on the user's writing. The user has selected this for you to review and elaborate on:
@@ -236,12 +258,14 @@ def retrieve_advice(selected_points):
         Return only a JSON object with a single key `advice` containing a list of strings.
         """)
         socrates = create_socrates()
-        advices = []
-        for point in selected_points:
-            prompt = MORE_ADVICE_PROMPT.invoke({'advice':point['content']})
-            advice = socrates.with_structured_output(Advice).invoke(prompt).advice
-            advices.append(advice)
+        advices = [call_advice_model(point['content']) for point in selected_points]
+        advices = await asyncio.gather(*advices)
         return advices
+        # for point in selected_points:
+        #     prompt = MORE_ADVICE_PROMPT.invoke({'advice':point['content']})
+        #     advice = socrates.with_structured_output(Advice).invoke(prompt).advice
+        #     advices.append(advice)
+        # return advices
     except Exception as e:
         raise
 
@@ -260,11 +284,12 @@ workflow = workflow.compile()
 from fastapi import Request
 @app.post("/get_points")
 async def get_points(writing:Request):
+   print("SDOFJIOEJFIOJEIORJWIE")
    body = await writing.json()
    writing = body.get("writing")
    if not writing:
         raise HTTPException(status_code=400, detail="No writing content provided")
-   output = workflow.invoke({"user_essay":writing})
+   output = await workflow.ainvoke({"user_essay":writing})
    return output['response']
 
 # API Endpoint to get more extensive feedback 
@@ -276,7 +301,7 @@ async def get_advice(request: Request):
     if not points:
         raise HTTPException(status_code=400, detail="No valid points provided")
 
-    advices = retrieve_advice(points)
+    advices = await retrieve_advice(points)
     response = []
     for i in range(len(advices)):
         res = {"advice": advices[i], "point": points[i]}
