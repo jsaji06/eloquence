@@ -62,8 +62,10 @@ const Editor = (props: EditorProps) => {
 
   useEffect(() => {
     document.querySelector(".editor")?.addEventListener("click", (e: Event) => {
+      console.log("Editor clicked")
       const target = e.target as HTMLElement
       if (target.tagName === "MARK") {
+        
         dataRef.current.map((data, _) => {
           data.points.map((point, _) => {
             point.active = true
@@ -74,11 +76,17 @@ const Editor = (props: EditorProps) => {
         })
         let highlightedContent = target.textContent!;
         let subsection = dataRef.current.filter(response => response.points.some(point => {
-          return point.highlighted_text.includes(highlightedContent);
+          
+          return point.highlighted_text.some(text => {
+            let normedHigh = normalize(text)
+            let normedCont = normalize(highlightedContent)
+            return normedHigh === normedCont;
+          });
         }))
         if (!subsection) return;
         let newData = dataRef.current.map((data, _) => {
           let newDataInfo = { ...data }
+          console.log("DATA", data, subsection[0], subsection)
           if (data === subsection[0]) {
             newDataInfo.collapsed = true;
             let newPoints = newDataInfo.points.map((point, _) => ({
