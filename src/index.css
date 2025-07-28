@@ -2,24 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
-    /* Base theme */
     --bg-primary: #0b0b0f;
-    /* Rich dark chocolate */
     --bg-secondary: #10121a;
-    /* Deep mocha */
     --text-primary: #e8ddc3;
-    /* Elegant cream */
     --text-secondary: #d6c195;
     --accent-one: #060713;
-            --accent-two: #0f1925;
-            --accent-three: #060713;
-    /* Refined cream */
-    /* /* --bg-primary: #120e09;     Rich dark chocolate */
-    /* --bg-secondary: #251e16;   Deep mocha */
-    /* --text-primary: #e8ddc3;   Elegant cream */
-    /* --text-secondary: #d6c195; Refined cream */
-
-
+    --accent-two: #0f1925;
+    --accent-three: #060713;
 }
 
 html,
@@ -75,11 +64,9 @@ html {
 button {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-
     border: 1px solid var(--text-primary);
     font-family: "DM Sans";
     padding: 15px;
-    border-radius: 10px;
     transition: .5s;
 }
 
@@ -1008,4 +995,47 @@ nav.hamburger {
         margin:10px 0;
 
     }
+}
+
+.paragraphDemo {
+    background-color: var(--bg-primary);
+    padding:20px;
+}
+
+.paragraphDemo .paragraphHeader {
+    display:flex;
+    align-items: center;
+    
+}
+
+.paragraphHeader .collapseIcon {
+    margin-left: auto;
+}
+
+.paragraphContent * {
+    margin:20px 0;
+}
+
+.paragraphContent button {
+    margin:0;
+    padding:10px 30px;
+}
+
+.paragraphHeader h2 {
+    font-size:18px;
+}
+
+
+.paragraphContent p {
+    font-size:14px;
+}
+
+.collapseIcon:hover {
+    cursor:pointer;
+}
+
+.activePara * {
+    color:var(--bg-primary);
+    background-color: var(--text-primary);
+
 }

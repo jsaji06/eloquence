@@ -34,6 +34,7 @@ interface EditorProps {
   setAiData: Dispatch<SetStateAction<Response[] | undefined>>
   setMessage: Dispatch<SetStateAction<string | undefined>>
   setActions?:Dispatch<SetStateAction<number>>
+  demoPara:string;
 
 }
 
@@ -52,6 +53,11 @@ const GuestEditor = (props: EditorProps) => {
   })
   let dataRef = useRef(props.aiData || [])
 
+  useEffect(() => {
+    if(props.demoPara !== ""){
+      props.setText(props.demoPara);
+    }
+  }, [props.demoPara])
   useEffect(() => {
     dataRef.current = props.aiData || []
   }, [props.aiData])

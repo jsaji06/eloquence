@@ -14,12 +14,10 @@ import GuestEditor from "./GuestEditor"
 import { type FeedbackResponse } from '../../Types';
 import { getAuth } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
+import DemoTestModal from '../../DemoTextModal/DemoTestModal';
 
 function EditDocument() {
-
     const navigate = useNavigate();
-
-
     const html_tag_regex = new RegExp("<[^>]+>", "g")
     const [aiPanelActive, setAiPanelActive] = useState(false);
     const [loadingPanel, setLoadingPanel] = useState(false);
@@ -34,6 +32,9 @@ function EditDocument() {
     const [message, setMessage] = useState<string | undefined>();
     const [button, setButton] = useState<() => void | undefined>();
     const [hide, setHide] = useState(false);
+    const [demoModal, setDemoModal] = useState(true);
+    const [demoTitle, setDemoTitle] = useState("");
+    const [demoPara, setDemoPara] = useState("");
 
     const auth = getAuth();
 
@@ -113,6 +114,7 @@ function EditDocument() {
     let wordCount = text.replace(html_tag_regex, "").split(" ").length;
     return (
         <>
+        {demoModal && <DemoTestModal modal={demoModal} setModal={setDemoModal} setDemoTitle={setDemoTitle} setDemoPara={setDemoPara} /> }
             {message && <Alert message={message} setMessage={setMessage} customButtonHandler={button} />}
             <div className="container" style={{display: !hide ? "block" : "none"}}>
                 {message && <Overlay />}
@@ -129,8 +131,8 @@ function EditDocument() {
                             ●<FontAwesomeIcon title={"Hello"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
                             ●<FontAwesomeIcon title={"Hello"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
                         </div>
-                        <Header docId="GUEST" setTitle={setTitle} title={title} />
-                        <GuestEditor setActions={setActions} setMessage={setMessage} setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} />
+                        <Header demoTitle={demoTitle} docId="GUEST" setTitle={setTitle} title={title} />
+                        <GuestEditor demoPara={demoPara} setActions={setActions} setMessage={setMessage} setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} />
                         <button style={{ display: (wordCount < 25 || wordCount >= 1500) || (aiPanelActive || loadingPanel) ? "none" : "flex" }} className="aiBtn" onClick={() => {
                             review()
                         }}><FontAwesomeIcon className="icon" icon={faBrain} /> <p>Review with AI</p> </button>
