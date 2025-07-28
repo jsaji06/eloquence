@@ -73,6 +73,7 @@ function EditDocument() {
     }, [auth])
 
     let review = (writing?: string) => {
+        if(actions > 0){
         if (loadingPanel) setMessage("Please wait. An analysis is pending.")
         if (title == "") setMessage("Please write a title.")
         else if (text.split(" ").length < 25) {
@@ -84,7 +85,8 @@ function EditDocument() {
             setFeedback([])
             setLoadingPanel(true);
             setAiPanelActive(true);
-            fetch("https://eloquence-68ro.onrender.com/get_points", {
+            fetch("http://localhost:8000/get_points", {
+            // fetch("https://eloquence-68ro.onrender.com/get_points", {
                 method: "POST",
                 body: JSON.stringify({
                     writing: writing ?? text,
@@ -110,6 +112,9 @@ function EditDocument() {
                     setMessage("An error occured. Please try again.");
                 })
         }
+        } else {
+            setActions(actions => actions - 1)
+        } 
     }
     let wordCount = text.replace(html_tag_regex, "").split(" ").length;
     return (
@@ -133,7 +138,8 @@ function EditDocument() {
                         <Header demoTitle={demoTitle} docId="GUEST" setTitle={setTitle} title={title} />
                         <GuestEditor demoPara={demoPara} setActions={setActions} setMessage={setMessage} setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} />
                         <button style={{ display: (wordCount < 25 || wordCount >= 1500) || (aiPanelActive || loadingPanel) ? "none" : "flex" }} className="aiBtn" onClick={() => {
-                            review()
+                                review()
+                            
                         }}><FontAwesomeIcon className="icon" icon={faBrain} /> <p>Review with AI</p> </button>
                     </Panel>
                     <PanelResizeHandle disabled={!aiPanelActive} className="resizeHandle" />

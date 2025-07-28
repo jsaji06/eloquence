@@ -25,6 +25,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:5173",
         "www.eloquenceai.org",
         "https://www.eloquenceai.org",
         "https://eloquenceai.org",

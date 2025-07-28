@@ -33,15 +33,13 @@ export default function () {
                     try {
                         await setDoc(docRef, newDoc)
                         await createDoc(id, guestDoc)
-                        console.log("User successfully registered in database & Created document")
                         navigate("/dashboard")
                     } catch(err){
-                        console.log("dih", err)
+                        setError("There was an error in validating your account. Try again.")
                     }
 
                 }
-                catch (err) {
-                    console.log(err);
+                catch (_) {
                     navigate("/signup")
                 }
             } 

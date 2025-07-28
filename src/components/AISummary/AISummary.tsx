@@ -32,17 +32,12 @@ export default function AISummary(props: AISummaryProps) {
   const [selectedPoints, setSelectedPoints] = useState<Array<Point>>([]);
   const [loadMorePanel, setLoadMorePanel] = useState(false);
   const [message, setMessage] = useState<string | undefined>(undefined)
-
-  let getExtraFeedback = () => {
-    if(props.setActions){
-      props.setActions(prev => prev - 1)
-      if(props.actions && props.actions <= 0) return;
-    }
-
+  let fetchFeedback = () => {
     setLoadMorePanel(true);
     props.setFeedback([])
     props.setFeedbackPanel(true);
-    fetch("https://eloquence-68ro.onrender.com/get_advice", {
+    fetch("http://localhost:8000/get_advice", {
+    // fetch("https://eloquence-68ro.onrender.com/get_advice", {
       method: "POST",
       body: JSON.stringify({
         points: selectedPoints
@@ -68,6 +63,15 @@ export default function AISummary(props: AISummaryProps) {
       setMessage("A problem occured. Please try again.")
     })
   }
+  let getExtraFeedback = () => {
+    if(props.setActions && props.actions){
+      props.setActions(prev => prev - 1)
+      if(props.actions && props.actions <= 0) return;
+      else if(props.actions > 0) fetchFeedback()
+    }
+    else fetchFeedback()
+    
+}
 
   return (
     <>
