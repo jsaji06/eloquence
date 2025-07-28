@@ -129,7 +129,6 @@ function EditDocument() {
                                 return <><p className="saved">{wordCount} words</p></>
                             })()}
                             ●<FontAwesomeIcon title={"Hello"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
-                            ●<FontAwesomeIcon title={"Hello"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
                         </div>
                         <Header demoTitle={demoTitle} docId="GUEST" setTitle={setTitle} title={title} />
                         <GuestEditor demoPara={demoPara} setActions={setActions} setMessage={setMessage} setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} />
