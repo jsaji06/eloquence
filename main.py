@@ -26,7 +26,6 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
         "www.eloquenceai.org",
         "https://www.eloquenceai.org",
         "https://eloquenceai.org",
@@ -120,7 +119,6 @@ This method is responsible for intelligently dividing the user's writing into su
 """
 def divide_text(state:SocratesState):
     essay = state['user_essay']
-    print(essay)
     sentences = re.sub(r'<[^>]+>', '', essay).split(".")
     word_count = len(re.sub(r'<[^>]+>', '', essay).split(" "))
     model = get_sentence_transformer()
@@ -128,11 +126,9 @@ def divide_text(state:SocratesState):
     subsections = []
     docmats = [embeddings]
     try:
-        print(max((word_count // 10), 50), word_count // 10)
         penalty = get_penalty(docmats, 10) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
-        print("Yerr", segments, len(segments))
         return {"subsections":segments}
     except ValueError as e:
         if "too short for given segment_len" in str(e):
@@ -284,7 +280,6 @@ workflow = workflow.compile()
 from fastapi import Request
 @app.post("/get_points")
 async def get_points(writing:Request):
-   print("SDOFJIOEJFIOJEIORJWIE")
    body = await writing.json()
    writing = body.get("writing")
    if not writing:
