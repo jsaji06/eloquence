@@ -17,7 +17,7 @@ interface HeaderProps {
   docId: string;
   title: string;
   setTitle: (value: string) => void
-  demoTitle:string;
+  demoTitle?:string;
 }
 
 
@@ -42,9 +42,11 @@ const Header = (props: HeaderProps) => {
 
   })
   useEffect(() => {
+    if(props.demoTitle){
     if(props.demoTitle !== ""){
       props.setTitle(props.demoTitle)
     }
+  }
   }, [props.demoTitle])
   useEffect(() => {
     if (editor && props.title != "" && props.title !== editor.getText()) {
