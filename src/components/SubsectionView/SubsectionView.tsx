@@ -18,7 +18,6 @@ interface SubsectionViewProps {
 export default function SubsectionView(props: SubsectionViewProps) {
     const [_, setCollapsed] = useState(false);
     const [message, setMessage] = useState<string | undefined>(undefined)
-
     return (
         <>
             {message && <Alert message={message} setMessage={setMessage} />}
@@ -55,10 +54,10 @@ export default function SubsectionView(props: SubsectionViewProps) {
                     } />
                 </div>
                 <div className="content" style={{ 'display': props.subsection.collapsed ? 'block' : 'none' }}>
-                    {props.subsection.points.map((point) => {
+                    {props.subsection.points.map((point, i) => {
                         if (point.active) {
                             return (
-                                <div className="point" style={{ backgroundColor: point.color }}>
+                                <div className="point" key={i} style={{ backgroundColor: point.color }}>
                                     <div className="select">
                                         <div className={"circle " + (props.points.includes(point) ? "active" : "")} onClick={() => {
                                             if (!props.points.includes(point)) {

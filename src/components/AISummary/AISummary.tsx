@@ -36,7 +36,8 @@ export default function AISummary(props: AISummaryProps) {
     setLoadMorePanel(true);
     props.setFeedback([])
     props.setFeedbackPanel(true);
-    fetch("https://eloquence-68ro.onrender.com/get_advice", {
+    fetch("http://localhost:8000/get_advice ", {
+    // fetch("https://eloquence-68ro.onrender.com/get_advice", {
       method: "POST",
       body: JSON.stringify({
         points: selectedPoints
@@ -125,8 +126,8 @@ export default function AISummary(props: AISummaryProps) {
             getExtraFeedback();
           }}>Get extra feedback</button>}
 
-          {props.aiData?.map((subsection:Response) => (
-            <SubsectionView subsection={subsection} points={selectedPoints} setPoints={setSelectedPoints} aiData={props.aiData} setAiData={props.setAiData} />
+          {props.aiData?.map((subsection:Response, i:number) => (
+            <SubsectionView key={i} subsection={subsection} points={selectedPoints} setPoints={setSelectedPoints} aiData={props.aiData} setAiData={props.setAiData} />
           ))}
         </div>
         </>
@@ -170,9 +171,9 @@ export default function AISummary(props: AISummaryProps) {
           The points are color-coded based on what you have requested.
           </p>
 
-          {props.feedback?.map((subsection:any, i:number) => {
+          {props.feedback?.map((subsection:any, i:number) => {            
           return (            
-            <Feedback setActiveColor={props.setActiveColor} setActiveText={props.setActiveText} feedback={subsection} index={i} feedbackList={props.feedback} setFeedbackList={props.setFeedback} />
+            <Feedback key={i} setActiveColor={props.setActiveColor} setActiveText={props.setActiveText} feedback={subsection} index={i} feedbackList={props.feedback} setFeedbackList={props.setFeedback} />
           )})}
         </div>
         </>

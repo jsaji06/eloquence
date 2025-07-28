@@ -26,6 +26,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:5173",
         "www.eloquenceai.org",
         "https://www.eloquenceai.org",
         "https://eloquenceai.org",
@@ -264,6 +265,8 @@ async def retrieve_advice(selected_points):
         # return advices
     except Exception as e:
         raise
+    # except InternalServerError as e:
+        
 
 # Establish LangGraph workflow (divide text into subsections -> retrieve analysis on each subsection)
 workflow = StateGraph(SocratesState)

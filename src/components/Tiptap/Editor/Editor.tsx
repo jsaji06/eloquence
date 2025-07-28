@@ -55,55 +55,73 @@ const Editor = (props: EditorProps) => {
     },
   })
   let dataRef = useRef(props.aiData || [])
+  let feedbackRef = useRef(props.feedback || [])
 
   useEffect(() => {
     dataRef.current = props.aiData || []
   }, [props.aiData])
 
   useEffect(() => {
+    feedbackRef.current = props.feedback || []
+  },[props.feedback])
+
+  useEffect(() => {
     document.querySelector(".editor")?.addEventListener("click", (e: Event) => {
-      console.log("Editor clicked")
       const target = e.target as HTMLElement
       if (target.tagName === "MARK") {
-        
-        dataRef.current.map((data, _) => {
-          data.points.map((point, _) => {
-            point.active = true
-            return point
-          })
-          return data
-
-        })
         let highlightedContent = target.textContent!;
-        let subsection = dataRef.current.filter(response => response.points.some(point => {
+        if(props.feedbackPanel === false){
+          dataRef.current.map((data, _) => {
+            data.points.map((point, _) => {
+              point.active = true
+              return point
+            })
+            return data
+
+          })
           
-          return point.highlighted_text.some(text => {
-            let normedHigh = normalize(text)
-            let normedCont = normalize(highlightedContent)
-            return normedHigh === normedCont;
-          });
-        }))
-        if (!subsection) return;
-        let newData = dataRef.current.map((data, _) => {
-          let newDataInfo = { ...data }
-          console.log("DATA", data, subsection[0], subsection)
-          if (data === subsection[0]) {
-            newDataInfo.collapsed = true;
-            let newPoints = newDataInfo.points.map((point, _) => ({
-              ...point,
-              active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent))
-            }))
-            newDataInfo.points = newPoints;
+          let subsection = dataRef.current.filter(response => response.points.some(point => {
+            
+            return point.highlighted_text.some(text => {
+              let normedHigh = normalize(text)
+              let normedCont = normalize(highlightedContent)
+              return normedHigh === normedCont;
+            });
+          }))
+          if (!subsection) return;
+          let newData = dataRef.current.map((data, _) => {
+            let newDataInfo = { ...data }
+            if (data === subsection[0]) {
+              newDataInfo.collapsed = true;
+              let newPoints = newDataInfo.points.map((point, _) => ({
+                ...point,
+                active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent))
+              }))
+              newDataInfo.points = newPoints;
           } else {
             newDataInfo.collapsed = false;
           }
           return newDataInfo
         })
         if (newData) props.setAiData(newData);
-      }
-    })
+      } else {
+        let feedback = feedbackRef.current.filter(back => back.point.highlighted_text.some((text:string) => normalize(text) === normalize(highlightedContent)))
+        if (!feedback) return;
+        let newFeedback = [...feedbackRef.current]
 
-  }, [editor])
+        for(let i  = 0; i < newFeedback.length; i++){
+          if(newFeedback[i] === feedback[0]){
+            newFeedback[i].collapsed = true;
+          } else newFeedback[i].collapsed = false;
+        }
+        props.setFeedback(newFeedback);
+        
+      }
+    } 
+    })
+    
+
+  }, [editor, props.feedbackPanel])
   useEffect(() => {
 
     if (editor && props.text !== editor.getHTML()) {
@@ -132,12 +150,17 @@ const Editor = (props: EditorProps) => {
     } else {
       editor?.chain().setTextSelection({ from: 0, to: editor.state.doc.content.size }).unsetMark("highlight").unsetHighlight().run()
       props.feedback.map((subsection: any, _) => {
-        if (subsection.highlighted) {
+        // if (subsection.highlighted) {
           subsection.point.highlighted_text.map((text: string) => {
             highlight(editor, text, subsection.point.color)
+            let positions = findText(editor, text)
+            if(positions){
+              editor?.chain().setTextSelection(positions.from);
+            }
+
             return;
           })
-        }
+        // }
       })
 
     }

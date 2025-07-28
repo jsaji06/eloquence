@@ -1,6 +1,6 @@
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState, type SetStateAction } from 'react';
+import { type SetStateAction } from 'react';
 import "./style.css";
 import { type Dispatch } from 'react';
  
@@ -14,29 +14,30 @@ interface FeedbackProps {
 }
 
 export default function Feedback(props: FeedbackProps) {
-    const [collapsed, setCollapsed] = useState(false);
-
+    const collapsed = props.feedback.collapsed ?? false;
     return (
         <>
-        <div className="subsectionView feedback" style={{backgroundColor: props.feedback.point.color}} onClick={() =>{ 
-            
-        }}>
+        <div className="subsectionView feedback" style={{backgroundColor: props.feedback.point.color}}>
             <div className='header' style={{backgroundColor: props.feedback.point.color}}>
                 <h2>Point {props.index+1}</h2>
                 <FontAwesomeIcon className="icon" icon={collapsed ? faMinus : faPlus} onClick={() => {
-                    setCollapsed(!collapsed)
                     let newList = [...props.feedbackList]
-                    newList[props.index].highlighted = !collapsed;
-                    props.setFeedbackList(newList)
+                    newList.map((_, i) => {
+                        if(i === props.index){
+                            newList[props.index].collapsed = !collapsed;
+                            newList[props.index].highlighted = !collapsed;
+                            props.setFeedbackList(newList)
+                        }
+                    })
                 }}
                   />
             </div>
             <div className='content' style={{padding:"20px", display:collapsed ? "block" : "none"}}>
                 <p>{props.feedback.point.content}</p>
                 <ul>
-                  {props.feedback.advice.map((adv:any) => {
+                  {props.feedback.advice.map((adv:any, i:number) => {
 
-                    return (<li>{adv}</li>)
+                    return (<li key={i}>{adv}</li>)
           })}
                 </ul>
             </div>
