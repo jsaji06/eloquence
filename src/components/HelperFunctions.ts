@@ -3,6 +3,7 @@ import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvide
 import { type Response, type FeedbackResponse } from "../Types";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { getFirestore, doc, setDoc, updateDoc, collection, arrayUnion, addDoc } from "firebase/firestore";
+import { type Dispatch, type SetStateAction } from "react";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_KEY,
@@ -28,7 +29,34 @@ export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider()
     return signInWithPopup(auth, provider)
+}
 
+export let updateUserProfile = async (setStatus:Dispatch<SetStateAction<string>>, firstName?: string, lastName?:string) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const id = user!.uid;
+    let userDoc = doc(db, "users", id)
+    let update: any = {
+
+    }
+    if(firstName){
+        update.firstName = firstName;
+    }
+    if(lastName){
+        update.lastName = lastName;
+    }
+    try {
+    await updateDoc(userDoc, update);
+    } catch(_) {
+        setStatus("An error occured in saving your data; please try again.")
+    }
+    
+}
+
+export let deleteAccount = async () => {
+    const auth = getAuth()
+    const user = auth.currentUser
+    await user?.delete()
 }
 
 export let updateDocument = async (documentId: string, title?: string, content?: string, aiData?: Response[], feedback?: FeedbackResponse[]) => {

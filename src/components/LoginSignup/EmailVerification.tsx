@@ -32,7 +32,8 @@ export default function () {
                     }
                     try {
                         await setDoc(docRef, newDoc)
-                        await createDoc(id, guestDoc)
+                        if(guestDoc)
+                            await createDoc(id, guestDoc)
                         navigate("/dashboard")
                     } catch(err){
                         setError("There was an error in validating your account. Try again.")

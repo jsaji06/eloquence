@@ -8,6 +8,8 @@ import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import Landing from "./components/Landing/Landing";
 import Guest from "./components/Guest/Guest"
 import { Analytics } from "@vercel/analytics/react";
+import ProfileSettings from "./components/ProfileSettings/ProfileSettings";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -20,6 +22,7 @@ export default function App() {
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/settings" element={<ProfileSettings />}></Route>
         <Route path="/editor/:document_id" element={<EditDocument />}></Route>
       </Routes>
     </BrowserRouter>

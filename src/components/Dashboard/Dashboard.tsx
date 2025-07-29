@@ -26,8 +26,11 @@ export default function Dashboard() {
         let unsubUser: (() => void) | undefined;
         const unsubscribed = onAuthStateChanged(auth, (auth_user) => {
             if(!auth_user) {
-                
                 navigate("/login")
+                return;
+            }
+            if(location.pathname !== "/dashboard"){
+                navigate("/dashboard")
                 return;
             }
             let userID = auth_user.uid;
@@ -36,7 +39,7 @@ export default function Dashboard() {
             unsubUser = onSnapshot(userRef, async (userSnap: DocumentSnapshot) => {
                 
                 if(userSnap.exists()){
-                    setUserInfo({ ...userSnap.data(), "nameOauth": auth_user.displayName } as unknown as UserInformation)
+                    setUserInfo({ ...userSnap.data() } as unknown as UserInformation)
                     let userDocRef = query(collection(db, "documents"), where("ownerId", "==", userID));
                     unsubscribeUserDoc = onSnapshot(userDocRef, async (userDocSnap: QuerySnapshot) => {
                         let docs: any = []
@@ -66,7 +69,6 @@ export default function Dashboard() {
     let logout = async () => {
         try {
             await signOut(auth);
-            navigate("/")
         } catch (_) {
             setMessage("There was an issue trying to sign you out; please try again.")
         }
@@ -99,19 +101,16 @@ export default function Dashboard() {
                 <nav>
 
                     <div className="icons">
-                        <button onClick={() => { setLoading(true); createDocument() }}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
+                        <button onClick={() => { createDocument() }}><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></button>
                         <div className="test" style={{ position: "relative" }}>
                             <button
                                 onClick={() => setOpen(!open)}
                             ><FontAwesomeIcon icon={faUser} /></button>
                             {open && (
                                 <div className="dropdown">
-                                    {/* <button>
-                                        Profile
-                                    </button>
-                                    <button>
+                                    <button onClick={() => navigate("/settings")}>
                                         Settings
-                                    </button> */}
+                                    </button>
                                     <button onClick={(e) => {
                                         e.preventDefault();
                                         logout()
@@ -125,7 +124,7 @@ export default function Dashboard() {
                 </nav>
                 <div className="dashContainer">
                     <div className="dashHeader">
-                        <h1>Welcome, {userInfo?.firstName ?? userInfo?.nameOauth}. </h1>
+                        <h1>Welcome, {userInfo?.firstName}. </h1>
                         <p>Below are your documents. Click on the title to proceed to editing.</p>
                     </div>
                     <div className="documentContainer">

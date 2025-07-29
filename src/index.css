@@ -90,7 +90,7 @@ input {
 
 input:focus {
     outline: none;
-    border: 1px solid var(--accent);
+    /* border: 1px solid var(--accent); */
 }
 
 select {
@@ -1038,4 +1038,22 @@ nav.hamburger {
     color:var(--bg-primary);
     background-color: var(--text-primary);
 
+}
+
+.profileSettings {
+    padding:50px 60px;
+    display:flex;
+    flex-direction: column;
+    gap:60px;
+}
+
+.profileSettingsContainer {
+    display: flex;
+    flex-direction: column;
+    gap:30px;
+}
+
+.profileSettings input {
+    width:300px;
+    padding:10px 5px;
 }

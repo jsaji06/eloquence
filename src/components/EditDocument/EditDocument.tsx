@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import { updateDocument } from '../HelperFunctions';
 import { getAuth } from 'firebase/auth';
-import { onAuthStateChanged } from 'firebase/auth';
 import './style.css'
 import { type FeedbackResponse } from '../../Types';
 
@@ -41,18 +40,7 @@ function EditDocument() {
   const db = getFirestore();
   const auth = getAuth();
 
-
-
   useEffect(() => {
-    
-    const unsubscribed = onAuthStateChanged(auth, (auth_user) => {
-      if (!auth_user) {
-        setMessage("You've been signed out. Redirecting you.")
-        navigate("/")
-        return;
-      }
-
-      else {
         let getDocument = async () => {
           let d = doc(db, "documents", document_id!);
 
@@ -81,11 +69,6 @@ function EditDocument() {
           }
         }
         getDocument();
-      }
-    })
-    return () => {
-      unsubscribed()
-    }
   }, [auth])
 
 

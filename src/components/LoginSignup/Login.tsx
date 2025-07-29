@@ -28,24 +28,12 @@ export default function Login() {
                 <br />
                 <input type="password" placeholder='Enter your password...' required onChange={e => setPassword(e.target.value)} />
                 <br />
-                <button type="submit" onClick={e => {
-                    loginWithEmail(e, email, password)
-                        .then((_) => {
-
-                            navigate("/dashboard")
-                        })
-                        .catch(_ => {
-                            setError("Invalid password or email; please try again.")
-                        })
+                <button type="submit" onClick={async e => {
+                    await loginWithEmail(e, email, password)
                 }}>Login</button>
-                        <button type="button" onClick={e => {
-                            loginWithGoogle(e)
-                                .then((_) => {
-                                    navigate("/dashboard")
-                                })
-                                .catch(_ => {
-                                    setError("An error occured. Please try again.")
-                                })
+                        <button type="button" onClick={async e => {
+                            await loginWithGoogle(e)
+                                
                         }} ><FontAwesomeIcon icon={faGoogle} />Login with Google</button>
                 <div className="options">
                     <div className="otherOptions">

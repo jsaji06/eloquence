@@ -4,7 +4,9 @@ import { loginWithGoogle } from "../HelperFunctions.ts";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import Alert from "../Alert/Alert.tsx";
 import { createDoc } from '../HelperFunctions.ts';
-
+import { collection, getFirestore } from 'firebase/firestore';
+import { setDoc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
 
 export default function Signup() {
     const [firstName, setFirstName] = useState("");
@@ -45,13 +47,30 @@ export default function Signup() {
                 <button type="button" onClick={ async (e) => {
                     try {
                     let user = await loginWithGoogle(e)
-                    if(state){
-                        try {
-                        await createDoc(user.user.uid, state);
-                        } catch(_) {
-                            setError("There was a problem in creating your doc - please try again later.")
-                        }
+                    let db = getFirestore()
+                    const usersRef = collection(db, "users")
+                    const docRef = doc(usersRef, user.user.uid)
+                    
+                    const newDoc = {
+                        firstName: firstName == "" ? user.user.displayName : firstName,
+                        lastName: "",
+                        documents: []
                     }
+                    console.log(newDoc)
+                    try {
+                        await setDoc(docRef, newDoc)
+                        if(state){
+                            try {
+                            await createDoc(user.user.uid, state);
+                            } catch(_) {
+                                setError("There was a problem in creating your doc - please try again later.")
+                            }
+                        }
+                        navigate("/dashboard")
+                    } catch(err){
+                        setError("There was an error in validating your account. Try again.")
+                    }
+                    
                     navigate("/dashboard")
                 } catch(_){
                     setError("There was a problem signing in - please try again later.")
