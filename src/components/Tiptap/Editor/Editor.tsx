@@ -70,6 +70,7 @@ const Editor = (props: EditorProps) => {
       const target = e.target as HTMLElement
       if (target.tagName === "MARK") {
         let highlightedContent = target.textContent!;
+        console.log(highlightedContent, normalize(highlightedContent))
         if(props.feedbackPanel === false){
           dataRef.current.map((data, _) => {
             data.points.map((point, _) => {
@@ -85,7 +86,7 @@ const Editor = (props: EditorProps) => {
             return point.highlighted_text.some(text => {
               let normedHigh = normalize(text)
               let normedCont = normalize(highlightedContent)
-              return normedHigh === normedCont;
+              return normedHigh === normedCont || text === highlightedContent || text.includes(highlightedContent);
             });
           }))
           if (!subsection) return;
@@ -95,7 +96,7 @@ const Editor = (props: EditorProps) => {
               newDataInfo.collapsed = true;
               let newPoints = newDataInfo.points.map((point, _) => ({
                 ...point,
-                active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent))
+                active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent) || text === highlightedContent || text.includes(highlightedContent))
               }))
               newDataInfo.points = newPoints;
           } else {
@@ -105,7 +106,7 @@ const Editor = (props: EditorProps) => {
         })
         if (newData) props.setAiData(newData);
       } else {
-        let feedback = feedbackRef.current.filter(back => back.point.highlighted_text.some((text:string) => normalize(text) === normalize(highlightedContent)))
+        let feedback = feedbackRef.current.filter(back => back.point.highlighted_text.some((text:string) => normalize(text) === normalize(highlightedContent) || text === highlightedContent || text.includes(highlightedContent)))
         if (!feedback) return;
         let newFeedback = [...feedbackRef.current]
 
@@ -150,7 +151,6 @@ const Editor = (props: EditorProps) => {
     } else {
       editor?.chain().setTextSelection({ from: 0, to: editor.state.doc.content.size }).unsetMark("highlight").unsetHighlight().run()
       props.feedback.map((subsection: any, _) => {
-        // if (subsection.highlighted) {
           subsection.point.highlighted_text.map((text: string) => {
             highlight(editor, text, subsection.point.color)
             let positions = findText(editor, text)

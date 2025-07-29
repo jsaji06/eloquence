@@ -92,7 +92,7 @@ const GuestEditor = (props: EditorProps) => {
             return point.highlighted_text.some(text => {
               let normedHigh = normalize(text)
               let normedCont = normalize(highlightedContent)
-              return normedHigh === normedCont;
+              return normedHigh === normedCont || text.includes(highlightedContent) || text === highlightedContent;
             });
           }))
           if (!subsection) return;
@@ -102,7 +102,7 @@ const GuestEditor = (props: EditorProps) => {
               newDataInfo.collapsed = true;
               let newPoints = newDataInfo.points.map((point, _) => ({
                 ...point,
-                active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent))
+                active: point.highlighted_text.some(text => normalize(text) === normalize(highlightedContent) || text.includes(highlightedContent) || text === highlightedContent)
               }))
               newDataInfo.points = newPoints;
             } else {
@@ -112,7 +112,7 @@ const GuestEditor = (props: EditorProps) => {
           })
           if (newData) props.setAiData(newData);
       } else {
-        let feedback = feedbackRef.current.filter(back => back.point.highlighted_text.some((text:string) => normalize(text) === normalize(highlightedContent)))
+        let feedback = feedbackRef.current.filter(back => back.point.highlighted_text.some((text:string) => normalize(text) === normalize(highlightedContent) || text.includes(highlightedContent)))
         if (!feedback) return;
         let newFeedback = [...feedbackRef.current]
 
