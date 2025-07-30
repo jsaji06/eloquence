@@ -6,6 +6,8 @@ import Alert from "../Alert/Alert";
 import './style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { isMobile } from "react-device-detect"; 
+import BestExperience from '../BestExperience/BestExperience';
 
 export default function Login() {
     const navigate = useNavigate()
@@ -18,6 +20,7 @@ export default function Login() {
             if (user) navigate('/dashboard');
         })
     }, [navigate])
+    if(!isMobile){
     return (
         <>
             {error && <Alert setMessage={setError} message={error} />}
@@ -45,4 +48,8 @@ export default function Login() {
             </form >
         </>
     )
+} else 
+{
+    return (<BestExperience />)
+}
 }

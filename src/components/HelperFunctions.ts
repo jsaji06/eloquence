@@ -27,8 +27,45 @@ export let loginWithEmail = (e: React.MouseEvent<HTMLButtonElement>, email: stri
 export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider()
-    return signInWithPopup(auth, provider)
+    const provider = new GoogleAuthProvider();
+    // CLAUDE-GENERATED CODE STARTS HERE
+
+    // These settings prevent the double sign-in issue
+    provider.setCustomParameters({
+        prompt: 'select_account',           // Always show account picker
+        access_type: 'offline',             // Get refresh token
+        include_granted_scopes: 'true'      // Include previously granted scopes
+    });
+    
+    // Clear any existing auth state to prevent conflicts
+    if (auth.currentUser) {
+        await auth.signOut();
+    }
+    
+    try {
+        // Add a small delay to ensure clean state
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        const result = await signInWithPopup(auth, provider);
+        return result;
+    } catch (error: any) {
+        console.error('Google sign-in error:', error);
+        
+        // Handle specific popup issues
+        if (error.code === 'auth/popup-closed-by-user') {
+            throw new Error('Sign-in was cancelled');
+        } else if (error.code === 'auth/popup-blocked') {
+            throw new Error('Popup was blocked. Please allow popups and try again.');
+        } else if (error.code === 'auth/cancelled-popup-request') {
+            // This happens when multiple popups are triggered
+            // Don't throw error, let it retry naturally
+            return;
+        }
+        
+        throw error;
+    }
+    // CLAUDE-GENERATED CODE ENDS HERE
+
 }
 
 export let updateUserProfile = async (setStatus:Dispatch<SetStateAction<string>>, firstName?: string, lastName?:string) => {
