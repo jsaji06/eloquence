@@ -48,32 +48,8 @@ export default function Signup() {
                 }}>Signup</button>
                 <button type="button" onClick={ async (e) => {
                     try {
-                    let user = await loginWithGoogle(e)
-                    let db = getFirestore()
-                    const usersRef = collection(db, "users")
-                    const docRef = doc(usersRef, user!.user.uid)
+                    let user = await loginWithGoogle(e, state, setError)                    
                     
-                    const newDoc = {
-                        firstName: firstName == "" ? user!.user.displayName : firstName,
-                        lastName: "",
-                        documents: []
-                    }
-                    console.log(newDoc)
-                    try {
-                        await setDoc(docRef, newDoc)
-                        if(state){
-                            try {
-                            await createDoc(user!.user.uid, state);
-                            } catch(_) {
-                                setError("There was a problem in creating your doc - please try again later.")
-                            }
-                        }
-                        navigate("/dashboard")
-                    } catch(err){
-                        setError("There was an error in validating your account. Try again.")
-                    }
-                    
-                    navigate("/dashboard")
                 } catch(_){
                     setError("There was a problem signing in - please try again later.")
                     

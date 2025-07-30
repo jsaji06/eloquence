@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app"
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { type Response, type FeedbackResponse } from "../Types";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { getFirestore, doc, setDoc, updateDoc, collection, arrayUnion, addDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, updateDoc, collection, arrayUnion, addDoc, getDoc } from "firebase/firestore";
 import { type Dispatch, type SetStateAction } from "react";
 
 const firebaseConfig = {
@@ -24,7 +24,7 @@ export let loginWithEmail = (e: React.MouseEvent<HTMLButtonElement>, email: stri
     const auth = getAuth(app);
     return signInWithEmailAndPassword(auth, email, password)
 }
-export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>, docObj?:any, setError?: Dispatch<SetStateAction<string | undefined>>) => {
     e.preventDefault();
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
@@ -47,6 +47,37 @@ export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
         
         const result = await signInWithPopup(auth, provider);
+        // CLAIDE GENERATED CODE ENDS HERE
+        let userDoc = doc(db, "users", result.user.uid)
+        let snap = await getDoc(userDoc)
+        if(!snap.exists()){
+            const usersRef = collection(db, "users")
+            const docRef = doc(usersRef, result!.user.uid)
+            
+            const newDoc = {
+                firstName: result!.user.displayName,
+                lastName: "",
+                documents: []
+            }
+            console.log(newDoc)
+            try {
+                await setDoc(docRef, newDoc)
+                if(docObj){
+                    try {
+                    await createDoc(result!.user.uid, docObj);
+                    } catch(_) {
+                        if(setError){
+                        setError("There was a problem in creating your doc - please try again later.")
+                        }
+                    }
+                }
+            } catch(err){
+                if(setError){
+                setError("There was an error in validating your account. Try again.")
+                }
+            }
+        }
+
         return result;
     } catch (error: any) {
         console.error('Google sign-in error:', error);
