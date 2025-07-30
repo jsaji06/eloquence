@@ -15,6 +15,8 @@ import { type FeedbackResponse } from '../../Types';
 import { getAuth } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import DemoTestModal from '../../DemoTextModal/DemoTestModal';
+import { isMobile } from 'react-device-detect';
+import BestExperience from '../BestExperience/BestExperience';
 
 function EditDocument() {
     const navigate = useNavigate();
@@ -116,6 +118,7 @@ function EditDocument() {
         } 
     }
     let wordCount = text.replace(html_tag_regex, "").split(" ").length;
+    if(!isMobile){
     return (
         <>
         {demoModal && <DemoTestModal modal={demoModal} setModal={setDemoModal} setDemoTitle={setDemoTitle} setDemoPara={setDemoPara} /> }
@@ -149,6 +152,9 @@ function EditDocument() {
             </div >
         </>
     )
+} else {
+    return <BestExperience />
+}
 }
 
 
