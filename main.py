@@ -5,6 +5,7 @@ Application powered by Claude Sonnet 3.5 by Anthropic.
 """
 
 from pydantic import BaseModel, field_validator
+from pydantic_core._pydantic_core import ValidationError
 from typing import Optional, Literal, TypedDict
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,6 +27,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:5173",
         "www.eloquenceai.org",
         "https://www.eloquenceai.org",
         "https://eloquenceai.org",
@@ -63,6 +65,13 @@ class Response(BaseModel):
     header: str
     points: list[Point]
     collapsed:bool = False
+    
+    @field_validator('points', mode='before')
+    def parse_points(cls, v):
+        if isinstance(v, str):
+            import json
+            return json.loads(v)
+        return v
 
 class FeedbackInput(TypedDict):
     points:list[Point]
@@ -129,9 +138,11 @@ def divide_text(state:SocratesState):
         penalty = get_penalty(docmats, 10) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
+        print("SEGMENTS", segments)
         return {"subsections":segments}
     except ValueError as e:
         if "too short for given segment_len" in str(e):
+            print("Test")
         # Fallback: treat entire text as one segment
             return {"subsections": [sentences]}  # or however you want to handle short docs
     else:
@@ -144,72 +155,65 @@ Each subsection will contain at most 3 critical points. These points come under 
 """
 async def call_model(subsection:str, index:int):
     PROMPT = PromptTemplate.from_template("""
-        You are Socrates. Analyze this subsection and create exactly 3 critical points.
+You are Socrates. Analyze this subsection and create exactly 3 critical points.
 
-        Subsection to analyze:
-        <writing_content>
-        {writing}
-        </writing_content>
+Subsection to analyze:
+<writing_content>
+{writing}
+</writing_content>
 
-        BEFORE analyzing, please provide a concise header for the subsection provided. It should be brief but to the point. 
+Generate exactly 3 critical points that challenge, question, or explore this content.
 
-        Next, READ THE TEXT FROM LEFT TO RIGHT and identify 3-5 DISTINCT key phrases or sentences as they appear in order. You must select these phrases in the exact sequence they appear in the text - from beginning to end. Write them exactly as they appear:
+IMPORTANT: You must respond with a JSON object matching this exact structure:
+{{
+  "header": "Brief header for this subsection",
+  "points": [
+    {{
+      "type_of_point": "refutation|counterpoint|question|dilemma",
+      "content": "Your critical point here",
+      "highlighted_text": ["exact phrase from text"],
+      "color": "#hexcolor",
+      "active": true
+    }}
+  ],
+  "collapsed": false
+}}
 
-        Key phrases from text (in order of appearance):
-        1. "[copy exact phrase 1 - from early in text]"
-        2. "[copy exact phrase 2 - from middle of text]"
-        3. "[copy exact phrase 3 - from later in text]"
+This subsection number is #{subsection_number}
 
-        DO NOTE: New sentences are separated by the flag <NEW_SENTENCE>. DO NOT repeat the same sentences for the points you want to make - each sentence you choose should be different.
-
-        Now generate exactly 3 critical points that challenge, question, or explore this content. Each point should be:
-        - One of: refutation, counterpoint, question, or dilemma
-        - Concise but thoughtful
-        - Directly related to the content
-
-        CRITICAL REQUIREMENT: For EACH point, you must reference the phrases IN THE SAME ORDER they appear in the text:
-        - Point 1 must reference phrase 1 (earliest in text)
-        - Point 2 must reference phrase 2 (middle of text)  
-        - Point 3 must reference phrase 3 (latest in text)
-
-        Use the EXACT same text you copied - do not modify it.
-
-        Color Assignment Rules:
-        - Subsection 1: Use blue tones
-        - Subsection 2: Use green tones
-        - Subsection 3: Use red tones
-        - Subsection 4: Use purple tones
-        - Subsection 5: Use orange tones
-        - Subsection 6: Use yellow tones
-        - The colors should be light but distinct from one another.
-
-        This subsection number is #{subsection_number}
-
-        Format each point as:
-        Point [X] (Color: [hex_code]): [Your critical point]
-        Referenced text: "[exact phrase from your list above]"
-
-        Be concise in your analysis.
-        """)
+Rules:
+- Each point must be one of: refutation, counterpoint, question, or dilemma
+- highlighted_text should contain exact phrases from the original text
+- Use appropriate colors for subsection {subsection_number}
+- Be concise but thoughtful
+""")
     socrates = create_socrates()
-    
-    if subsection != [""]:
-        prompt = await PROMPT.ainvoke({"subsection_number": index + 1, "writing": subsection})
-        point = await socrates.with_structured_output(Response).ainvoke(prompt)
-        point_list = point.points
-        new_list = []
-        seen_list = set()
-        for j in range(len(point_list)):
-            point_list[j]['color'] = COLORS[index][j]
-        for j in range(len(point_list)):
-            highlights = tuple(point_list[j]["highlighted_text"])
-            if highlights not in seen_list:
-                point_list[j]["color"] = COLORS[index][j]
-                new_list.append(point_list[j])
-                seen_list.add(highlights)
-        point.points = new_list
-        return point
-    return None
+    MAX_TRIES = 5
+    for i in range(MAX_TRIES):
+        print("SUBSECTION", subsection)
+        if subsection != [""]:
+            try:
+                prompt = await PROMPT.ainvoke({"subsection_number": index + 1, "writing": subsection})
+                point = await socrates.with_structured_output(Response).ainvoke(prompt)
+                point_list = point.points
+                new_list = []
+                seen_list = set()
+                for j in range(len(point_list)):
+                    point_list[j]['color'] = COLORS[index][j]
+                for j in range(len(point_list)):
+                    highlights = tuple(point_list[j]["highlighted_text"])
+                    if highlights not in seen_list:
+                        point_list[j]["color"] = COLORS[index][j]
+                        new_list.append(point_list[j])
+                        seen_list.add(highlights)
+                point.points = new_list
+                return point
+            except ValidationError:
+                print("Error, trying again")
+                raise
+                # if i < MAX_TRIES - 1:
+                #     await asyncio.sleep(1)
+                # else: raise
     
 
 async def retrieve_points(state:SocratesState):
@@ -218,6 +222,7 @@ async def retrieve_points(state:SocratesState):
         
         points = [call_model(subsection, i) for i, subsection in enumerate(subsections)]
         results = await asyncio.gather(*points)
+        print("RESULTS", results)
         state = {**state, "response":results}
         return state
     except Exception as e:

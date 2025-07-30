@@ -36,7 +36,8 @@ export default function AISummary(props: AISummaryProps) {
     setLoadMorePanel(true);
     props.setFeedback([])
     props.setFeedbackPanel(true);
-    fetch("https://eloquence-68ro.onrender.com/get_advice", {
+    fetch("http://localhost:8000/get_advice", {
+    // fetch("https://eloquence-68ro.onrender.com/get_advice", {
       method: "POST",
       body: JSON.stringify({
         points: selectedPoints

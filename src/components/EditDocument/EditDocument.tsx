@@ -101,7 +101,8 @@ function EditDocument() {
         })
         .then((data: Response[]) => {
           setLoadingPanel(false);
-          setAIData(data);
+          console.log(data)
+          setAIData(data.filter(feedback => feedback));
           setFeedback([]);
           updateDocument(document_id!, undefined, undefined, data, []);
         })
