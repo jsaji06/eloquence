@@ -7,6 +7,8 @@ import { createDoc } from '../HelperFunctions.ts';
 import { collection, getFirestore } from 'firebase/firestore';
 import { setDoc } from 'firebase/firestore';
 import { doc } from 'firebase/firestore';
+import { isMobile } from 'react-device-detect';
+import BestExperience from '../BestExperience/BestExperience.tsx';
 
 export default function Signup() {
     const [firstName, setFirstName] = useState("");
@@ -17,7 +19,7 @@ export default function Signup() {
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state;
-
+    if(!isMobile){
     return (
         <>
             {error && <Alert setMessage={setError} message={error} />}
@@ -86,4 +88,7 @@ export default function Signup() {
             </form>
         </>
     )
+} else {
+    return <BestExperience />
+}
 }
