@@ -44,7 +44,7 @@ export default function Signup() {
                 }}>Signup</button>
                 <button type="button" onClick={ async (e) => {
                     try {
-                    await loginWithGoogle(e, state, setError)                    
+                    await loginWithGoogle(e, state)                    
                     
                 } catch(_){
                     setError("There was a problem signing in - please try again later.")
