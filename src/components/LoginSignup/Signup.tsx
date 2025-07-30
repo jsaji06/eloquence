@@ -49,10 +49,10 @@ export default function Signup() {
                     let user = await loginWithGoogle(e)
                     let db = getFirestore()
                     const usersRef = collection(db, "users")
-                    const docRef = doc(usersRef, user.user.uid)
+                    const docRef = doc(usersRef, user!.user.uid)
                     
                     const newDoc = {
-                        firstName: firstName == "" ? user.user.displayName : firstName,
+                        firstName: firstName == "" ? user!.user.displayName : firstName,
                         lastName: "",
                         documents: []
                     }
@@ -61,7 +61,7 @@ export default function Signup() {
                         await setDoc(docRef, newDoc)
                         if(state){
                             try {
-                            await createDoc(user.user.uid, state);
+                            await createDoc(user!.user.uid, state);
                             } catch(_) {
                                 setError("There was a problem in creating your doc - please try again later.")
                             }
