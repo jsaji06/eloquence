@@ -24,7 +24,7 @@ export let loginWithEmail = (e: React.MouseEvent<HTMLButtonElement>, email: stri
     const auth = getAuth(app);
     return signInWithEmailAndPassword(auth, email, password)
 }
-export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>, docObj?:any, setError?: Dispatch<SetStateAction<string | undefined>>) => {
+export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>, docObj?:any) => {
     e.preventDefault();
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
@@ -59,26 +59,15 @@ export let loginWithGoogle = async (e: React.MouseEvent<HTMLButtonElement>, docO
                 lastName: "",
                 documents: []
             }
-            console.log(newDoc)
-            try {
                 await setDoc(docRef, newDoc)
                 if(docObj){
-                    try {
                     await createDoc(result!.user.uid, docObj);
-                    } catch(_) {
-                        if(setError){
-                        setError("There was a problem in creating your doc - please try again later.")
-                        }
-                    }
                 }
-            } catch(err){
-                if(setError){
-                setError("There was an error in validating your account. Try again.")
-                }
-            }
+           
         }
 
         return result;
+        // CLAUDE-GENERATED CODE STARTS HERE
     } catch (error: any) {
         console.error('Google sign-in error:', error);
         

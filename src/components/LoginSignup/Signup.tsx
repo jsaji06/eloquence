@@ -3,10 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { loginWithGoogle } from "../HelperFunctions.ts";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import Alert from "../Alert/Alert.tsx";
-import { createDoc } from '../HelperFunctions.ts';
-import { collection, getFirestore } from 'firebase/firestore';
-import { setDoc } from 'firebase/firestore';
-import { doc } from 'firebase/firestore';
 import { isMobile } from 'react-device-detect';
 import BestExperience from '../BestExperience/BestExperience.tsx';
 
@@ -48,7 +44,7 @@ export default function Signup() {
                 }}>Signup</button>
                 <button type="button" onClick={ async (e) => {
                     try {
-                    let user = await loginWithGoogle(e, state, setError)                    
+                    await loginWithGoogle(e, state, setError)                    
                     
                 } catch(_){
                     setError("There was a problem signing in - please try again later.")
