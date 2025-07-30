@@ -9,7 +9,6 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
 import TextStyle from "@tiptap/extension-text-style";
-import './style.css'
 import { updateDocument } from '../../HelperFunctions'
 import { Timestamp } from 'firebase/firestore'
 import { type Response, type Point } from '../../../Types'
