@@ -37,6 +37,7 @@ function EditDocument() {
     const [demoModal, setDemoModal] = useState(true);
     const [demoTitle, setDemoTitle] = useState("");
     const [demoPara, setDemoPara] = useState("");
+    const [header, setHeader] = useState<string | undefined>();
 
     const auth = getAuth();
 
@@ -57,6 +58,8 @@ function EditDocument() {
     useEffect(() => {
         if (actions <= 0) {
             setMessage("Like Eloquence so far? Sign up so that you don't lose your feedback.")
+            setHeader("Sign up to continue");
+
             setButton(() => redirectGuest);
         }
     }, [actions])
@@ -76,10 +79,19 @@ function EditDocument() {
 
     let review = (writing?: string) => {
         if(actions > 0){
-        if (loadingPanel) setMessage("Please wait. An analysis is pending.")
-        if (title == "") setMessage("Please write a title.")
+        if (loadingPanel) {
+            setHeader("Error");
+            setMessage("Please wait. An analysis is pending.")
+        }
+        if (title == "") {
+            setMessage("Please write a title.")
+            setHeader("Error");
+
+        }
         else if (text.split(" ").length < 25) {
             setMessage("You must write at least 25 words before requesting an analysis.");
+            setHeader("Error");
+
         }
         else {
             setFeedbackPanel(false);
@@ -111,6 +123,7 @@ function EditDocument() {
                     setLoadingPanel(false);
                     setAiPanelActive(false);
                     setMessage("An error occured. Please try again.");
+                    setHeader("Error");
                 })
         }
         } else {
@@ -122,7 +135,7 @@ function EditDocument() {
     return (
         <>
         {demoModal && <DemoTestModal modal={demoModal} setModal={setDemoModal} setDemoTitle={setDemoTitle} setDemoPara={setDemoPara} /> }
-            {message && <Alert message={message} setMessage={setMessage} customButtonHandler={button} />}
+            {message && <Alert header={header} message={message} setMessage={setMessage} customButtonHandler={button} />}
             <div className="container" style={{display: !hide ? "block" : "none"}}>
                 {message && <Overlay />}
                 <PanelGroup direction="horizontal" className="eContainer">
