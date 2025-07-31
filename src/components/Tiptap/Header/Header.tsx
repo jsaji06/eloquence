@@ -10,7 +10,7 @@ const extensions = [StarterKit, Heading.configure({
   levels: [1],
 
 }), Placeholder.configure({
-  placeholder: "Your title"
+  placeholder: "Your title..."
 })]
 
 interface HeaderProps {

@@ -27,7 +27,8 @@ h5,
 h6 {
     font-family: "Playfair Display";
     font-weight: normal;
-    color: var(--text-primary)
+    color: var(--text-primary);
+    line-height:5rem;
 }
 
 p {
@@ -318,16 +319,23 @@ p.docContent {
     font-family: "DM Sans";
     font-size: 22px;
     font-weight: 200;
+    
 }
 
 .ProseMirror.header p {
     font-family: "Playfair Display";
     font-size: 64px;
+    color:var(--text-secondary)
 }
 
 .ProseMirror.header p.is-editor-empty:first-child::before {
     font-family: "Playfair Display";
     font-size: 64px;
+    opacity:.3;
+}
+
+.ProseMirror.editor p {
+    color:var(--text-primary)
 }
 
 .ProseMirror.editor p.is-editor-empty:first-child::before {
