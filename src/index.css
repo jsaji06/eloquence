@@ -28,7 +28,8 @@ h6 {
     font-family: "Playfair Display";
     font-weight: normal;
     color: var(--text-primary);
-    line-height:5rem;
+    
+    
 }
 
 p {
@@ -332,6 +333,10 @@ p.docContent {
     font-family: "Playfair Display";
     font-size: 64px;
     opacity:.3;
+}
+
+.ProseEditor.header h1, .ProseEditor.header h2, .ProseEditor.header h3, .ProseEditor.header h4, .ProseEditor.header h5, .ProseEditor.header h6 {
+    line-height:5rem;
 }
 
 .ProseMirror.editor p {
