@@ -569,7 +569,7 @@ button.bubbleBtn {
 }
 
 /* Utility Classes */
-.active {
+.bubbleBtn .active {
     background-color: var(--text-primary);
     color: var(--bg-primary);
 }
