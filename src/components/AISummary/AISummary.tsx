@@ -120,6 +120,7 @@ export default function AISummary(props: AISummaryProps) {
             Collapse each section to view what we suggested you cover/think
             about for the corresponding header. The color of the highlighted text corresponds to the color-coded section of our feedback.
           </p>
+          <p>You can select up to 3 pieces of feedback to request a deeper analysis on each of them.</p>
           {selectedPoints.length > 0 && <button style={{backgroundColor:"", marginBottom:"20px"}} onClick={e => {
             e.preventDefault();
             getExtraFeedback();

@@ -486,8 +486,8 @@ button.bubbleBtn {
 }
 
 .circle {
-    width: 10px;
-    height: 10px;
+    width: 22.5px;
+    height: 22.5px;
     border: 1px solid var(--text-primary);
     border-radius: 100px;
 }
@@ -497,7 +497,7 @@ button.bubbleBtn {
     background-color: var(--text-primary);
 }
 
-.circle .active {
+.circle.active {
     background-color: var(--text-primary);
 }
 
