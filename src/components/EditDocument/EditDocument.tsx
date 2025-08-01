@@ -54,7 +54,7 @@ function EditDocument() {
               setText(data.content);
               setRecentlyModified(data.recentlyModified);
               if (data.aiData) {
-                setAIData(data.aiData);
+                setAIData(data.aiData.filter((feedback:Response) => feedback));
                 setAiPanelActive(true)
               }
               if (data.feedback) {

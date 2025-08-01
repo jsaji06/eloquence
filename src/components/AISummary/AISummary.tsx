@@ -125,9 +125,12 @@ export default function AISummary(props: AISummaryProps) {
             getExtraFeedback();
           }}>Get extra feedback</button>}
 
-          {props.aiData?.map((subsection:Response, i:number) => (
-            <SubsectionView key={i} subsection={subsection} points={selectedPoints} setPoints={setSelectedPoints} aiData={props.aiData} setAiData={props.setAiData} />
-          ))}
+          {props.aiData?.map((subsection:Response, i:number) => {
+            if(subsection){
+            return (<SubsectionView key={i} subsection={subsection} points={selectedPoints} setPoints={setSelectedPoints} aiData={props.aiData} setAiData={props.setAiData} />)
+            }
+          }
+          )}
         </div>
         </>
       )
