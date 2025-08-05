@@ -3,7 +3,7 @@ This is the backend file for Eloquence. Below, you will see how I have establish
 
 Application powered by Claude Sonnet 3.5 by Anthropic.
 """
-
+import sys
 from pydantic import BaseModel, field_validator
 from pydantic_core._pydantic_core import ValidationError
 from typing import Optional, Literal, TypedDict
@@ -84,6 +84,10 @@ class SocratesState(TypedDict):
     advice:list[Advice]
     user_selected_points:list[Point]
     response:list[Response]
+    summaries:list[str]
+
+class Context(BaseModel):
+    summaries:list[str]
     
 COLORS = [
     ["#2e1a26", "#472b3a", "#6b3e53"], 
@@ -138,11 +142,9 @@ def divide_text(state:SocratesState):
         penalty = get_penalty(docmats, 10) # ✅ FIXED
         splits = split_optimal(embeddings, penalty=penalty)
         segments = get_segments(sentences, splits)
-        print("SEGMENTS", segments)
         return {"subsections":segments}
     except ValueError as e:
         if "too short for given segment_len" in str(e):
-            print("Test")
         # Fallback: treat entire text as one segment
             return {"subsections": [sentences]}  # or however you want to handle short docs
     else:
@@ -153,9 +155,15 @@ Method to retreive initial feedback on user's writings.
 
 Each subsection will contain at most 3 critical points. These points come under the form of questions, refutations, dilemmas, and/or counterpoints, in hopes of getting the user to think deeper about their ideas/arguments they want to discuss in their writings.
 """
-async def call_model(subsection:str, index:int):
+async def call_model(subsection:str, index:int, summary:str):
     PROMPT = PromptTemplate.from_template("""
-You are Socrates. Analyze this subsection and create exactly 3 critical points.
+You are Socrates. You are tasked to analyze a complete essay that's been broken down to subsections to make your job easier.
+
+To better understand the context behind the essay, here is a brief, one sentence summary of the subsection preceding this one: {summary}
+
+NOTE: If there was NO context provided, this implies that this is the introductory paragraph to the essay, so please treat this as such.
+
+Analyze this subsection and create exactly 3 critical points with consideration of the context of the previous subsection, if included.
 
 Subsection to analyze:
 <writing_content>
@@ -190,7 +198,6 @@ Rules:
     socrates = create_socrates()
     MAX_TRIES = 5
     for i in range(MAX_TRIES):
-        print("SUBSECTION", subsection)
         if subsection != [""]:
             try:
                 prompt = await PROMPT.ainvoke({"subsection_number": index + 1, "writing": subsection})
@@ -209,7 +216,6 @@ Rules:
                 point.points = new_list
                 return point
             except ValidationError:
-                print("Error, trying again")
                 raise
                 # if i < MAX_TRIES - 1:
                 #     await asyncio.sleep(1)
@@ -218,11 +224,11 @@ Rules:
 
 async def retrieve_points(state:SocratesState):
     subsections = state['subsections']
+    summaries = state['summaries']
     try:
         
-        points = [call_model(subsection, i) for i, subsection in enumerate(subsections)]
+        points = [call_model(subsection, i, summaries[i-1] if i >= 1 else "No previous context provided.") for i, subsection in enumerate(subsections)]
         results = await asyncio.gather(*points)
-        print("RESULTS", results)
         state = {**state, "response":results}
         return state
     except Exception as e:
@@ -266,14 +272,27 @@ async def retrieve_advice(selected_points):
         raise
     # except InternalServerError as e:
         
+async def retrieve_context(state:SocratesState):
+    subsections = state['subsections']
+    CONTEXT_PROMPT = PromptTemplate.from_template("""
+    You are being provided an essay that has been broken down into subsections. You are responsible for briefly summarizing each subsection into one sentence. 
+    
+    The subsection in question: {subsection}
+    """)
+    model = create_socrates()
+    summaries = [model.ainvoke(CONTEXT_PROMPT.invoke({"subsection": subsection})) for subsection in subsections]
+    summaries = await asyncio.gather(*summaries)
+    return {**state, "summaries":[summary.content for summary in summaries]}
 
 # Establish LangGraph workflow (divide text into subsections -> retrieve analysis on each subsection)
 workflow = StateGraph(SocratesState)
 workflow.add_node("divide_text", divide_text)
+workflow.add_node("retrieve_context", retrieve_context)
 workflow.add_node("get_points", retrieve_points)
 
 workflow.add_edge(START, "divide_text")
-workflow.add_edge("divide_text", "get_points")
+workflow.add_edge("divide_text", "retrieve_context")
+workflow.add_edge("retrieve_context", "get_points")
 workflow.add_edge("get_points", END)
 
 workflow = workflow.compile()
@@ -282,8 +301,10 @@ workflow = workflow.compile()
 from fastapi import Request
 @app.post("/get_points")
 async def get_points(writing:Request):
+    
    body = await writing.json()
    writing = body.get("writing")
+   # context = body.get("context")
    if not writing:
         raise HTTPException(status_code=400, detail="No writing content provided")
    output = await workflow.ainvoke({"user_essay":writing})
