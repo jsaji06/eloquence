@@ -3,11 +3,11 @@ import Editor from '../Tiptap/Editor/Editor';
 import Header from '../Tiptap/Header/Header';
 import AISummary from '../AISummary/AISummary';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBrain, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faBrain, faArrowLeft, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Alert from '../Alert/Alert';
 import Overlay from '../Overlay/Overlay';
-import { type Response } from '../../Types';
+import type { FeedbackPersonalizationObject, Response } from '../../Types';
 import { useParams } from 'react-router-dom';
 import { doc, getFirestore, getDoc, Timestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,8 @@ import { updateDocument } from '../HelperFunctions';
 import { getAuth } from 'firebase/auth';
 import './style.css'
 import { type FeedbackResponse } from '../../Types';
+import FeedbackPersonalization from '../FeedbackPersonalization/FeedbackPersonalization';
+
 
 function EditDocument() {
 
@@ -36,23 +38,28 @@ function EditDocument() {
   const [feedbackPanel, setFeedbackPanel] = useState(false);
   const [activeText, setActiveText] = useState("");
   const [activeColor, setActiveColor] = useState("");
-
+  const [feedbackPersonalization, setFeedbackPersonalization] = useState<FeedbackPersonalizationObject | undefined>();
+  const [feedbackModal, setFeedbackModal] = useState<boolean | undefined>(true);
   const db = getFirestore();
   const auth = getAuth();
 
   useEffect(() => {
         let getDocument = async () => {
           let d = doc(db, "documents", document_id!);
-
           setLoading(true);
           try {
             let document = await getDoc(d);
             if (document.exists()) {
               let data = document.data();
+              console.log(data)
               setLoading(false);
               setTitle(data.title);
               setText(data.content);
               setRecentlyModified(data.recentlyModified);
+              if (data.feedbackPersonalization) {
+                setFeedbackPersonalization(data.feedbackPersonalization);
+                setFeedbackModal(data.feedbackPersonalization.personalized);
+              }
               if (data.aiData) {
                 setAIData(data.aiData.filter((feedback:Response) => feedback));
                 setAiPanelActive(true)
@@ -88,6 +95,7 @@ function EditDocument() {
         method: "POST",
         body: JSON.stringify({
           writing: writing ?? text,
+          prompt:feedbackPersonalization?.openEnded
         }),
         headers: {
           'Content-Type': "application/json"
@@ -118,6 +126,7 @@ function EditDocument() {
     <>
       {loading && <Loading />}
       {message && <Alert message={message} setMessage={setMessage} />}
+      {!feedbackModal && <FeedbackPersonalization docId={document_id!} setFeedbackModal={setFeedbackModal} feedbackPersonalization={feedbackPersonalization!} setFeedbackPersonalization={setFeedbackPersonalization} />}
       <div className="container" style={{ display: loading ? "none" : "block" }}>
 
 
@@ -139,7 +148,7 @@ function EditDocument() {
                     : "am"
                 )}</p></>
               })()}
-              ●<FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />
+              ●<FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />●<FontAwesomeIcon title={"Click to tailor feedback"} icon={faUserTie} className="icon" style={{ "display": feedbackModal ? "block" : "none" }} onClick={() => setFeedbackModal(false)} />
             </div>
             <Header docId={document_id!} setTitle={setTitle} title={title} />
             <Editor setMessage={setMessage} setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />

@@ -41,6 +41,12 @@ export type FeedbackResponse = {
     point:Point;
 }
 
+export interface FeedbackPersonalizationObject {
+    personalized:false,                
+    openEnded: "",
+    attributes:[]
+}
+
 // export type Feedbacl
 
 // export interface AdviceResponse {

@@ -82,6 +82,11 @@ export default function Dashboard() {
             dateCreated: new Date(),
             recentlyModified: new Date(),
             trash: false,
+            feedbackPersonalization: {
+                personalized:false,                
+                openEnded: "",
+                attributes:[]
+            }
         })
 
         let id = docRef.id;

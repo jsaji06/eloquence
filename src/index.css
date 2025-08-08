@@ -1071,3 +1071,47 @@ nav.hamburger {
     width:300px;
     padding:10px 5px;
 }
+
+.feedbackModal {
+    width:650px
+}
+
+.feedbackModal input {
+    width:85%;
+}
+
+.modalForm {
+    display:flex;
+    gap:50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert input {
+    padding:10px 3px;
+}
+
+.modalForm {
+    margin:20px 0
+}
+
+.modalForm button {
+    flex:0;
+    flex-grow: 0;
+}
+
+.feedbackModal button {
+    flex:0;
+    flex-grow:0;
+}
+
+.paragraphContainer {
+    display:flex;
+    flex-grow: 0;
+    flex-direction: column;
+}
+
+.paragraphContainer button {
+    flex-grow: 0;
+    flex:0;
+}

@@ -85,6 +85,7 @@ class SocratesState(TypedDict):
     user_selected_points:list[Point]
     response:list[Response]
     summaries:list[str]
+    prompt:str
 
 class Context(BaseModel):
     summaries:list[str]
@@ -127,6 +128,23 @@ def create_socrates():
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to initialize model.")
 
+def valid_prompt(user_prompt:str):
+    try:
+        socrates = create_socrates()
+        prompt = PromptTemplate.from_template("""
+        You are Socrates. A writer has begun writing their piece and has specifically advised you to tailor feedback you'll give upon request based on their following descriptions:
+        
+        {description}
+        Please return only one of the following responses: "YES" for if this prompt is valid/relevant for tailored feedback, or "NO" if this prompt is nonsensical or cannot be used for tailored feedback.
+        """)
+        prompt = prompt.invoke({"description":user_prompt})
+        response = socrates.invoke(prompt)
+        return {"response":response}
+    except:
+        raise Exception("An error occured; try again soon")
+        
+    
+
 """
 This method is responsible for intelligently dividing the user's writing into subsections using a pre-trained machine learning model. 
 """
@@ -155,11 +173,16 @@ Method to retreive initial feedback on user's writings.
 
 Each subsection will contain at most 3 critical points. These points come under the form of questions, refutations, dilemmas, and/or counterpoints, in hopes of getting the user to think deeper about their ideas/arguments they want to discuss in their writings.
 """
-async def call_model(subsection:str, index:int, summary:str):
+async def call_model(subsection:str, index:int, summary:str, user_prompt:str):
+    print(summary, "WEEE", user_prompt)
     PROMPT = PromptTemplate.from_template("""
 You are Socrates. You are tasked to analyze a complete essay that's been broken down to subsections to make your job easier.
 
 To better understand the context behind the essay, here is a brief, one sentence summary of the subsection preceding this one: {summary}
+
+In addition, please tailor the feedback based off of the user's description of the general writing they are working with: {writing_desc}
+
+If there's NO INFORMATION to tailor feedback from, please assess the type of writing based on the context that was already provided. Do not provide overly deep/pretentiously-sounding feedback if it's not necessary (i.e. don't unnecessarily philosophize over the user's personal experiences in their college essays).
 
 NOTE: If there was NO context provided, this implies that this is the introductory paragraph to the essay, so please treat this as such.
 
@@ -200,7 +223,7 @@ Rules:
     for i in range(MAX_TRIES):
         if subsection != [""]:
             try:
-                prompt = await PROMPT.ainvoke({"subsection_number": index + 1, "writing": subsection})
+                prompt = await PROMPT.ainvoke({"subsection_number": index + 1, "writing": subsection, "writing_desc": user_prompt, "summary":summary})
                 point = await socrates.with_structured_output(Response).ainvoke(prompt)
                 point_list = point.points
                 new_list = []
@@ -227,7 +250,7 @@ async def retrieve_points(state:SocratesState):
     summaries = state['summaries']
     try:
         
-        points = [call_model(subsection, i, summaries[i-1] if i >= 1 else "No previous context provided.") for i, subsection in enumerate(subsections)]
+        points = [call_model(subsection, i, summaries[i-1] if i >= 1 else "No previous context provided.", state['prompt']) for i, subsection in enumerate(subsections)]
         results = await asyncio.gather(*points)
         state = {**state, "response":results}
         return state
@@ -304,10 +327,11 @@ async def get_points(writing:Request):
     
    body = await writing.json()
    writing = body.get("writing")
+   prompt = body.get("prompt")
    # context = body.get("context")
    if not writing:
         raise HTTPException(status_code=400, detail="No writing content provided")
-   output = await workflow.ainvoke({"user_essay":writing})
+   output = await workflow.ainvoke({"user_essay":writing, "prompt": prompt})
    return output['response']
 
 # API Endpoint to get more extensive feedback 
@@ -326,3 +350,14 @@ async def get_advice(request: Request):
         response.append(res)
     
     return {"response": response}
+
+@app.post("/validate_prompt")
+async def get_points(request:Request):
+    
+   body = await request.json()
+   writing = body.get("prompt")
+   # context = body.get("context")
+   if not writing:
+        raise HTTPException(status_code=400, detail="No writing content provided")
+   output = valid_prompt(writing)
+   return output['response']

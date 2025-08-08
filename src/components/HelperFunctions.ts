@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
-import { type Response, type FeedbackResponse } from "../Types";
+import { type Response, type FeedbackResponse, type FeedbackPersonalizationObject } from "../Types";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { getFirestore, doc, setDoc, updateDoc, collection, arrayUnion, addDoc, getDoc } from "firebase/firestore";
 import { type Dispatch, type SetStateAction } from "react";
@@ -116,7 +116,7 @@ export let deleteAccount = async () => {
     await user?.delete()
 }
 
-export let updateDocument = async (documentId: string, title?: string, content?: string, aiData?: Response[], feedback?: FeedbackResponse[]) => {
+export let updateDocument = async (documentId: string, title?: string, content?: string, aiData?: Response[], feedback?: FeedbackResponse[], feedbackPersonalization?: FeedbackPersonalizationObject) => {
     const update: any = {
         recentlyModified: new Date()
     }
@@ -132,6 +132,9 @@ export let updateDocument = async (documentId: string, title?: string, content?:
     }
     if (feedback) {
         update.feedback = feedback;
+    }
+    if(feedbackPersonalization){
+        update.feedbackPersonalization = feedbackPersonalization
     }
     try {
         await updateDoc(doc(db, "documents", documentId), update);
