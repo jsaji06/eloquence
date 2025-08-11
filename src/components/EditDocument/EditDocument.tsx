@@ -51,7 +51,6 @@ function EditDocument() {
             let document = await getDoc(d);
             if (document.exists()) {
               let data = document.data();
-              console.log(data)
               setLoading(false);
               setTitle(data.title);
               setText(data.content);
@@ -59,6 +58,17 @@ function EditDocument() {
               if (data.feedbackPersonalization) {
                 setFeedbackPersonalization(data.feedbackPersonalization);
                 setFeedbackModal(data.feedbackPersonalization.personalized);
+              } else {
+                  setFeedbackPersonalization({
+                    personalized:false,                
+                    openEnded: "",
+                    attributes:[]
+                })
+                updateDocument(document_id!, undefined, undefined, undefined, undefined, {
+                  personalized:false,                
+                  openEnded: "",
+                  attributes:[]
+                })
               }
               if (data.aiData) {
                 setAIData(data.aiData.filter((feedback:Response) => feedback));
@@ -109,7 +119,6 @@ function EditDocument() {
         })
         .then((data: Response[]) => {
           setLoadingPanel(false);
-          console.log(data)
           setAIData(data.filter(feedback => feedback));
           setFeedback([]);
           updateDocument(document_id!, undefined, undefined, data, []);
@@ -148,7 +157,11 @@ function EditDocument() {
                     : "am"
                 )}</p></>
               })()}
-              ●<FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />●<FontAwesomeIcon title={"Click to tailor feedback"} icon={faUserTie} className="icon" style={{ "display": feedbackModal ? "block" : "none" }} onClick={() => setFeedbackModal(false)} />
+              ●<FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />●<FontAwesomeIcon title={"Click to tailor feedback"} icon={faUserTie} className="icon" style={{ "display": feedbackModal ? "block" : "none" }} onClick={() => {
+                
+                setFeedbackModal(false)
+                
+              }} />
             </div>
             <Header docId={document_id!} setTitle={setTitle} title={title} />
             <Editor setMessage={setMessage} setAiData={setAIData} activeText={{ "text": activeText, "color": activeColor }} aiPanel={aiPanelActive} feedbackPanel={feedbackPanel} feedback={feedback} setFeedback={setFeedback} aiData={aiData!} docId={document_id!} title={title} loading={loadingPanel} review={review} setText={setText} text={text} setRecentlyModified={setRecentlyModified} />

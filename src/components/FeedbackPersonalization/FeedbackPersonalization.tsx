@@ -18,7 +18,38 @@ interface FeedbackProps {
 export default function FeedbackPersonalization(props: FeedbackProps) {
   const [openEndedFeedback, setOpenEndedFeedback] = useState<string>(props.feedbackPersonalization!.openEnded)
   const [error, setError] = useState<string | undefined>();
-  console.log(props);
+  function getFeedback(){
+    setError("Loading...")
+    fetch("https://eloquence-68ro.onrender.com/validate_prompt", {
+        
+        method: "POST",
+        body: JSON.stringify({
+        prompt: openEndedFeedback,
+        }),
+        headers: {
+        'Content-Type': "application/json"
+        }
+    })
+        .then(response => {
+        if (response.status === 200) return response.json()
+        else {
+            throw new Error("Error");
+        }
+        })
+        .then((data: any) => {
+            if (data['content'] === "YES"){ 
+                props.setFeedbackPersonalization({...props.feedbackPersonalization, openEnded: openEndedFeedback, personalized: true} as unknown as FeedbackPersonalizationObject)
+                updateDocument(props.docId, undefined, undefined, undefined, undefined, {...props.feedbackPersonalization, openEnded: openEndedFeedback, personalized: true} as unknown as FeedbackPersonalizationObject)
+                props.setFeedbackModal(true)
+
+            } else {
+                setError("The prompt you provided doesnt work")
+            }
+        })
+        .catch(_ => {
+        console.log(_)
+        })
+    }
 
   return (
     <>
@@ -34,38 +65,7 @@ export default function FeedbackPersonalization(props: FeedbackProps) {
             <div className="paragraphContainer">
                 <div className="modalForm">
                 <input onChange={(e) => setOpenEndedFeedback(e.target.value)} type='text' defaultValue={openEndedFeedback} />
-                <button onClick={() => {
-                setError("Loading...")
-                fetch("https://eloquence-68ro.onrender.com/validate_prompt", {
-                        method: "POST",
-                        body: JSON.stringify({
-                        prompt: openEndedFeedback,
-                        }),
-                        headers: {
-                        'Content-Type': "application/json"
-                        }
-                    })
-                        .then(response => {
-                        if (response.status === 200) return response.json()
-                        else {
-                            throw new Error("Error");
-                        }
-                        })
-                        .then((data: any) => {
-                            console.log(data)
-                            if (data['content'] === "YES"){ 
-                                props.setFeedbackPersonalization({...props.feedbackPersonalization, openEnded: openEndedFeedback, personalized: true} as unknown as FeedbackPersonalizationObject)
-                                updateDocument(props.docId, undefined, undefined, undefined, undefined, {...props.feedbackPersonalization, openEnded: openEndedFeedback, personalized: true} as unknown as FeedbackPersonalizationObject)
-                                props.setFeedbackModal(true)
-
-                            } else {
-                                setError("The prompt you provided doesnt work")
-                            }
-                        })
-                        .catch(_ => {
-                        console.log(_)
-                        })
-                }}><FontAwesomeIcon icon={faArrowRight} /> </button>
+                <button onClick={() => getFeedback()}><FontAwesomeIcon icon={faArrowRight} /> </button>
             </div>
                 </div>
                 <p>{error ? error : ""}</p>
