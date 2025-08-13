@@ -1073,7 +1073,9 @@ nav.hamburger {
 }
 
 .feedbackModal {
-    width:650px
+    width:700px;
+    max-height:600px
+
 }
 
 .feedbackModal input {
@@ -1103,6 +1105,7 @@ nav.hamburger {
 .feedbackModal button {
     flex:0;
     flex-grow:0;
+
 }
 
 .paragraphContainer {
@@ -1115,3 +1118,26 @@ nav.hamburger {
     flex-grow: 0;
     flex:0;
 }
+
+.feedbackSection {
+    margin:10px 0
+}
+
+.feedbackModal h2 {
+    font-size:28px
+}
+
+.feedbackSection * {
+    margin:10px 0
+}
+
+.optionsFeedback button {
+    margin-right:15px;
+
+}
+
+.activeFeedback {
+    background-color: var(--text-primary);
+    color:var(--bg-primary)
+}
+

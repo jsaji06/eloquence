@@ -13,6 +13,8 @@ interface FeedbackProps {
     feedbackPersonalization: FeedbackPersonalizationObject | undefined
     setFeedbackPersonalization: Dispatch<SetStateAction<FeedbackPersonalizationObject | undefined>>
     setFeedbackModal: Dispatch<SetStateAction<boolean | undefined>>
+    setOpenEnded: Dispatch<SetStateAction<boolean>>
+
 }
 
 export default function FeedbackPersonalization(props: FeedbackProps) {
@@ -68,6 +70,7 @@ export default function FeedbackPersonalization(props: FeedbackProps) {
                 <button onClick={() => getFeedback()}><FontAwesomeIcon icon={faArrowRight} /> </button>
             </div>
                 </div>
+                <a href="#" style={{color:"var(--text-primary)"}} onClick={() => props.setOpenEnded(false)}>Customizable Prompting</a>
                 <p>{error ? error : ""}</p>
             </div>
             

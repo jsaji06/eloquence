@@ -17,7 +17,7 @@ import { getAuth } from 'firebase/auth';
 import './style.css'
 import { type FeedbackResponse } from '../../Types';
 import FeedbackPersonalization from '../FeedbackPersonalization/FeedbackPersonalization';
-
+import CustomizableFeedbackPersonalization from '../CustomizableFeedbackPersonalization/CustomizableFeedbackPersonalization';
 
 function EditDocument() {
 
@@ -40,6 +40,8 @@ function EditDocument() {
   const [activeColor, setActiveColor] = useState("");
   const [feedbackPersonalization, setFeedbackPersonalization] = useState<FeedbackPersonalizationObject | undefined>();
   const [feedbackModal, setFeedbackModal] = useState<boolean | undefined>(true);
+  const [openEnded, setOpenEnded] = useState(false)
+
   const db = getFirestore();
   const auth = getAuth();
 
@@ -135,7 +137,7 @@ function EditDocument() {
     <>
       {loading && <Loading />}
       {message && <Alert message={message} setMessage={setMessage} />}
-      {!feedbackModal && <FeedbackPersonalization docId={document_id!} setFeedbackModal={setFeedbackModal} feedbackPersonalization={feedbackPersonalization!} setFeedbackPersonalization={setFeedbackPersonalization} />}
+      {!feedbackModal && (openEnded ? <FeedbackPersonalization setOpenEnded={setOpenEnded} docId={document_id!} setFeedbackModal={setFeedbackModal} feedbackPersonalization={feedbackPersonalization!} setFeedbackPersonalization={setFeedbackPersonalization} /> : <CustomizableFeedbackPersonalization docId={document_id!} setFeedbackModal={setFeedbackModal} feedbackPersonalization={feedbackPersonalization!} setFeedbackPersonalization={setFeedbackPersonalization} setOpenEnded={setOpenEnded} />)}
       <div className="container" style={{ display: loading ? "none" : "block" }}>
 
 
@@ -157,7 +159,7 @@ function EditDocument() {
                     : "am"
                 )}</p></>
               })()}
-              ●<FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon" style={{ "display": aiData ? "block" : "none" }} onClick={() => setAiPanelActive(true)} />●<FontAwesomeIcon title={"Click to tailor feedback"} icon={faUserTie} className="icon" style={{ "display": feedbackModal ? "block" : "none" }} onClick={() => {
+              <span style={{ "display": aiData ? "block" : "none" }}>●<FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon"  onClick={() => setAiPanelActive(true)} /></span>●<FontAwesomeIcon title={"Click to tailor feedback"} icon={faUserTie} className="icon" style={{ "display": feedbackModal ? "block" : "none" }} onClick={() => {
                 
                 setFeedbackModal(false)
                 

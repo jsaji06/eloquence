@@ -85,7 +85,60 @@ export default function Dashboard() {
             feedbackPersonalization: {
                 personalized:false,                
                 openEnded: "",
-                attributes:[]
+                attributes:[
+                    {
+                        type: "Type of Writing",
+                        options: [
+                            {
+                                "type": "Academic",
+                                "active":false
+                            },
+                            {
+                                "type": "Persuasive",
+                                "active":false
+                            },
+                            {
+                                "type": "Story Telling",
+                                "active":false
+                            },
+                        ]
+                    },
+                    {
+                        type: "Audience",
+                        options: [
+                            {
+                                "type": "Experts",
+                                "active":false
+                            },
+                            {
+                                "type": "General Public",
+                                "active":false
+                            },
+                            {
+                                "type": "Students",
+                                "active":false
+                            },
+                        ]
+                    },
+                    {
+                        type: "Formality",
+                        options: [
+                            {
+                                "type": "Formal",
+                                "active":false
+                            },
+                            {
+                                "type": "Colloquial",
+                                "active":false
+                            },
+                            {
+                                "type": "General",
+                                "active":false
+                            },
+                        ]
+                    },
+                    
+                  ]
             }
         })
 

@@ -47,8 +47,12 @@ export interface FeedbackPersonalizationObject {
     attributes:[]
 }
 
-// export type Feedbacl
+export interface Option {
+    type:string,
+    active:boolean
+}
 
-// export interface AdviceResponse {
-//     point:
-// }
+export interface Section {
+    type: string;
+    options:Array<Option>
+}
