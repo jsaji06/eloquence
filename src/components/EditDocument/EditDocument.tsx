@@ -159,7 +159,7 @@ function EditDocument() {
                     : "am"
                 )}</p></>
               })()}
-              <span style={{ "display": aiData ? "block" : "none" }}>●<FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon"  onClick={() => setAiPanelActive(true)} /></span>●<FontAwesomeIcon title={"Click to tailor feedback"} icon={faUserTie} className="icon" style={{ "display": feedbackModal ? "block" : "none" }} onClick={() => {
+              <FontAwesomeIcon title={"Click to toggle AI panel"} icon={faBrain} className="icon"  onClick={() => setAiPanelActive(true)} />●<FontAwesomeIcon title={"Click to tailor feedback"} icon={faUserTie} className="icon" style={{ "display": feedbackModal ? "block" : "none" }} onClick={() => {
                 
                 setFeedbackModal(false)
                 
