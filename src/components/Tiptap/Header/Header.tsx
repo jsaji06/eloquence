@@ -30,12 +30,19 @@ const Header = (props: HeaderProps) => {
       attributes: {
         class: 'header',
       },
+      transformPastedHTML: (html) => {
+          console.log(html);
+          return html
+      },
       handleKeyDown(_, event) {
         if (event.key === 'Enter') return true
       },
     },
     onUpdate: async ({ editor }) => {
       props.setTitle(editor?.getJSON()?.content![0].content![0].text ?? "")
+      if(editor?.getJSON()?.content![0].content![0].text?.length! >= 2){
+        console.log("Oopsiedaisy");
+      }
       if(props.docId !== "GUEST")
         updateDocument(props.docId, editor?.getJSON()?.content![0].content![0].text, undefined, undefined);
     }

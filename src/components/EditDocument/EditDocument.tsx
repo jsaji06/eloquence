@@ -41,9 +41,17 @@ function EditDocument() {
   const [feedbackPersonalization, setFeedbackPersonalization] = useState<FeedbackPersonalizationObject | undefined>();
   const [feedbackModal, setFeedbackModal] = useState<boolean | undefined>(true);
   const [openEnded, setOpenEnded] = useState(false)
+  
 
   const db = getFirestore();
   const auth = getAuth();
+
+  useEffect(() => {
+    if (title.length > 85){
+      setMessage("Please reduce length of title")
+      setTitle(title.substring(0, title.length-1))
+    }
+  }, [title])
 
   useEffect(() => {
         let getDocument = async () => {

@@ -45,6 +45,19 @@ const Editor = (props: EditorProps) => {
     editorProps: {
       attributes: {
         class: 'editor'
+      },
+      // This method was copied from Claude
+      transformPastedHTML: (html) => {
+        // Remove color styling and other unwanted inline styles
+        return html
+          .replace(/style="[^"]*color[^"]*"/gi, '') // Remove any style attribute containing color
+          .replace(/color="[^"]*"/gi, '') // Remove color attributes
+          .replace(/bgcolor="[^"]*"/gi, '') // Remove background color attributes
+          .replace(/style="[^"]*background[^"]*"/gi, '') // Remove background styles
+          .replace(/style="\s*"/gi, '') // Remove empty style attributes
+          .replace(/style='[^']*color[^']*'/gi, '') // Handle single quotes too
+          .replace(/style='[^']*background[^']*'/gi, '')
+          .replace(/style='\s*'/gi, '');
       }
     },
     onUpdate: ({ editor }) => {
