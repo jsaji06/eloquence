@@ -59,7 +59,11 @@ export default function SubsectionView(props: SubsectionViewProps) {
                             return (
                                 <div className="point" key={i} style={{ backgroundColor: point.color }}>
                                     <div className="select">
-                                        <div className={"circle " + (props.points.includes(point) ? "active" : "")} onClick={() => {
+                                    </div>
+                                    <div className="pointContent">
+                                        <p className="subtext">{point.type_of_point.toUpperCase()}</p>
+                                        <p className="pointText">{point.content}</p>
+                                        <button className={"selectBtn " + (props.points.includes(point) ? "selectedActive" : "")} onClick={() => {
                                             if (!props.points.includes(point)) {
                                                 if (props.points.length >= 3) {
                                                     setMessage("You can only select up to three points.")
@@ -68,11 +72,7 @@ export default function SubsectionView(props: SubsectionViewProps) {
                                             } else {
                                                 props.setPoints(props.points.filter(p => point !== p))
                                             }
-                                        }}></div>
-                                    </div>
-                                    <div className="pointContent">
-                                        <p className="subtext">{point.type_of_point.toUpperCase()}</p>
-                                        <p className="pointText">{point.content}</p>
+                                        }}>{(props.points.includes(point) ? "Deselect" : "Select")}</button>
                                     </div>
                                 </div>
                             )

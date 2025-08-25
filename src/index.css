@@ -473,13 +473,13 @@ button.bubbleBtn {
 }
 
 .point {
-    padding: 15px 20px;
+    padding: 20px;
     border-bottom: 1px solid var(--text-secondary);
     background-color: var(--bg-secondary);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
 }
 
 .pointText {
@@ -498,8 +498,20 @@ button.bubbleBtn {
     background-color: var(--text-primary);
 }
 
-.circle.active {
+button.selectBtn {
+    background-color: transparent;
+    padding:10px 25px;
+
+}
+
+button.selectBtn:hover {
     background-color: var(--text-primary);
+
+}
+
+button.selectedActive {
+    background-color: var(--text-primary);
+    color:var(--bg-secondary)
 }
 
 /* Login Components */
@@ -1149,11 +1161,6 @@ nav.hamburger {
     align-items: center;
 
     /* display:flex; */
-}
-
-.feedbackOptions * {
-    /* flex:0; */
-    /* flex-grow:0; */
 }
 
 .feedbackOptions button {
