@@ -70,7 +70,7 @@ export default function FeedbackPersonalization(props: FeedbackProps) {
                 <button onClick={() => getFeedback()}><FontAwesomeIcon icon={faArrowRight} /> </button>
             </div>
                 </div>
-                <a href="#" style={{color:"var(--text-primary)"}} onClick={() => props.setOpenEnded(false)}>Customizable Prompting</a>
+                <a href="#" className="switchModal" onClick={() => props.setOpenEnded(false)}>Customizable Prompting</a>
                 <p>{error ? error : ""}</p>
             </div>
             

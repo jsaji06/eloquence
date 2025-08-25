@@ -89,14 +89,17 @@ export default function CustomizableFeedbackPersonalization(props: FeedbackProps
                 ))}
                 
             </div>
-            <a href="#" style={{color:"var(--text-primary)"}} onClick={() => props.setOpenEnded(true)}>Open-ended Prompting</a>
-            <p>{error ? error : ""}</p>
+            <div className="feedbackOptions">
+            <a href="#" className="switchModal" onClick={() => props.setOpenEnded(true)}>Open-ended Prompting</a>
             <button style={{
                 "display": feedback.some(optionList => optionList.options.some(option => option.active)) ? "block" : "none"
 
             }} onClick={() => {
                 getFeedback()
             }}>Submit</button>
+            </div>
+            <p>{error ? error : ""}</p>
+            
             </div>
             
         </>

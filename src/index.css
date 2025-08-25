@@ -69,7 +69,7 @@ button {
     color: var(--text-primary);
     border: 1px solid var(--text-primary);
     font-family: "DM Sans";
-    padding: 15px;
+    padding:12.5px;
     transition: .5s;
 }
 
@@ -1075,7 +1075,8 @@ nav.hamburger {
 
 .feedbackModal {
     width:700px;
-    max-height:600px
+    max-height:600px;
+    padding:100px 80px
 
 }
 
@@ -1142,3 +1143,25 @@ nav.hamburger {
     color:var(--bg-primary)
 }
 
+
+.feedbackOptions {
+    display:flex;
+    align-items: center;
+
+    /* display:flex; */
+}
+
+.feedbackOptions * {
+    /* flex:0; */
+    /* flex-grow:0; */
+}
+
+.feedbackOptions button {
+    margin-left:auto
+}
+
+.switchModal 
+{
+    font-family:"DM Sans";
+    color:var(--text-primary)
+}
