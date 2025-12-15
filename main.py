@@ -324,15 +324,17 @@ workflow = workflow.compile()
 from fastapi import Request
 @app.post("/get_points")
 async def get_points(writing:Request):
-    
-   body = await writing.json()
-   writing = body.get("writing")
-   prompt = body.get("prompt")
-   # context = body.get("context")
-   if not writing:
-        raise HTTPException(status_code=400, detail="No writing content provided")
-   output = await workflow.ainvoke({"user_essay":writing, "prompt": prompt})
-   return output['response']
+    try: 
+       body = await writing.json()
+       writing = body.get("writing")
+       prompt = body.get("prompt")
+       # context = body.get("context")
+       if not writing:
+            raise HTTPException(status_code=400, detail="No writing content provided")
+       output = await workflow.ainvoke({"user_essay":writing, "prompt": prompt})
+       return output['response']
+    except Exception as e:
+        raise HTTPExcpetion(status_code=500, detail=str(e))
 
 # API Endpoint to get more extensive feedback 
 @app.post("/get_advice")
