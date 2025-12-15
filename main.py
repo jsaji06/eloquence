@@ -334,6 +334,7 @@ async def get_points(writing:Request):
        output = await workflow.ainvoke({"user_essay":writing, "prompt": prompt})
        return output['response']
     except Exception as e:
+        print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
 # API Endpoint to get more extensive feedback 
