@@ -123,7 +123,7 @@ Initializes Claude Sonnet 3.5 model.
 """
 def create_socrates():
     try:
-        socrates = init_chat_model("anthropicclaude-sonnet-4-5", max_tokens=5000, max_retries=2, timeout=60)
+        socrates = init_chat_model("anthropic:claude-sonnet-4-5", max_tokens=5000, max_retries=2, timeout=60)
         return socrates
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to initialize model.")
